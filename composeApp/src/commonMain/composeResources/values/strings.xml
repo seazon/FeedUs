@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">FeedUs</string>
+
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_new">New</string>
+    <string name="common_add">Add</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_update">Update</string>
+    <string name="common_remove">Remove</string>
+    <string name="common_close">Close</string>
+    <string name="common_operator">Operator</string>
+    <string name="common_processing">processing …</string>
+    <string name="common_enable">Enable</string>
+    <string name="common_disable">Disable</string>
+    <string name="common_success">Success</string>
+    <string name="common_failed">Failed</string>
+    <string name="common_choose">Choose</string>
+    <string name="common_download">Download</string>
+    <string name="common_load">Load</string>
+    <string name="common_loading">Loading</string>
+    <string name="common_search">Search</string>
+    <string name="common_unspecified">Unspecified</string>
+    <string name="common_default">Default</string>
+    <string name="common_built_in">Built-in</string>
+    <string name="common_clear">Clear</string>
+    <string name="common_asc">Asc</string>
+    <string name="common_desc">Desc</string>
+    <string name="common_increase">Increase</string>
+    <string name="common_decrease">Decrease</string>
+    <string name="common_reset">Reset</string>
+    <string name="common_none">None</string>
+    <string name="common_activity_not_found_exception">No apps can perform this action</string>
+    <string name="common_drawer">Drawer</string>
+    <string name="common_back">Back</string>
+    <string name="common_error">Oops, an error occurred</string>
+    <string name="common_import">Import</string>
+    <string name="common_no_data">No data</string>
+    <string name="common_show_dropdown_menu">show dropdown menu</string>
+
+    <string name="login_login">Login</string>
+    <string name="login_host">Host</string>
+    <string name="login_username">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_http_authentication">HTTP Authentication (Optional)</string>
+    <string name="login_http_username">Username</string>
+    <string name="login_http_password">Password</string>
+    <string name="login_tip">Login …</string>
+    <string name="login_oauth2_failed">Auth failed</string>
+    <string name="login_username_inoreader">Email/username</string>
+    <string name="login_tip_inoreader">Create username &amp; password in Profile settings if you have signed in with Google or Facebook</string>
+    <string name="login_username_bazqux">Login</string>
+    <string name="login_tip_bazqux">Enter login from the BazQux \'Mobile login\' settings</string>
+    <string name="login_username_the_old_reader">Email</string>
+    <string name="login_tip_the_old_reader">Create password in the The Old Reader \'Settings\' menu</string>
+    <string name="login_username_fresh_rss">Username</string>
+    <string name="login_tip_fresh_rss">Go to FreshRSS \'profile\' menu and open link behind \'API password\' to get host address</string>
+    <string name="login_guide_link_fresh_rss" translatable="false">https://github.com/seazon/FeedMe/blob/master/doc/en/rss_authentication_guide.md#freshrss</string>
+    <string name="login_username_google_reader">Username</string>
+    <string name="login_tip_google_reader"></string>
+    <string name="login_username_fever">Username</string>
+    <string name="login_tip_fever">Host does not need to include \'\\fever\\\'</string>
+    <string name="login_username_feedbin">Email</string>
+    <string name="login_tip_feedbin">Only self-build server need set \'Host\'</string>
+    <string name="login_username_ttrss">Username</string>
+    <string name="login_tip_ttrss">If your expected host login fails, please try to append \`/tt-rss\`. For example: \`http://example.com/tt-rss\`</string>
+
+    <string name="local_rss_category_label">Local RSS</string>
+
+    <string name="feeds_title">Feeds</string>
+
+    <string name="articles_title">Articles</string>
+
+    <string name="demo_title">Demo</string>
+    <string name="translator_title">Translator Demo</string>
+    <string name="translator_type">Type</string>
+    <string name="translator_key">Key</string>
+    <string name="translator_app_id">AppID</string>
+
+    <string name="category_category">Expand or collapse category</string>
+    <string name="category_feed">Feed icon</string>
+    <string name="category_starred">Starred icon</string>
+    <string name="category_play">Play icon</string>
+    <string name="category_all_items">All items icon</string>
+
+    <string name="all_items">All items</string>
+
+    <string name="ui_artlist_collapse">Collapse</string>
+    <string name="ui_artlist_expand">Expand</string>
+
+    <string name="item_time_just_now">a moment ago</string>
+    <string name="item_time_1_minute_ago">1 minute ago</string>
+    <string name="item_time_x_minutes_ago"> minutes ago</string>
+    <string name="item_time_1_hour_ago">1 hour ago</string>
+    <string name="item_time_x_hours_ago"> hours ago</string>
+    <string name="item_time_1_day_ago">1 day ago</string>
+    <string name="item_time_x_days_ago"> days ago</string>
+</resources>

@@ -1,0 +1,128 @@
+import kotlin.Boolean;
+
+CREATE TABLE Launch (
+    flightNumber INTEGER NOT NULL,
+    missionName TEXT NOT NULL,
+    details TEXT,
+    launchSuccess INTEGER AS Boolean DEFAULT NULL,
+    launchDateUTC TEXT NOT NULL,
+    patchUrlSmall TEXT,
+    patchUrlLarge TEXT,
+    articleUrl TEXT
+);
+
+insertLaunch:
+INSERT INTO Launch(flightNumber, missionName, details, launchSuccess, launchDateUTC, patchUrlSmall, patchUrlLarge, articleUrl)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+removeAllLaunches:
+DELETE FROM Launch;
+
+selectAllLaunchesInfo:
+SELECT Launch.*
+FROM Launch;
+
+CREATE TABLE Feed (
+    id TEXT NOT NULL,
+    title TEXT,
+    sortId TEXT,
+    url TEXT,
+    feedUrl TEXT,
+    categories TEXT,
+    favicon TEXT,
+    cntClientAll INTEGER NOT NULL,
+    cntClientUnread INTEGER NOT NULL
+);
+
+insertFeed:
+INSERT INTO Feed(id, title, sortId, url, feedUrl, categories, favicon, cntClientAll, cntClientUnread)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateFeedCntClientUnread:
+UPDATE Feed
+SET cntClientUnread = ? WHERE id = ?;
+
+removeAllFeeds:
+DELETE FROM Feed;
+
+selectAllFeeds:
+SELECT Feed.*
+FROM Feed;
+
+selectFeedById:
+SELECT Feed.*
+FROM Feed WHERE id = :id;
+
+CREATE TABLE Item (
+    id TEXT NOT NULL,
+    fid TEXT,
+    flag INTEGER NOT NULL,
+    status INTEGER NOT NULL,
+    process INTEGER NOT NULL,
+    star INTEGER NOT NULL,
+    tag INTEGER NOT NULL,
+    title TEXT,
+    titleTranslated TEXT,
+    link TEXT,
+    visual TEXT,
+    author TEXT,
+    publishedDate INTEGER,
+    updatedDate INTEGER,
+    description TEXT,
+    tags TEXT
+);
+
+insertItem:
+INSERT INTO Item(
+    id,
+    fid,
+    flag,
+    status,
+    process,
+    star,
+    tag,
+    title,
+    titleTranslated,
+    link,
+    visual,
+    author,
+    publishedDate,
+    updatedDate,
+    description,
+    tags
+)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);
+
+updateFlag:
+UPDATE Item
+SET flag = ? WHERE id = ?;
+
+removeAllItems:
+DELETE FROM Item;
+
+selectAllItems:
+SELECT Item.*
+FROM Item;
+
+CREATE TABLE Category (
+    id TEXT NOT NULL,
+    title TEXT,
+    sortId TEXT,
+    cntClientAll INTEGER NOT NULL,
+    cntClientUnread INTEGER NOT NULL
+);
+
+insertCategory:
+INSERT INTO Category(id, title, sortId, cntClientAll, cntClientUnread)
+VALUES(?, ?, ?, ?, ?);
+
+removeAllCategories:
+DELETE FROM Category;
+
+selectAllCategories:
+SELECT Category.*
+FROM Category;
+
+selectCategoryById:
+SELECT Category.*
+FROM Category WHERE id = :id;

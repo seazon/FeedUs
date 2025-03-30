@@ -1,0 +1,173 @@
+package com.seazon.feedus.ui.feeds
+
+import androidx.lifecycle.viewModelScope
+import com.seazon.feedus.cache.RssDatabase
+import com.seazon.feedme.lib.rss.bo.Category
+import com.seazon.feedme.lib.rss.bo.Feed
+import com.seazon.feedme.lib.rss.bo.RssTag
+import com.seazon.feedme.lib.rss.service.RssApi
+import com.seazon.feedme.lib.rss.service.localrss.LocalRssApi
+import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedus.data.AppSettings
+import com.seazon.feedus.data.RssSDK
+import com.seazon.feedus.data.TokenSettings
+import com.seazon.feedus.ui.BaseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class FeedsViewModel(
+    val rssSDK: RssSDK,
+    val tokenSettings: TokenSettings,
+    val rssDatabase: RssDatabase,
+    val appSettings: AppSettings,
+) : BaseViewModel() {
+
+    private val _state = MutableStateFlow(FeedsScreenState())
+    val state: StateFlow<FeedsScreenState> = _state
+
+    private val _subscribeState = MutableStateFlow(SubscribeDialogState())
+    val subscribeState: StateFlow<SubscribeDialogState> = _subscribeState
+
+    init {
+        viewModelScope.launch {
+            val feeds = rssDatabase.getFeeds().filter { it.cntClientUnread > 0 }
+            val categories = rssDatabase.getCategories().filter { it.cntClientUnread > 0 }
+            if (feeds.isEmpty()) {
+                sync()
+            } else {
+                val appPreferences = appSettings.getAppPreferences()
+                _state.update {
+                    it.copy(
+                        maxUnreadCount = appPreferences.unreadMax,
+                        feeds = feeds,
+                        categories = categories,
+                    )
+                }
+            }
+        }
+    }
+
+    fun isLogged(): Boolean {
+        return tokenSettings.getToken().isAuthed()
+    }
+
+    fun logout(callback: () -> Unit) {
+        viewModelScope.launch {
+            tokenSettings.clear()
+            appSettings.clear()
+            rssDatabase.clearCategories()
+            rssDatabase.clearItems()
+            rssDatabase.clearFeeds()
+
+            callback()
+        }
+    }
+
+    fun sync() {
+        if (!isLogged()) {
+            return
+        }
+        viewModelScope.launch {
+            val api = rssSDK.getRssApi(false)
+
+            fetchSubscription(api)
+            fetchUnreadCount(api)
+
+            val feeds = rssDatabase.getFeeds().filter { it.cntClientUnread > 0 }
+            val categories = rssDatabase.getCategories().filter { it.cntClientUnread > 0 }
+            val appPreferences = appSettings.getAppPreferences()
+            _state.update {
+                it.copy(maxUnreadCount = appPreferences.unreadMax, feeds = feeds, categories = categories)
+            }
+        }
+    }
+
+    private suspend fun fetchSubscription(api: RssApi) {
+        val subscriptions = api.getSubscriptions()
+        val tagMap = mutableMapOf<String, RssTag>()
+        val feeds = subscriptions?.map { feed ->
+            feed.categories?.forEach { tag ->
+                tagMap[tag.id.orEmpty()] = tag
+            }
+            Feed(
+                id = feed.id.orEmpty(),
+                title = feed.title,
+                sortId = null,
+                url = feed.url,
+                feedUrl = feed.feedUrl,
+                categories = feed.categories?.joinToString(",", transform = { it.label.orEmpty() }),
+                favicon = feed.favicon,
+                cntClientAll = 0,
+                cntClientUnread = 0,
+            )
+        }
+        rssDatabase.saveFeeds(feeds.orEmpty())
+
+        val categories = tagMap.values.map {
+            Category(
+                id = it.id.orEmpty(),
+                title = it.label.orEmpty(),
+                sortId = null,
+                cntClientAll = 0,
+                cntClientUnread = 0,
+            )
+        }
+        rssDatabase.saveCategories(categories)
+    }
+
+    private suspend fun fetchUnreadCount(api: RssApi) {
+        val unreadCounts = api.getUnreadCounts()
+        val categoryMap = rssDatabase.getCategories().associateBy { it.id }
+        val feedMap = rssDatabase.getFeeds().associateBy { it.id }
+        var max = 0
+        unreadCounts?.unreadCounts?.forEach {
+            categoryMap[it.id]?.cntClientUnread = it.count
+            feedMap[it.id]?.let { feed ->
+                feed.cntClientUnread = it.count
+                max += it.count
+            }
+        }
+        rssDatabase.saveCategories(categoryMap.values.toList())
+        rssDatabase.saveFeeds(feedMap.values.toList())
+        appSettings.getAppPreferences().apply {
+            appSettings.saveAppPreferences(this.copy(unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()))
+        }
+    }
+
+    fun subscribe(
+        host: String?,
+        onSuccess: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            val api = rssSDK.getRssApi(false)
+            when (api) {
+                is LocalRssApi -> {
+                    api.search(host)?.let {
+                        if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>() )) {
+                            onSuccess()
+                        }else{
+                            _subscribeState.update {
+                                it.copy(
+                                    errorTips = "Subscribe failed",
+                                )
+                            }
+                        }
+
+                    } ?: run {
+                        _subscribeState.update {
+                            it.copy(
+                                errorTips = "Not found",
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    // TODO handle other cases
+                }
+            }
+        }
+    }
+}

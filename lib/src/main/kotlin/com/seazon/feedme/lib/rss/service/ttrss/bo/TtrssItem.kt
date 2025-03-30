@@ -1,0 +1,56 @@
+package com.seazon.feedme.lib.rss.service.ttrss.bo
+
+import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssEnclosure
+import com.seazon.feedme.lib.rss.bo.RssItem
+import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
+import com.seazon.feedme.lib.utils.HtmlUtils
+
+data class TtrssItem(
+    var id: String? = null,
+    var title: String? = null,
+    var link: String? = null,
+    var unread: Boolean = false,
+    var author: String? = null,
+    var updated: Long = 0,
+    var feed_id: String? = null,
+    var feed_title: String? = null,
+    var content: String? = null,
+    var attachments: MutableList<TtrssAttachments>? = null,
+) : Entity() {
+
+    fun convert(): RssItem {
+        val item: RssItem = RssItem()
+        item.id = id
+        item.title = title
+        item.publisheddate = if (updated == 0L) null else updated * 1000
+        item.updateddate = item.publisheddate
+        item.description = content
+        if (item.description == null) {
+            item.description = ""
+        }
+        item.author = if (author == null) "" else author
+        item.link = link
+        item.feed?.let {
+            id = TtrssApi.wrapFeedId(feed_id.orEmpty())
+            title = feed_title
+        }
+        item.fid = item.feed?.id
+        item.visual = HtmlUtils.getFirstImage(item.description, item.link)
+        var audioUrl: String? = null
+        item.enclosure = attachments?.map {
+            if (audioUrl == null && it.content_type?.startsWith("audio/") == true) {
+                audioUrl = it.content_url
+            }
+            RssEnclosure(
+                href = it.content_url,
+                type = it.content_type,
+            )
+        }
+        item.podcastUrl = audioUrl
+        item.podcastSize = 0
+        item.isUnread = unread
+        item.since = id
+        return item
+    }
+}
