@@ -42,12 +42,13 @@ fun TranslatorScreenComposable(
         TranslatorUtil.TYPE_BAIDU,
         TranslatorUtil.TYPE_GOOGLE,
         TranslatorUtil.TYPE_MICROSOFT,
+        TranslatorUtil.TYPE_GEMINI,
     )
     val title = stringResource(Res.string.translator_title)
     val typeLabel = stringResource(Res.string.translator_type)
     val keyLabel = stringResource(Res.string.translator_key)
     val appIdLabel = stringResource(Res.string.translator_app_id)
-    val typeValue = remember { mutableStateOf(TranslatorUtil.TYPE_BAIDU) }
+    val typeValue = remember { mutableStateOf(TranslatorUtil.TYPE_GEMINI) }
     val keyValue = remember { mutableStateOf("") }
     val appIdValue = remember { mutableStateOf("") }
     val queryValue = remember { mutableStateOf("") }
