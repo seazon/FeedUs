@@ -4,6 +4,7 @@ import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
+import com.seazon.feedme.lib.network.toType
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.RssApi
@@ -13,11 +14,9 @@ import com.seazon.feedme.lib.rss.service.gr.bo.GrStream
 import com.seazon.feedme.lib.rss.service.gr.bo.GrSubscriptions
 import com.seazon.feedme.lib.rss.service.gr.bo.GrTags
 import com.seazon.feedme.lib.rss.service.gr.bo.GrUserInfo
-import com.seazon.feedme.lib.utils.Helper
 import io.ktor.client.call.body
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
-import java.util.ArrayList
 
 class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,config,  api) {
 
@@ -247,6 +246,6 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
     suspend fun getUserInfo(): GrUserInfo? {
         val parameters: MutableList<NameValuePair> = ArrayList<NameValuePair>()
         parameters.add(NameValuePair("output", "json"))
-        return execute(HttpMethod.GET, GrConstants.URL_USER_INFO, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_USER_INFO, parameters, null, null).toType()
     }
 }

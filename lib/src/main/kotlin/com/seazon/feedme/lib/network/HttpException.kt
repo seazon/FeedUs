@@ -1,5 +1,6 @@
 package com.seazon.feedme.lib.network
 
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import java.lang.Exception
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -132,6 +133,8 @@ class HttpException : Exception {
                     return HttpException(Type.ESKTEX, e)
                 }
             } else if (e is SocketTimeoutException) {
+                return HttpException(Type.ESKTTOEX, e)
+            } else if (e is HttpRequestTimeoutException) {
                 return HttpException(Type.ESKTTOEX, e)
             } else if (e is UnknownHostException) {
                 return HttpException(Type.EASSOHOST, e)

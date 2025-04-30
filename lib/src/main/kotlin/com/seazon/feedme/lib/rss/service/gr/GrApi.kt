@@ -11,7 +11,6 @@ import com.seazon.feedme.lib.rss.service.gr.api.AuthenticationApi
 import com.seazon.feedme.lib.rss.service.gr.api.MainApi
 import com.seazon.feedme.lib.rss.service.gr.bo.convert
 import com.seazon.feedme.lib.rss.service.gr.bo.convert2
-import com.seazon.feedme.lib.utils.Helper
 import com.seazon.feedme.lib.utils.orZero
 
 abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Long) : RssApi, SelfHostedRssApi {
