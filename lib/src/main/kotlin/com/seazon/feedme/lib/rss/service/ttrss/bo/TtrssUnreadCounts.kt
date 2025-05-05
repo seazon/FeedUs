@@ -3,16 +3,20 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 import com.seazon.feedme.lib.rss.bo.RssUnreadCount
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.utils.toJson
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TtrssCounterList(
     var content: List<TtrssCounter>? = null,
 )
 
+@Serializable
 data class TtrssCounter(
     var id: String? = null,
     var counter: Int = 0,
 )
 
+@Serializable
 data class TtrssUnreadCounts(
     var max: Int = 0,
     var unreadcounts: List<TtrssUnreadCount>? = null,

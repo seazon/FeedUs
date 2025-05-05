@@ -5,7 +5,9 @@ import com.seazon.feedme.lib.rss.bo.RssEnclosure
 import com.seazon.feedme.lib.rss.bo.RssItem
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.HtmlUtils
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TtrssItem(
     var id: String? = null,
     var title: String? = null,

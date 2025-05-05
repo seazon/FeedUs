@@ -5,8 +5,9 @@ import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.toJson
-import kotlin.text.get
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TtrssSubscription(
     private var id: String? = null, // ttrss的类别和订阅源id都是int数值，无法区分，为了区分，订阅源id加上feed/前缀
     var title: String? = null,

@@ -1,9 +1,13 @@
 package com.seazon.feedme.lib.rss.service.ttrss.bo
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class TtrssFeedList(
     val content: List<TtrssFeed>? = null
 )
 
+@Serializable
 data class TtrssFeed(
     val id: String? = null,
     val cat_id: String? = null,
