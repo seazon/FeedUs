@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommonResponse(
-    val api_version: Int,
-    val auth: Int,
-    val last_refreshed_on_time: Long
+    val api_version: Int? = null,
+    val auth: Int? = null,
+    val last_refreshed_on_time: Long? = null,
 )
