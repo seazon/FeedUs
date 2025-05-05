@@ -7,7 +7,6 @@ import com.seazon.feedme.lib.rss.service.ttrss.TtrssConstants
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssStream
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssTagList
 import com.seazon.feedme.lib.utils.LogUtils
-import io.ktor.client.call.body
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -17,11 +16,11 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         val o = mapOf(
             "output_mode" to "f"
         )
-        return execute(TtrssConstants.METHOD_GET_COUNTERS, o).body()
+        return execute(TtrssConstants.METHOD_GET_COUNTERS, o).body
     }
 
     suspend fun getCategories(): String? {
-        return execute(TtrssConstants.METHOD_GET_CATEGORIES, null).body()
+        return execute(TtrssConstants.METHOD_GET_CATEGORIES, null).body
     }
 
     suspend fun getFeeds(): String? {
@@ -29,7 +28,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "cat_id" to "-3",
             "unread_only" to "false"
         )
-        return execute(TtrssConstants.METHOD_GET_FEEDS, o).body()
+        return execute(TtrssConstants.METHOD_GET_FEEDS, o).body
     }
 
     suspend fun subscribeToFeed(url: String, categoryId: String): String? {
@@ -37,7 +36,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "feed_url" to url,
             "category_id" to categoryId
         )
-        return execute(TtrssConstants.METHOD_SUBSCRIBE_TO_FEED, o).body()
+        return execute(TtrssConstants.METHOD_SUBSCRIBE_TO_FEED, o).body
     }
 
     suspend fun unsubscribeFeed(feedId: String): String? {
@@ -45,7 +44,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "feed_id" to feedId
         )
 
-        return execute(TtrssConstants.METHOD_UNSUBSCRIBE_FEED, o).body()
+        return execute(TtrssConstants.METHOD_UNSUBSCRIBE_FEED, o).body
     }
 
     /**
@@ -61,11 +60,11 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "mode" to mode,
             "field" to field
         )
-        return execute(TtrssConstants.METHOD_UPDATE_ARTICLE, o).body()
+        return execute(TtrssConstants.METHOD_UPDATE_ARTICLE, o).body
     }
 
     suspend fun getLabels(): TtrssTagList? {
-        return execute(TtrssConstants.METHOD_GET_LABELS, null).body()
+        return execute(TtrssConstants.METHOD_GET_LABELS, null).convertBody()
     }
 
     suspend fun getHeadlines(
@@ -95,7 +94,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "order_by" to "feed_dates",
             "include_attachments" to true
         )
-        return execute(TtrssConstants.METHOD_GET_HEADLINES, o).body()
+        return execute(TtrssConstants.METHOD_GET_HEADLINES, o).body
     }
 
     suspend fun getArticle(entryIds: Array<String>?): TtrssStream? {
@@ -106,7 +105,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         val o = mapOf(
             "article_ids" to entryIds.joinToString(separator = ","),
         )
-        return execute(TtrssConstants.METHOD_GET_ARTICLE, o).body()
+        return execute(TtrssConstants.METHOD_GET_ARTICLE, o).convertBody()
     }
 
     private fun getStreamId(streamId: String?): String? {
@@ -132,6 +131,6 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "label_id" to labelId,
             "assign" to assign
         )
-        return execute(TtrssConstants.METHOD_SET_ARTICLE_LABEL, o).body()
+        return execute(TtrssConstants.METHOD_SET_ARTICLE_LABEL, o).body
     }
 }

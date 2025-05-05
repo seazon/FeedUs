@@ -11,6 +11,7 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
+import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.runBlocking
@@ -143,8 +144,22 @@ class HttpManager {
                     }
                 }
             }
-            LogUtils.debug("response code: ${response.status.value}")
             return response
+        }
+
+        suspend fun requestWrap(
+            httpMethod: HttpMethod,
+            url: String,
+            params: List<NameValuePair>? = null,
+            headers: Map<String, String>? = null,
+            body: String? = null,
+            json: Boolean = true,
+        ): SimpleResponse {
+            val a = request(httpMethod, url, params, headers, body, json)
+            val b = SimpleResponse(a.status.value, a.bodyAsText())
+            LogUtils.debug("response code: ${b.code}")
+            LogUtils.debug("response body: ${b.body}")
+            return b
         }
 
         suspend fun stream(

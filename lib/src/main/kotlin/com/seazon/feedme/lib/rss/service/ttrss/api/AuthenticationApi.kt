@@ -6,7 +6,6 @@ import com.seazon.feedme.lib.rss.service.ttrss.TtrssConstants
 import com.seazon.feedme.lib.rss.service.ttrss.bo.AuthResponse
 import com.seazon.feedme.lib.utils.base64
 import com.seazon.feedme.lib.utils.toJson
-import io.ktor.client.call.body
 
 class AuthenticationApi(token: RssToken) : BaseApi(token) {
     suspend fun getAccessToken(username: String, password: String, httpUsername: String?, httpPassword: String?): String {
@@ -14,16 +13,18 @@ class AuthenticationApi(token: RssToken) : BaseApi(token) {
             "user" to username,
             "password" to password,
         )
+        val u = if (httpUsername.isNullOrEmpty()) username else httpUsername
+        val p = if (httpPassword.isNullOrEmpty()) password else httpPassword
         val token = String.format(
             TtrssConstants.HTTP_HEADER_AUTHORIZATION_VALUE,
-            "${httpUsername ?: username}:${httpPassword ?: password}".base64()
+            "${u}:${p}".base64()
         )
         val headers = mapOf(
             TtrssConstants.HTTP_HEADER_AUTHORIZATION_KEY to token,
         )
         val response = execute(TtrssConstants.METHOD_LOGIN, o, headers)
-        if (response.status.value == 200) {
-            return response.body()
+        if (response.code == 200) {
+            return response.body
         } else {
             throw HttpException(HttpException.Type.EAUTHFAILED)
         }
@@ -36,9 +37,11 @@ class AuthenticationApi(token: RssToken) : BaseApi(token) {
             throw HttpException(HttpException.Type.EREMOTE, content.error)
         }
         token.auth = content?.sessionId
+        val username = if (token.httpUsername.isNullOrEmpty()) token.username else token.httpUsername
+        val password = if (token.httpPassword.isNullOrEmpty()) token.password else token.httpPassword
         val t = String.format(
             TtrssConstants.HTTP_HEADER_AUTHORIZATION_VALUE,
-            "${token.httpUsername ?: token.username}:${token.httpPassword ?: token.password}".base64()
+            "${username}:${password}".base64()
         )
         token.accessToken = t
         token.expiresTimestamp = System.currentTimeMillis() + getExpiredTimestamp() * 1000

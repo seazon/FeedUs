@@ -9,8 +9,8 @@ data class TtrssFeedList(
 
 @Serializable
 data class TtrssFeed(
-    val id: String? = null,
-    val cat_id: String? = null,
+    val id: Int? = null,
+    val cat_id: Int? = null,
     val title: String? = null,
     val last_updated: Long = 0,
     val feed_url: String? = null,

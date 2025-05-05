@@ -12,9 +12,9 @@ import com.seazon.feedme.lib.rss.service.convert
 import com.seazon.feedme.lib.rss.service.ttrss.api.AuthenticationApi
 import com.seazon.feedme.lib.rss.service.ttrss.api.MainApi
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssCategory
+import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssCounterList
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssStream
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssSubscription
-import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssUnreadCounts
 
 class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     private var token: RssToken? = null
@@ -66,7 +66,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getUnreadCounts(): RssUnreadCounts {
-        return TtrssUnreadCounts.parse(mainApi!!.getCounters())
+        return TtrssCounterList.parse(mainApi!!.getCounters())
     }
 
     override suspend fun markRead(entryIds: Array<String>?): String? {

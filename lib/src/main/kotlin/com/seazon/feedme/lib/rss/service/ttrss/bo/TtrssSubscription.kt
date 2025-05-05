@@ -42,9 +42,9 @@ data class TtrssSubscription(
             val list = toJson<TtrssFeedList>(json.orEmpty())
             return list.content?.map {
                 val c = RssFeed()
-                c.id = TtrssApi.wrapFeedId(it.id.orEmpty())
+                c.id = TtrssApi.wrapFeedId(it.id.toString())
                 c.title = it.title
-                c.categories = listOfNotNull(map[TtrssApi.wrapCategoryId(it.cat_id.orEmpty())])
+                c.categories = listOfNotNull(map[TtrssApi.wrapCategoryId(it.cat_id.toString())])
                 c.url = it.feed_url
                 c.feedUrl = c.url
                 c.favicon = null

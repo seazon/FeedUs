@@ -1,13 +1,12 @@
 package com.seazon.feedme.lib.rss.service.ttrss.api
 
+import com.seazon.feedme.lib.network.SimpleResponse
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssConstants
-import io.ktor.client.statement.HttpResponse
-import java.util.HashMap
 
 open class AuthedApi(token: RssToken) : BaseApi(token) {
 
-    suspend fun execute(method: String, bodyMap: Map<String, Any>?): HttpResponse {
+    suspend fun execute(method: String, bodyMap: Map<String, Any>?): SimpleResponse {
         val bodyMutableMap = bodyMap?.toMutableMap() ?: mutableMapOf<String, Any>()
         bodyMutableMap.put("sid", token.auth.orEmpty())
 

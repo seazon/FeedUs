@@ -118,6 +118,11 @@ class FeedsViewModel(
     }
 
     private suspend fun fetchUnreadCount(api: RssApi) {
+        try {
+            val tags = api.getTags() // TODO use tags in app
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         val unreadCounts = api.getUnreadCounts()
         val categoryMap = rssDatabase.getCategories().associateBy { it.id }
         val feedMap = rssDatabase.getFeeds().associateBy { it.id }

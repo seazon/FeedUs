@@ -13,7 +13,7 @@ data class TtrssTag2List(
 
 @Serializable
 data class TtrssTag2(
-    val id: String? = null,
+    val id: Int? = null,
     val title: String? = null,
 )
 
@@ -42,7 +42,7 @@ data class TtrssCategory(
                     val idid = it.id?.toInt() ?: -1
                     if (idid >= 0) {
                         RssTag(
-                            id = TtrssApi.wrapCategoryId(it.id!!),
+                            id = TtrssApi.wrapCategoryId(it.id.toString()),
                             label = it.title
                         )
                     } else {
