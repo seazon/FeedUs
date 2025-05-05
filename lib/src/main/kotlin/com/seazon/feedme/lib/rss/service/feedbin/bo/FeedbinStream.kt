@@ -2,7 +2,7 @@ package com.seazon.feedme.lib.rss.service.feedbin.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssStream
-import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,7 +21,7 @@ data class FeedbinStream(
 
     companion object {
         fun parse(json: String?): RssStream? {
-            return Static.defaultJson.decodeFromString<FeedbinStream?>(json.orEmpty())?.convert()
+            return toJson<FeedbinStream?>(json.orEmpty())?.convert()
         }
     }
 }

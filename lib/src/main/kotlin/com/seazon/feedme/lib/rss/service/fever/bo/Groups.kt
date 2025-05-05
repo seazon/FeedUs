@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.service.fever.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
-import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,7 +11,7 @@ data class Groups(
 ) {
     companion object {
         fun parse(json: String): List<Group> {
-            return Static.defaultJson.decodeFromString<Groups>(json).groups
+            return toJson<Groups>(json).groups
         }
     }
 }

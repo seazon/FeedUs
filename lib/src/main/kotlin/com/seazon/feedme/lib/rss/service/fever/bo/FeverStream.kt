@@ -3,9 +3,9 @@ package com.seazon.feedme.lib.rss.service.fever.bo
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssItem
 import com.seazon.feedme.lib.rss.bo.RssStream
-import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.utils.HtmlUtils
 import com.seazon.feedme.lib.utils.RssUtils
+import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +19,7 @@ data class FeverStream(
     companion object {
 
         fun parse(json: String): RssStream {
-            val feverStream = Static.defaultJson.decodeFromString<FeverStream>(json).apply {
+            val feverStream = toJson<FeverStream>(json).apply {
                 if (unread_item_ids.isNotBlank()) {
                     ids = unread_item_ids.split(",").toMutableList()
                 }

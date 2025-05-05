@@ -10,6 +10,7 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.gr.GrConfig
 import com.seazon.feedme.lib.rss.service.gr.GrConstants
 import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedme.lib.utils.toJson
 import io.ktor.client.call.body
 
 open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token, config) {
@@ -69,7 +70,7 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
     }
 
     fun setUserWithRefreshToken(token: RssToken, response: String) {
-        val r = Static.defaultJson.decodeFromString<Oauth2Response>(response)
+        val r = toJson<Oauth2Response>(response)
         token.refreshToken = r.refresh_token
         token.accessToken = r.access_token
         token.expiresTimestamp = (System.currentTimeMillis()
@@ -77,7 +78,7 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
     }
 
     fun setUserWithAccessTokenOAuth2(token: RssToken, response: String) {
-        val r = Static.defaultJson.decodeFromString<Oauth2Response>(response)
+        val r = toJson<Oauth2Response>(response)
         token.refreshToken = r.refresh_token
         token.accessToken = r.access_token
         token.expiresTimestamp = (System.currentTimeMillis()

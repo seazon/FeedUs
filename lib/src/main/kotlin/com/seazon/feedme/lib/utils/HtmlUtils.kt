@@ -138,7 +138,7 @@ object HtmlUtils {
      * @return
      */
     private fun isRightImageUrl(url: String): Boolean {
-        url.toLowerCase().run {
+        url.lowercase().run {
             return if (isHttpUrl(url)) {
                 true
             } else url.startsWith(URL_DATA)

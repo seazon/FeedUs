@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.service.fever.bo
 
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,7 +12,7 @@ data class Feeds(
     companion object {
 
         fun parse(json: String, groups: List<Group>): List<RssFeed> {
-            val feeds = Static.defaultJson.decodeFromString<Feeds>(json)
+            val feeds = toJson<Feeds>(json)
 
             val feedGroupMap = mutableMapOf<Int, MutableList<Group>>()
             feeds.feeds_groups.forEach {

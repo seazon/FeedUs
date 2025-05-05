@@ -2,7 +2,7 @@ package com.seazon.feedme.lib.rss.service.localrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssItem
-import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -37,7 +37,7 @@ data class LocalRssItem(
 
     companion object {
         fun parse(json: String?): LocalRssItem? {
-            return Static.defaultJson.decodeFromString<LocalRssItem?>(json.orEmpty())
+            return toJson<LocalRssItem?>(json.orEmpty())
         }
     }
 }

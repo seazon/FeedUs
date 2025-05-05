@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.spider
 
 import com.seazon.feedme.lib.rss.bo.Entity
-import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.toJson
 
 class SpiderItem : Entity() {
     var title: String? = null
@@ -13,7 +13,7 @@ class SpiderItem : Entity() {
 
     companion object {
         fun parseList(json: String?): List<SpiderItem> {
-            return Static.defaultJson.decodeFromString<List<SpiderItem>>(json.orEmpty())
+            return toJson<List<SpiderItem>>(json.orEmpty())
         }
     }
 }

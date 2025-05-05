@@ -5,9 +5,9 @@ import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.fever.FeverConstants
 import com.seazon.feedme.lib.rss.service.fever.bo.CommonResponse
+import com.seazon.feedme.lib.utils.toJson
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 
@@ -31,7 +31,7 @@ open class BaseApi(val token: RssToken) {
         }
 
         if (authCheck) {
-            val commonResponse = Static.defaultJson.decodeFromString<CommonResponse>(response.body())
+            val commonResponse = toJson<CommonResponse>(response.body())
             if (commonResponse.auth != 1) {
                 throw HttpException(HttpException.Type.EEXPIRED)
             }

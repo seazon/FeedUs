@@ -2,10 +2,10 @@ package com.seazon.feedme.lib.rss.service.ttrss.api
 
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssConstants
 import com.seazon.feedme.lib.rss.service.ttrss.bo.AuthResponse
 import com.seazon.feedme.lib.utils.base64
+import com.seazon.feedme.lib.utils.toJson
 import io.ktor.client.call.body
 
 class AuthenticationApi(token: RssToken) : BaseApi(token) {
@@ -30,7 +30,7 @@ class AuthenticationApi(token: RssToken) : BaseApi(token) {
     }
 
     fun setUserWithAccessToken(token: RssToken, response: String) {
-        val o = Static.defaultJson.decodeFromString<AuthResponse>(response)
+        val o = toJson<AuthResponse>(response)
         val content = o.content
         if (!content?.error.isNullOrEmpty()) {
             throw HttpException(HttpException.Type.EREMOTE, content.error)
