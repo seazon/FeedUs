@@ -13,9 +13,9 @@ class AuthenticationApi(token: RssToken) : BaseApi(token) {
         val token = String.format(FeedbinConstants.HTTP_HEADER_AUTHORIZATION_VALUE, Helper.base64("$email:$password"))
         val headers: MutableMap<String, String> = HashMap<String, String>()
         headers.put(FeedbinConstants.HTTP_HEADER_AUTHORIZATION_KEY, token)
-        val response = HttpManager.request(HttpMethod.GET, getSchema() + FeedbinConstants.AUTH, null, headers, null)
+        val response = HttpManager.requestWrap(HttpMethod.GET, getSchema() + FeedbinConstants.AUTH, null, headers, null)
 
-        if (response.status.value == 200) {
+        if (response.code == 200) {
             return token
         } else {
             throw HttpException(HttpException.Type.EAUTHFAILED)

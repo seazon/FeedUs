@@ -24,14 +24,14 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
         val parameters = listOf(
             NameValuePair("output", "json")
         )
-        return execute(HttpMethod.GET, GrConstants.URL_MARKER_COUNTS, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_MARKER_COUNTS, parameters, null, null).convertBody()
     }
 
     suspend fun getSubscriptions(): GrSubscriptions? {
         val parameters = listOf(
             NameValuePair("output", "json")
         )
-        return execute(HttpMethod.GET, GrConstants.URL_SUBSCRIPTION, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_SUBSCRIPTION, parameters, null, null).convertBody()
     }
 
     suspend fun quickadd(url: String?): String? {
@@ -46,7 +46,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
         return execute(
             HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_QUICKADD, null, null,
             HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
-        ).body()
+        ).body
     }
 
     /**
@@ -98,14 +98,14 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
         return execute(
             HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_EDIT, null, null,
             HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
-        ).body()
+        ).body
     }
 
     suspend fun getTags(): GrTags? {
         val parameters = listOf(
             NameValuePair("output", "json")
         )
-        return execute(HttpMethod.GET, GrConstants.URL_TAG, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_TAG, parameters, null, null).convertBody()
     }
 
     suspend fun getContents(feedId: String?, count: Int, unreadOnly: Boolean, ot: String?, continuation: String?): GrStream? {
@@ -130,7 +130,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             parameters.add(NameValuePair("s", feedId))
         }
 
-        return execute(HttpMethod.GET, GrConstants.URL_STREAM_CONTENTS, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_STREAM_CONTENTS, parameters, null, null).convertBody()
     }
 
     suspend fun getContents2(feedId: String?, count: Int, unreadOnly: Boolean, ot: String?, continuation: String?): GrStream? {
@@ -157,7 +157,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             feedId = "/$feedId"
         }
 
-        return execute(HttpMethod.GET, GrConstants.URL_STREAM_CONTENTS + feedId, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_STREAM_CONTENTS + feedId, parameters, null, null).convertBody()
     }
 
     suspend fun getContentsIds(streamId: String?, count: Int, unreadOnly: Boolean, continuation: String?): GrStream? {
@@ -182,7 +182,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             parameters.add(NameValuePair("s", streamId))
         }
 
-        return execute(HttpMethod.GET, GrConstants.URL_STREAM_IDS, parameters, null, null).body()
+        return execute(HttpMethod.GET, GrConstants.URL_STREAM_IDS, parameters, null, null).convertBody()
     }
 
     suspend fun getContentsByIds(entryIds: Array<String>?): GrStream? {
@@ -205,7 +205,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
         return execute(
             HttpMethod.POST, GrConstants.URL_STREAM_ITEMS_CONTENTS, parameters, null,
             HttpUtils.format(parameters2, HttpUtils.DEFAULT_CHARSET), false
-        ).body()
+        ).convertBody()
     }
 
     private fun getStreamId(streamId: String?): String? {
@@ -240,12 +240,12 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
         return execute(
             HttpMethod.POST, GrConstants.URL_TAG_EDIT, null, null,
             HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
-        ).body()
+        ).body
     }
 
     suspend fun getUserInfo(): GrUserInfo? {
         val parameters: MutableList<NameValuePair> = ArrayList<NameValuePair>()
         parameters.add(NameValuePair("output", "json"))
-        return execute(HttpMethod.GET, GrConstants.URL_USER_INFO, parameters, null, null).toType()
+        return execute(HttpMethod.GET, GrConstants.URL_USER_INFO, parameters, null, null).convertBody()
     }
 }

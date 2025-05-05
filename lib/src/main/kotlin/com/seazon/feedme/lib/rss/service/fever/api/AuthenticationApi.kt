@@ -7,7 +7,6 @@ import com.seazon.feedme.lib.rss.service.fever.FeverConstants
 import com.seazon.feedme.lib.rss.service.fever.bo.CommonResponse
 import com.seazon.feedme.lib.utils.Helper
 import com.seazon.feedme.lib.utils.toJson
-import io.ktor.client.call.body
 
 class AuthenticationApi(token: RssToken) : BaseApi(token) {
 
@@ -18,13 +17,12 @@ class AuthenticationApi(token: RssToken) : BaseApi(token) {
             add(NameValuePair("api_key", Helper.md52("$username:$password").lowercase()))
         }, false)
 
-        val rr = response.body<String>()
-        val commonResponse = toJson<CommonResponse>(rr)
+        val commonResponse = response.convertBody<CommonResponse>()
         if (commonResponse.auth != 1) {
             throw HttpException(HttpException.Type.EAUTHFAILED)
         }
 
-        return rr
+        return response.body
     }
 
     fun setUserWithAccessToken(token: RssToken, response: String) {

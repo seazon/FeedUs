@@ -4,7 +4,6 @@ import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedbin.FeedbinConstants
-import io.ktor.client.call.body
 
 class EntriesApi(token: RssToken) : AuthedApi(token) {
     /**
@@ -38,7 +37,7 @@ class EntriesApi(token: RssToken) : AuthedApi(token) {
         }
         parameters.add(NameValuePair("include_enclosure", "true"))
         parameters.add(NameValuePair("mode", "extended"))
-        return execute(HttpMethod.GET, FeedbinConstants.URL_ENTRIES, parameters, null, null).body()
+        return execute(HttpMethod.GET, FeedbinConstants.URL_ENTRIES, parameters, null, null).body
     }
 
     suspend fun getFeedEntries(feedId: String, appointed: Boolean, ids: Array<String>?, count: Int, since: String?): String? {
@@ -65,6 +64,6 @@ class EntriesApi(token: RssToken) : AuthedApi(token) {
         }
         parameters.add(NameValuePair("include_enclosure", "true"))
         parameters.add(NameValuePair("mode", "extended"))
-        return execute(HttpMethod.GET, String.format(FeedbinConstants.URL_FEED_ENTRIES, feedId), parameters, null, null).body()
+        return execute(HttpMethod.GET, String.format(FeedbinConstants.URL_FEED_ENTRIES, feedId), parameters, null, null).body
     }
 }

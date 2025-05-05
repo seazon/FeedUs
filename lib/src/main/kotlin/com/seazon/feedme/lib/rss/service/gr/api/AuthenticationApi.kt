@@ -1,17 +1,16 @@
 package com.seazon.feedme.lib.rss.service.gr.api
 
-import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.Oauth2Response
 import com.seazon.feedme.lib.rss.bo.RssToken
+import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.gr.GrConfig
 import com.seazon.feedme.lib.rss.service.gr.GrConstants
 import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedme.lib.utils.toJson
-import io.ktor.client.call.body
 
 open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token, config) {
 
@@ -26,12 +25,12 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
             setHeaderAppAuthentication(headers)
         }
 
-        val response = HttpManager.request(
+        val response = HttpManager.requestWrap(
             HttpMethod.POST, getSchema() + GrConstants.AUTH,
             parameters, headers, null
         )
-        if (response.status.value == 200) {
-            return response.body()
+        if (response.code == 200) {
+            return response.body
         } else {
             throw HttpException(HttpException.Type.EAUTHFAILED)
         }
@@ -59,14 +58,14 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val a = "code=%s&redirect_uri=%s&client_id=%s&client_secret=%s&scope=&grant_type=authorization_code"
         val params = String.format(a, code, Static.REDIRECT_URI, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET)
 
-        return HttpManager.request(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body()
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body
     }
 
     suspend fun getAccessTokenOAuth2(refreshToken: String?): String? {
         val a = "client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s"
         val params = String.format(a, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET, refreshToken)
 
-        return HttpManager.request(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body()
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body
     }
 
     fun setUserWithRefreshToken(token: RssToken, response: String) {

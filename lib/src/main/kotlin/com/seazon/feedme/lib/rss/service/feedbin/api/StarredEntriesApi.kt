@@ -4,12 +4,11 @@ import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedbin.FeedbinConstants
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class StarredEntriesApi(token: RssToken) : AuthedApi(token) {
 
     suspend fun getStarredEntries(): List<Long>? {
-        return execute(HttpMethod.GET, FeedbinConstants.URL_STARRED_ENTRIES, null, null, null).body()
+        return execute(HttpMethod.GET, FeedbinConstants.URL_STARRED_ENTRIES, null, null, null).convertBody()
     }
 
     /**
@@ -19,7 +18,7 @@ class StarredEntriesApi(token: RssToken) : AuthedApi(token) {
         val o = jsonOf(
             "starred_entries" to ids.mapNotNull { it }
         )
-        return execute(HttpMethod.POST, FeedbinConstants.URL_STARRED_ENTRIES, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FeedbinConstants.URL_STARRED_ENTRIES, null, null, o.toString()).body
     }
 
     /**
@@ -29,6 +28,6 @@ class StarredEntriesApi(token: RssToken) : AuthedApi(token) {
         val o = jsonOf(
             "starred_entries" to ids.mapNotNull { it }
         )
-        return execute(HttpMethod.DELETE, FeedbinConstants.URL_STARRED_ENTRIES, null, null, o.toString()).body()
+        return execute(HttpMethod.DELETE, FeedbinConstants.URL_STARRED_ENTRIES, null, null, o.toString()).body
     }
 }

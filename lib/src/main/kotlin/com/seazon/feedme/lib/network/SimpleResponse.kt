@@ -6,7 +6,7 @@ data class SimpleResponse(
     val code: Int,
     val body: String,
 ) {
-    inline fun <reified T> convertBody(): T? {
+    inline fun <reified T> convertBody(): T {
         return toJson<T>(body)
     }
 }

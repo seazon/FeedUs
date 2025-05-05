@@ -5,22 +5,21 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedbin.FeedbinConstants
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinSubscription
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class SubscriptionsApi(token: RssToken) : AuthedApi(token) {
 
     suspend fun getSubscriptions(): List<FeedbinSubscription>? {
-        return execute(HttpMethod.GET, FeedbinConstants.URL_SUBSCRIPTIONS).body()
+        return execute(HttpMethod.GET, FeedbinConstants.URL_SUBSCRIPTIONS).convertBody()
     }
 
     suspend fun createSubscriptions(url: String?): String? {
         val o = jsonOf(
             "feed_url" to url
         )
-        return execute(HttpMethod.POST, FeedbinConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FeedbinConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body
     }
 
     suspend fun deleteSubscriptions(id: String): String? {
-        return execute(HttpMethod.DELETE, String.format(FeedbinConstants.URL_SUBSCRIPTIONS_DELETE, id)).body()
+        return execute(HttpMethod.DELETE, String.format(FeedbinConstants.URL_SUBSCRIPTIONS_DELETE, id)).body
     }
 }

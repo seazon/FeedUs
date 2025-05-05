@@ -9,21 +9,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TtrssItem(
-    var id: String? = null,
+    var id: Int? = null,
     var title: String? = null,
     var link: String? = null,
     var unread: Boolean = false,
     var author: String? = null,
     var updated: Long = 0,
-    var feed_id: String? = null,
+    var feed_id: Int? = null,
     var feed_title: String? = null,
     var content: String? = null,
     var attachments: MutableList<TtrssAttachments>? = null,
 ) : Entity() {
 
     fun convert(): RssItem {
-        val item: RssItem = RssItem()
-        item.id = id
+        val item = RssItem()
+        item.id = id.toString()
         item.title = title
         item.publisheddate = if (updated == 0L) null else updated * 1000
         item.updateddate = item.publisheddate
@@ -34,8 +34,8 @@ data class TtrssItem(
         item.author = if (author == null) "" else author
         item.link = link
         item.feed?.let {
-            id = TtrssApi.wrapFeedId(feed_id.orEmpty())
-            title = feed_title
+            it.id = TtrssApi.wrapFeedId(feed_id.toString())
+            it.title = feed_title
         }
         item.fid = item.feed?.id
         item.visual = HtmlUtils.getFirstImage(item.description, item.link)
@@ -52,7 +52,7 @@ data class TtrssItem(
         item.podcastUrl = audioUrl
         item.podcastSize = 0
         item.isUnread = unread
-        item.since = id
+        item.since = id.toString()
         return item
     }
 }

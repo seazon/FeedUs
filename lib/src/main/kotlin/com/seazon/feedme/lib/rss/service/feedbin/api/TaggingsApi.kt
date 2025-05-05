@@ -5,12 +5,11 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedbin.FeedbinConstants
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinCategory
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class TaggingsApi(token: RssToken) : AuthedApi(token) {
 
     suspend fun getTaggings(): List<FeedbinCategory>? {
-        return execute(HttpMethod.GET, FeedbinConstants.URL_TAGGINGS).body()
+        return execute(HttpMethod.GET, FeedbinConstants.URL_TAGGINGS).convertBody()
     }
 
     suspend fun createTagging(feedId: Int, name: String?): String? {
@@ -18,10 +17,10 @@ class TaggingsApi(token: RssToken) : AuthedApi(token) {
             "feed_id" to feedId,
             "name" to name,
         )
-        return execute(HttpMethod.POST, FeedbinConstants.URL_TAGGINGS, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FeedbinConstants.URL_TAGGINGS, null, null, o.toString()).body
     }
 
     suspend fun deleteTagging(taggingId: Int): String? {
-        return execute(HttpMethod.DELETE, String.format(FeedbinConstants.URL_TAGGING, taggingId)).body()
+        return execute(HttpMethod.DELETE, String.format(FeedbinConstants.URL_TAGGING, taggingId)).body
     }
 }
