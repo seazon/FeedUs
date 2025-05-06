@@ -61,7 +61,7 @@ fun GrUnreadCounts.convert(): RssUnreadCounts {
         unreadcounts?.map {
             (it as GrUnreadCount).run {
                 val updated: Long = try {
-                    newestItemTimestampUsec?.toLong().orZero()
+                    newestItemTimestampUsec.orZero()
                 } catch (e: Exception) {
                     0L
                 }

@@ -11,5 +11,5 @@ class GrUnreadCount {
      */
     var id: String? = null
     var count: Int = 0
-    var newestItemTimestampUsec: String? = null
+    var newestItemTimestampUsec: Long? = null
 }
