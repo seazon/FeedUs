@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Oauth2Response(
-    val id: String?,
-    val refresh_token: String?,
-    val access_token: String?,
-    val expires_in: Long?,
+    val id: String? = null,
+    val refresh_token: String? = null,
+    val access_token: String? = null,
+    val expires_in: Long? = null,
 )

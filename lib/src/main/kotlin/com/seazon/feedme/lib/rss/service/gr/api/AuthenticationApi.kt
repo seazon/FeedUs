@@ -58,14 +58,19 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val a = "code=%s&redirect_uri=%s&client_id=%s&client_secret=%s&scope=&grant_type=authorization_code"
         val params = String.format(a, code, Static.REDIRECT_URI, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET)
 
-        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
     }
 
     suspend fun getAccessTokenOAuth2(refreshToken: String?): String? {
         val a = "client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s"
         val params = String.format(a, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET, refreshToken)
-
-        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, null, params, false).body
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
     }
 
     fun setUserWithRefreshToken(token: RssToken, response: String) {
