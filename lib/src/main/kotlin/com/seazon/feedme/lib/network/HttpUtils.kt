@@ -118,7 +118,7 @@ object HttpUtils {
      * @param encoding   The encoding to use.
      */
     fun format(
-        parameters:  List<out NameValuePair>,
+        parameters: List<out NameValuePair>,
         encoding: String?
     ): String {
         val result = StringBuilder()

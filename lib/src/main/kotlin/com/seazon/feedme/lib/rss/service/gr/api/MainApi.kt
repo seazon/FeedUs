@@ -43,8 +43,11 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             NameValuePair("quickadd", url),
             NameValuePair("output", "json"),
         )
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
         return execute(
-            HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_QUICKADD, null, null,
+            HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_QUICKADD, null, headers,
             HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
         ).body
     }
@@ -94,9 +97,11 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
                 }
             }
         }
-
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
         return execute(
-            HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_EDIT, null, null,
+            HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_EDIT, null, headers,
             HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
         ).body
     }
@@ -201,9 +206,11 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
 
             parameters2.add(NameValuePair("i", entryIds[i]))
         }
-
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
         return execute(
-            HttpMethod.POST, GrConstants.URL_STREAM_ITEMS_CONTENTS, parameters, null,
+            HttpMethod.POST, GrConstants.URL_STREAM_ITEMS_CONTENTS, parameters, headers,
             HttpUtils.format(parameters2, HttpUtils.DEFAULT_CHARSET), false
         ).convertBody()
     }
@@ -226,9 +233,7 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             return null
         }
 
-        val parameters: MutableList<NameValuePair> = ArrayList<NameValuePair>()
-        parameters.add(NameValuePair(action, tag))
-
+        val parameters = mutableListOf(NameValuePair(action, tag))
         for (i in entryIds.indices) {
             if (entryIds[i].isNullOrEmpty()) {
                 continue
@@ -237,9 +242,16 @@ class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,
             parameters.add(NameValuePair("i", entryIds[i]))
         }
 
+        val headers = mutableMapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
         return execute(
-            HttpMethod.POST, GrConstants.URL_TAG_EDIT, null, null,
-            HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET), false
+            httpMethod = HttpMethod.POST,
+            url = GrConstants.URL_TAG_EDIT,
+            params = null,
+            headers = headers,
+            body = HttpUtils.format(parameters, HttpUtils.DEFAULT_CHARSET),
+            json = false,
         ).body
     }
 
