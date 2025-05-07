@@ -18,7 +18,10 @@ data class FeverStream(
 
     companion object {
 
-        fun parse(json: String): RssStream {
+        fun parse(json: String?): RssStream {
+            if (json.isNullOrBlank()) {
+                return RssStream()
+            }
             val feverStream = toJson<FeverStream>(json).apply {
                 if (unread_item_ids.isNotBlank()) {
                     ids = unread_item_ids.split(",").toMutableList()

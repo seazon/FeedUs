@@ -168,7 +168,7 @@ private fun MainContent(
     onCategoryClick: (Category) -> Unit,
 ) {
     val feeds = state.feeds
-    val height = ITEM_HEIGHT * (state.feeds.size + state.categories.size)
+    val height = ITEM_HEIGHT * (state.feeds.size + state.categories.size + 1)
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()

@@ -10,7 +10,10 @@ data class Groups(
     val feeds_groups: List<FeedGroup>
 ) {
     companion object {
-        fun parse(json: String): List<Group> {
+        fun parse(json: String?): List<Group> {
+            if (json.isNullOrBlank()) {
+                return emptyList()
+            }
             return toJson<Groups>(json).groups
         }
     }

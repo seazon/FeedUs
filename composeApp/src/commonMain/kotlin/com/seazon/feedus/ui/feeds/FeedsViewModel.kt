@@ -32,8 +32,9 @@ class FeedsViewModel(
 
     init {
         viewModelScope.launch {
-            val feeds = rssDatabase.getFeeds().filter { it.cntClientUnread > 0 }
-            val categories = rssDatabase.getCategories().filter { it.cntClientUnread > 0 }
+            val api = rssSDK.getRssApi(false)
+            val feeds = rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+            val categories = rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
             if (feeds.isEmpty()) {
                 sync()
             } else {
@@ -75,8 +76,8 @@ class FeedsViewModel(
             fetchSubscription(api)
             fetchUnreadCount(api)
 
-            val feeds = rssDatabase.getFeeds().filter { it.cntClientUnread > 0 }
-            val categories = rssDatabase.getCategories().filter { it.cntClientUnread > 0 }
+            val feeds = rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+            val categories = rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
             val appPreferences = appSettings.getAppPreferences()
             _state.update {
                 it.copy(maxUnreadCount = appPreferences.unreadMax, feeds = feeds, categories = categories)
@@ -123,21 +124,25 @@ class FeedsViewModel(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        val unreadCounts = api.getUnreadCounts()
-        val categoryMap = rssDatabase.getCategories().associateBy { it.id }
-        val feedMap = rssDatabase.getFeeds().associateBy { it.id }
-        var max = 0
-        unreadCounts?.unreadCounts?.forEach {
-            categoryMap[it.id]?.cntClientUnread = it.count
-            feedMap[it.id]?.let { feed ->
-                feed.cntClientUnread = it.count
-                max += it.count
+        if (api.supportPagingFetchIds()) {
+            val unreadCounts = api.getUnreadCounts()
+            val categoryMap = rssDatabase.getCategories().associateBy { it.id }
+            val feedMap = rssDatabase.getFeeds().associateBy { it.id }
+            var max = 0
+            unreadCounts?.unreadCounts?.forEach {
+                categoryMap[it.id]?.cntClientUnread = it.count
+                feedMap[it.id]?.let { feed ->
+                    feed.cntClientUnread = it.count
+                    max += it.count
+                }
             }
-        }
-        rssDatabase.saveCategories(categoryMap.values.toList())
-        rssDatabase.saveFeeds(feedMap.values.toList())
-        appSettings.getAppPreferences().apply {
-            appSettings.saveAppPreferences(this.copy(unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()))
+            rssDatabase.saveCategories(categoryMap.values.toList())
+            rssDatabase.saveFeeds(feedMap.values.toList())
+            appSettings.getAppPreferences().apply {
+                appSettings.saveAppPreferences(this.copy(unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()))
+            }
+        } else {
+            // TODO for the rss services which not support supportPagingFetchIds(), need a way to show feeds
         }
     }
 
@@ -150,9 +155,9 @@ class FeedsViewModel(
             when (api) {
                 is LocalRssApi -> {
                     api.search(host)?.let {
-                        if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>() )) {
+                        if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>())) {
                             onSuccess()
-                        }else{
+                        } else {
                             _subscribeState.update {
                                 it.copy(
                                     errorTips = "Subscribe failed",

@@ -15,7 +15,7 @@ import com.seazon.feedme.lib.rss.service.fever.bo.Groups
 
 class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
 
-    private lateinit var mainApi: MainApi
+    private var mainApi: MainApi? = null
     private val authenticationApi by lazy { AuthenticationApi(_token) }
 
     override fun getAuthType(): Int {
@@ -73,7 +73,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun markRead(entryIds: Array<String>?): String? {
         entryIds?.forEach {
             it?.run {
-                mainApi.markItem(this, "read")
+                mainApi?.markItem(this, "read")
             }
         }
         return ""
@@ -84,15 +84,16 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getStreamByIds(entryIds: Array<String>): RssStream {
-        return FeverStream.parse(mainApi.getItems(entryIds))
+        return FeverStream.parse(mainApi?.getItems(entryIds))
     }
 
     override suspend fun getUnraedStreamIds(count: Int, continuation: String?): RssStream {
-        return FeverStream.parse(mainApi.getUnreadItemIds())
+        return FeverStream.parse(mainApi?.getUnreadItemIds())
     }
 
     override suspend fun getUnraedStream(count: Int, since: String?, continuation: String?): RssStream {
-        return RssStream()
+        val idsRssStream = getUnraedStreamIds(count, continuation)
+        return getStreamByIds(idsRssStream.ids.toTypedArray())
     }
 
     override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream {
@@ -112,7 +113,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getSubscriptions(): List<RssFeed> {
-        return Feeds.parse(mainApi.getFeeds(), Groups.parse(mainApi.getGroups()))
+        return Feeds.parse(mainApi?.getFeeds(), Groups.parse(mainApi?.getGroups()))
     }
 
     override fun supportSubscribe(): Boolean {
@@ -143,7 +144,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun markStar(entryIds: Array<String>): String {
         entryIds?.forEach {
             it?.run {
-                mainApi.markItem(this, "saved")
+                mainApi?.markItem(this, "saved")
             }
         }
         return ""
@@ -152,14 +153,14 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun markUnstar(entryIds: Array<String>): String {
         entryIds?.forEach {
             it?.run {
-                mainApi.markItem(this, "unsaved")
+                mainApi?.markItem(this, "unsaved")
             }
         }
         return ""
     }
 
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream {
-        return FeverStream.parse(mainApi.getSavedItemIds())
+        return FeverStream.parse(mainApi?.getSavedItemIds())
     }
 
     override fun supportCreateTag(): Boolean {

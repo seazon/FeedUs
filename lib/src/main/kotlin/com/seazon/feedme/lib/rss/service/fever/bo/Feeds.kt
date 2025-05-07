@@ -11,7 +11,11 @@ data class Feeds(
 ) {
     companion object {
 
-        fun parse(json: String, groups: List<Group>): List<RssFeed> {
+        fun parse(json: String?, groups: List<Group>): List<RssFeed> {
+            if (json.isNullOrBlank()) {
+                return emptyList()
+            }
+
             val feeds = toJson<Feeds>(json)
 
             val feedGroupMap = mutableMapOf<Int, MutableList<Group>>()
