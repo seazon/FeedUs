@@ -159,11 +159,11 @@ class FeedlyApi : RssApi {
     }
 
     override suspend fun getFeedStream(feedId: String, count: Int, since: String?, continuation: String?): RssStream? {
-        return streamsApi!!.getContents(feedId, count, true, since, continuation)?.convert()
+        return streamsApi?.getContents(feedId, count, true, since, continuation)?.convert()
     }
 
     override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream? {
-        return streamsApi!!.getContents(category, count, true, since, continuation)?.convert()
+        return streamsApi?.getContents(category, count, true, since, continuation)?.convert()
     }
 
     override suspend fun getTagStreamIds(tag: String, count: Int, continuation: String?): RssStream? {

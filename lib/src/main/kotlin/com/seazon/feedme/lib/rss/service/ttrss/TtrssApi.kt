@@ -66,23 +66,23 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getUnreadCounts(): RssUnreadCounts {
-        return TtrssCounterList.parse(mainApi!!.getCounters())
+        return TtrssCounterList.parse(mainApi?.getCounters())
     }
 
     override suspend fun markRead(entryIds: Array<String>?): String? {
-        return mainApi!!.updateArticle(entryIds, 0, 2)
+        return mainApi?.updateArticle(entryIds, 0, 2)
     }
 
     override suspend fun markUnread(entryIds: Array<String>?): String? {
-        return mainApi!!.updateArticle(entryIds, 1, 2)
+        return mainApi?.updateArticle(entryIds, 1, 2)
     }
 
     override suspend fun markStar(entryIds: Array<String>): String? {
-        return mainApi!!.updateArticle(entryIds, 1, 0)
+        return mainApi?.updateArticle(entryIds, 1, 0)
     }
 
     override suspend fun markUnstar(entryIds: Array<String>): String? {
-        return mainApi!!.updateArticle(entryIds, 0, 0)
+        return mainApi?.updateArticle(entryIds, 0, 0)
     }
 
     override suspend fun markTag(entryIds: Array<String>, tagIds: Array<String>) {
@@ -94,7 +94,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
             if (tagIds[i].isEmpty()) {
                 continue
             }
-            mainApi!!.setArticleLabel(true, tagMap[tagIds[i]].orEmpty(), entryIds)
+            mainApi?.setArticleLabel(true, tagMap[tagIds[i]].orEmpty(), entryIds)
         }
     }
 
@@ -107,17 +107,17 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
             if (tagIds[i].isEmpty()) {
                 continue
             }
-            mainApi!!.setArticleLabel(false, tagMap[tagIds[i]].orEmpty(), entryIds)
+            mainApi?.setArticleLabel(false, tagMap[tagIds[i]].orEmpty(), entryIds)
         }
     }
 
     override suspend fun getStreamByIds(entryIds: Array<String>): RssStream? {
-        return mainApi!!.getArticle(entryIds)?.convert()
+        return mainApi?.getArticle(entryIds)?.convert()
     }
 
     override suspend fun getUnraedStreamIds(count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 "-4", false, false,
                 true, count, "0", continuation
             ), continuation
@@ -126,7 +126,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 unwrapFeedId(feedId), false, false,
                 true, count, "0", continuation
             ), continuation
@@ -135,7 +135,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getCategoryStreamIds(category: String, count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 unwrapCategoryId(category), true, false,
                 true, count, "0", continuation
             ), continuation
@@ -144,7 +144,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getUnraedStream(count: Int, since: String?, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 "-4", false, true,
                 true, count, since, continuation
             ), continuation
@@ -153,7 +153,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getFeedStream(feedId: String, count: Int, since: String?, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 unwrapFeedId(feedId), false, true,
                 true, count, since, continuation
             ), continuation
@@ -162,7 +162,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 unwrapCategoryId(category), true, true,
                 true, count, since, continuation
             ), continuation
@@ -171,7 +171,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
-            mainApi!!.getHeadlines(
+            mainApi?.getHeadlines(
                 "-1", false, false,
                 false, count, "0", continuation
             ), continuation
@@ -183,8 +183,8 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getSubscriptions(): List<RssFeed> {
-        val feeds = mainApi!!.getFeeds()
-        return TtrssSubscription.parse(feeds, TtrssCategory.parse(mainApi!!.getCategories().orEmpty(), true))
+        val feeds = mainApi?.getFeeds()
+        return TtrssSubscription.parse(feeds, TtrssCategory.parse(mainApi?.getCategories().orEmpty(), true))
     }
 
     override fun supportSubscribe(): Boolean {
@@ -194,23 +194,23 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean {
         // 需要订阅到其他类别，但是由于ttrss api不支持添加类别，所以暂时默认添加到未分类的，或者已有分类
         val url = id2url(feedId)
-        val map = TtrssCategory.parse(mainApi!!.getCategories().orEmpty(), false)
+        val map = TtrssCategory.parse(mainApi?.getCategories().orEmpty(), false)
         for (i in categories.indices) {
             if (categories[i].isEmpty()) {
                 continue
             }
             val category = map[categories[i]]
             if (category != null) {
-                mainApi!!.subscribeToFeed(url, category.id.orEmpty())
+                mainApi?.subscribeToFeed(url, category.id.orEmpty())
             } else {
-                mainApi!!.subscribeToFeed(url, "0")
+                mainApi?.subscribeToFeed(url, "0")
             }
         }
         return true
     }
 
     override suspend fun unsubscribeFeed(id: String): String? {
-        return mainApi!!.unsubscribeFeed(unwrapFeedId(id))
+        return mainApi?.unsubscribeFeed(unwrapFeedId(id))
     }
 
     override fun supportCreateTag(): Boolean {
@@ -218,7 +218,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getTags(): List<RssTag> {
-        return mainApi!!.getLabels()?.content?.map {
+        return mainApi?.getLabels()?.content?.map {
             RssTag(
                 it.id,
                 it.caption
