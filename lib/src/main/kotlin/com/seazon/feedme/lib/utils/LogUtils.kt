@@ -49,6 +49,10 @@ object LogUtils {
         e?.printStackTrace()
     }
 
+    fun error(content: String?) {
+        println("$TAG\t[error]\t${content}")
+    }
+
     fun error(tag: String = TAG, e: Throwable?) {
         println("$tag\t[error]\t${e?.message}")
         e?.printStackTrace()

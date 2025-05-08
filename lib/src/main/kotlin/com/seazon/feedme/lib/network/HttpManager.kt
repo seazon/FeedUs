@@ -179,11 +179,11 @@ class HttpManager {
                 try {
                     return contentLengthHeader.toLong()
                 } catch (e: NumberFormatException) {
-                    println("Failed to parse Content-Length: ${e.message}")
+                    LogUtils.error("Failed to parse Content-Length", e)
                     return -1
                 }
             } else {
-                println("Content-Length header is not present in the response.")
+                LogUtils.error("Content-Length header is not present in the response.")
                 return -1
             }
         }

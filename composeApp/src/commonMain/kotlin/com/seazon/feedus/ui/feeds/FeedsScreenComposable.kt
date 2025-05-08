@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
+import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedus.ui.customize.Avatar
 import com.seazon.feedus.ui.customize.noRippleClickable
 import feedus.composeapp.generated.resources.*
@@ -86,7 +87,7 @@ fun FeedsScreenComposable(
             onSuccess = {
                 // TODO should handle subscribe success case
                 openDialog = false
-                println("subscribe ok")
+                debug("subscribe ok")
             }
         )
     }

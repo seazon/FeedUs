@@ -1,20 +1,20 @@
 package com.seazon.feedus.ui.demo
 
 import androidx.lifecycle.viewModelScope
-import com.seazon.feedme.lib.translation.TranslatorUtil
+import com.seazon.feedme.lib.summary.SummaryUtil
 import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedus.ui.BaseViewModel
 import kotlinx.coroutines.launch
 
-class TranslatorViewModel(
+class SummaryViewModel(
 ) : BaseViewModel() {
 
-    fun translate(
-        type: String, key: String, appId: String, query: String, lang: String,
+    fun summary(
+        type: String, key: String, query: String, lang: String,
     ) {
         viewModelScope.launch {
             try {
-                val text = TranslatorUtil.translate(query, lang, key, appId, type)
+                val text = SummaryUtil.summary(query, lang, key, type)
                 debug("text: $text")
             } catch (e: Exception) {
                 e.printStackTrace()

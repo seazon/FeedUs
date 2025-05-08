@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.seazon.feedus.ui.articles.ArticlesScreen
 import com.seazon.feedus.ui.demo.DemoScreen
+import com.seazon.feedus.ui.demo.SummaryScreen
 import com.seazon.feedus.ui.demo.TranslatorScreen
 import com.seazon.feedus.ui.feeds.FeedsScreen
 import com.seazon.feedus.ui.login.LoginScreen
@@ -77,11 +78,17 @@ fun App() {
             DemoScreen(
                 navToTranslator = {
                     navController.navigate(Screen.Translator.name)
-                }
+                },
+                navToSummary = {
+                    navController.navigate(Screen.Summary.name)
+                },
             )
         }
         composable(route = Screen.Translator.name) {
             TranslatorScreen()
+        }
+        composable(route = Screen.Summary.name) {
+            SummaryScreen()
         }
     }
 }

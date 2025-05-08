@@ -9,4 +9,5 @@ enum class Screen(val title: StringResource) {
     Articles(title = Res.string.articles_title),
     Demo(title = Res.string.demo_title),
     Translator(title = Res.string.translator_title),
+    Summary(title = Res.string.summary_title),
 }

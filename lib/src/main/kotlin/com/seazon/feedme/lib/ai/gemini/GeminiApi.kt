@@ -23,6 +23,16 @@ class GeminiApi {
         }
     }
 
+    suspend fun summary(query: String, language: String, key: String): Translation? {
+        val result = generateContent("Summary the text in $language, JSON format output, key is dst. Text: $query", key)
+        val text = result?.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
+        return if (text.isNullOrEmpty()) {
+            null
+        } else {
+            toJson<Translation>(text.replace("```json\n", "").replace("```", ""))
+        }
+    }
+
     private suspend fun generateContent(prompt: String, key: String): Result? {
         return HttpManager.request(
             httpMethod = HttpMethod.POST,

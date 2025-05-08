@@ -22,15 +22,18 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DemoScreenComposable(
     navToTranslator: () -> Unit,
+    navToSummary: () -> Unit,
 ) {
     MainContent(
         navToTranslator = navToTranslator,
+        navToSummary = navToSummary,
     )
 }
 
 @Composable
 private fun MainContent(
-    navToTranslator: () -> Unit
+    navToTranslator: () -> Unit,
+    navToSummary: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -46,6 +49,14 @@ private fun MainContent(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(16.dp).noRippleClickable {
                 navToTranslator()
+            }
+        )
+        Text(
+            text = stringResource(Res.string.summary_title),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(16.dp).noRippleClickable {
+                navToSummary()
             }
         )
     }
@@ -72,5 +83,6 @@ fun AppBar() {
 fun DemoScreenComposablePreview() {
     DemoScreenComposable(
         navToTranslator = {},
+        navToSummary = {},
     )
 }

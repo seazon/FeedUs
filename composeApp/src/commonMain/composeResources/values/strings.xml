@@ -76,6 +76,7 @@
     <string name="translator_type">Type</string>
     <string name="translator_key">Key</string>
     <string name="translator_app_id">AppID</string>
+    <string name="summary_title">Summary Demo</string>
 
     <string name="category_category">Expand or collapse category</string>
     <string name="category_feed">Feed icon</string>
