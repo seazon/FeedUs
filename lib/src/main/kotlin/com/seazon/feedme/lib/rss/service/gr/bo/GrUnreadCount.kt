@@ -11,5 +11,6 @@ class GrUnreadCount {
      */
     var id: String? = null
     var count: Int = 0
-    var newestItemTimestampUsec: Long? = null
+//    var newestItemTimestampUsec: Long? = null // sometimes return string, sometimes return int, so ignore it.
+    // https://github.com/seazon/FeedMe/issues/20#issuecomment-2859752442
 }
