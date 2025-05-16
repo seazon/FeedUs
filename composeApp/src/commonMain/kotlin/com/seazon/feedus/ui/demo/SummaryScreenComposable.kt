@@ -44,10 +44,9 @@ fun SummaryScreenComposable(
     val title = stringResource(Res.string.summary_title)
     val typeLabel = stringResource(Res.string.translator_type)
     val keyLabel = stringResource(Res.string.translator_key)
-    val appIdLabel = stringResource(Res.string.translator_app_id)
     val typeValue = remember { mutableStateOf(SummaryUtil.TYPE_GEMINI) }
-    val keyValue = remember { mutableStateOf("AIzaSyBpVz6YXuFpjEvOcalxXa906lFouyYHQLo") }
-    val queryValue = remember { mutableStateOf("Review main business processes: (e.g., e - commerce browsing, ordering, after - sales) to ensure smooth running on mobile.") }
+    val keyValue = remember { mutableStateOf("") }
+    val queryValue = remember { mutableStateOf("") }
     val expanded = rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
