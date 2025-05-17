@@ -5,17 +5,20 @@ import com.seazon.feedme.lib.rss.bo.RssEnclosure
 import com.seazon.feedme.lib.rss.bo.RssItem
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.HtmlUtils
+import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TtrssItem(
-    var id: Int? = null,
+    @Serializable(with = IntAsStringSerializer::class)
+    var id: String? = null,
     var title: String? = null,
     var link: String? = null,
     var unread: Boolean = false,
     var author: String? = null,
     var updated: Long = 0,
-    var feed_id: Int? = null,
+    @Serializable(with = IntAsStringSerializer::class)
+    var feed_id: String? = null,
     var feed_title: String? = null,
     var content: String? = null,
     var attachments: MutableList<TtrssAttachments>? = null,
@@ -23,7 +26,7 @@ data class TtrssItem(
 
     fun convert(): RssItem {
         val item = RssItem()
-        item.id = id.toString()
+        item.id = id
         item.title = title
         item.publisheddate = if (updated == 0L) null else updated * 1000
         item.updateddate = item.publisheddate
@@ -34,7 +37,7 @@ data class TtrssItem(
         item.author = if (author == null) "" else author
         item.link = link
         item.feed?.let {
-            it.id = TtrssApi.wrapFeedId(feed_id.toString())
+            it.id = TtrssApi.wrapFeedId(feed_id.orEmpty())
             it.title = feed_title
         }
         item.fid = item.feed?.id
@@ -52,7 +55,7 @@ data class TtrssItem(
         item.podcastUrl = audioUrl
         item.podcastSize = 0
         item.isUnread = unread
-        item.since = id.toString()
+        item.since = id
         return item
     }
 }

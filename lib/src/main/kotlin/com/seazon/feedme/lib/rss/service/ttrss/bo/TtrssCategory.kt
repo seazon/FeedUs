@@ -3,6 +3,7 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
+import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
@@ -13,7 +14,8 @@ data class TtrssTag2List(
 
 @Serializable
 data class TtrssTag2(
-    val id: Int? = null,
+    @Serializable(with = IntAsStringSerializer::class)
+    val id: String? = null,
     val title: String? = null,
 )
 
@@ -42,7 +44,7 @@ data class TtrssCategory(
                     val idid = it.id?.toInt() ?: -1
                     if (idid >= 0) {
                         RssTag(
-                            id = TtrssApi.wrapCategoryId(it.id.toString()),
+                            id = TtrssApi.wrapCategoryId(it.id.orEmpty()),
                             label = it.title
                         )
                     } else {

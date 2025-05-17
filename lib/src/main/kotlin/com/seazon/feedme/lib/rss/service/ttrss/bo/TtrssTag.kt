@@ -1,6 +1,7 @@
 package com.seazon.feedme.lib.rss.service.ttrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
@@ -11,6 +12,7 @@ data class TtrssTagList(
 
 @Serializable
 data class TtrssTag(
+    @Serializable(with = IntAsStringSerializer::class)
     var id: String? = null,
     var caption: String? = null,
 ) : Entity() {

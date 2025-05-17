@@ -2,7 +2,7 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 
 import com.seazon.feedme.lib.rss.bo.RssUnreadCount
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
-import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
@@ -12,12 +12,11 @@ data class TtrssCounterList(
 ) {
     companion object {
         fun parse(json: String?): RssUnreadCounts {
-            val json2 = json?.replace("\"id\":\"([^\"]*)\"".toRegex(), "\"id\":0")
-            val list = toJson<TtrssCounterList>(json2.orEmpty())
+            val list = toJson<TtrssCounterList>(json.orEmpty())
             return RssUnreadCounts(
-                unreadCounts = list.content?.filter { it.id.orZero() > 0 && it.kind != "cat" }?.map {
+                unreadCounts = list.content?.filter { it.kind != "cat" }?.map {
                     RssUnreadCount(
-                        id = "feed/${it.id.toString()}",
+                        id = "feed/${it.id.orEmpty()}",
                         count = it.counter,
                     )
                 }.orEmpty()
@@ -28,7 +27,8 @@ data class TtrssCounterList(
 
 @Serializable
 data class TtrssCounter(
-    val id: Int? = 0, // id可能是int，可能是string，但我们只需要int的
+    @Serializable(with = IntAsStringSerializer::class)
+    val id: String? = null,
     val counter: Int = 0,
     val kind: String? = null,
 )
