@@ -103,7 +103,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         }
 
         val o = mapOf(
-            "article_ids" to entryIds.joinToString(separator = ","),
+            "article_id" to entryIds.joinToString(separator = ","),
         )
         return execute(TtrssConstants.METHOD_GET_ARTICLE, o).convertBody()
     }
