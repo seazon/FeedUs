@@ -2,10 +2,8 @@ package com.seazon.feedus.data
 
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.rss.service.JSONException
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.RssUtil
-import com.seazon.feedme.lib.utils.LogUtils
 
 class RssSDK(val tokenSettings: TokenSettings) {
 
@@ -35,14 +33,8 @@ class RssSDK(val tokenSettings: TokenSettings) {
         val api = RssUtil.newApi(token)
         try {
             val accessTokenResponse = api.getAccessToken(token)
-            try {
-                api.setUserWithAccessToken(token, accessTokenResponse!!)
-                tokenSettings.saveToken(token)
-            } catch (e: JSONException) {
-                // send expired broadcast
-                LogUtils.error(content = "Catch JSONException while setUserWithAccessToken, response:$accessTokenResponse")
-                throw HttpException(HttpException.Type.EEXPIRED, e)
-            }
+            api.setUserWithAccessToken(token, accessTokenResponse!!)
+            tokenSettings.saveToken(token)
         } catch (e: Exception) {
             throw HttpException(HttpException.Type.EEXPIRED, e)
         }

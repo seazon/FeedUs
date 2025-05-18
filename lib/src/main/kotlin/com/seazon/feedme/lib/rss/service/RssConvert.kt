@@ -74,7 +74,7 @@ fun GrUnreadCounts.convert(): RssUnreadCounts {
 fun TtrssStream.convert(): RssStream {
     return RssStream(
         continuation,
-        content?.map { it.convert() } ?: ArrayList(),
+        content?.map { it.convert() } ?: emptyList(),
         ids.orEmpty()
     )
 }

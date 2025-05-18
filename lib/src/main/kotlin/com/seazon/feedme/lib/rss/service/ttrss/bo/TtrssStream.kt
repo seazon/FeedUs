@@ -3,12 +3,14 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.service.convert
+import com.seazon.feedme.lib.utils.PolymorphicListOrSingleSerializer
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TtrssStream(
     val continuation: String? = null,
+    @Serializable(with = PolymorphicListOrSingleSerializer::class)
     val content: List<TtrssItem>? = null,
     val ids: List<String>? = null,
 ) : Entity() {
