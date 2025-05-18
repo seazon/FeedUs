@@ -120,7 +120,9 @@ class FeedsViewModel(
 
     private suspend fun fetchUnreadCount(api: RssApi) {
         try {
-            val tags = api.getTags() // TODO use tags in app
+            // TODO use in app
+            val tags = api.getTags()
+            val stars = api.getStarredStreamIds(100, null)
         } catch (e: Exception) {
             e.printStackTrace()
         }
