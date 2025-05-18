@@ -24,7 +24,7 @@ class FeedsViewModel(
     val appSettings: AppSettings,
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(FeedsScreenState())
+    private val _state = MutableStateFlow(FeedsScreenState(serviceName = rssSDK.tokenSettings.getToken().getAccountTypeName().orEmpty()))
     val state: StateFlow<FeedsScreenState> = _state
 
     private val _subscribeState = MutableStateFlow(SubscribeDialogState())

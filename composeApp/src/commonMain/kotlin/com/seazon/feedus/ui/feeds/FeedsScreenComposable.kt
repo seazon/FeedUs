@@ -66,7 +66,7 @@ fun FeedsScreenComposable(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        AppBar(navToDemo, sync, logout, navToSubscribe = {
+        AppBar(state2.serviceName, navToDemo, sync, logout, navToSubscribe = {
             openDialog = true
         })
         MainContent(
@@ -94,7 +94,8 @@ fun FeedsScreenComposable(
 }
 
 @Composable
-fun AppBar(
+private fun AppBar(
+    serviceName: String,
     navToDemo: () -> Unit,
     sync: () -> Unit,
     logout: () -> Unit,
@@ -103,7 +104,7 @@ fun AppBar(
     TopAppBar(
         title = {
             Text(
-                text = stringResource(Res.string.app_name),
+                text = serviceName,
                 style = MaterialTheme.typography.titleMedium,
             )
         },
