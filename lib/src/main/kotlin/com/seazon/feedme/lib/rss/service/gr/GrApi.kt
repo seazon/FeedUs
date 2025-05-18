@@ -95,7 +95,7 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
      * MarkersApi
      */
     override suspend fun getUnreadCounts(): RssUnreadCounts? {
-        return mainApi?.getUnreadCounts()
+        return mainApi?.getUnreadCounts()?.convert()
     }
 
     override suspend fun markRead(entryIds: Array<String>?): String? {

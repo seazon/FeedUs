@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.service.gr.bo
 
+import com.seazon.feedme.lib.utils.LongAsStringSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.LongAsStringSerializer
 
 @Serializable
 class GrUnreadCount {

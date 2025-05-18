@@ -1,49 +1,14 @@
 package com.seazon.feedme.lib.rss.service
 
-//import com.seazon.feedme.ext.api.lib.bo.RssFeed
-//import com.seazon.feedme.ext.api.lib.bo.RssItem
-//import com.seazon.feedme.ext.api.lib.bo.RssStream
-//import com.seazon.feedme.ext.api.lib.bo.RssTag
-//import com.seazon.feedme.ext.api.lib.bo.RssUnreadCount
-//import com.seazon.feedme.ext.api.lib.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssItem
 import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.bo.RssTag
-import com.seazon.feedme.lib.rss.bo.RssUnreadCount
-import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
-import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinItem
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinStream
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinSubscription
 import com.seazon.feedme.lib.rss.service.gr.GrConstants
-import com.seazon.feedme.lib.rss.service.gr.bo.GrItem
 import com.seazon.feedme.lib.rss.service.gr.bo.GrStream
 import com.seazon.feedme.lib.rss.service.gr.bo.GrSubscription
-import com.seazon.feedme.lib.rss.service.gr.bo.GrUnreadCount
-import com.seazon.feedme.lib.rss.service.gr.bo.GrUnreadCounts
-import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssItem
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssStream
-import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssTag
-import com.seazon.feedme.lib.utils.orZero
-//import org.jetbrains.kotlin.ir.types.IdSignatureValues.continuation
-//import com.seazon.feedme.rss.bo.Feed
-//import com.seazon.feedme.rss.bo.Item
-//import com.seazon.feedme.rss.bo.Tag
-//import com.seazon.feedme.rss.feedbin.bo.FeedbinItem
-//import com.seazon.feedme.rss.feedbin.bo.FeedbinStream
-//import com.seazon.feedme.rss.feedbin.bo.FeedbinSubscription
-//import com.seazon.feedme.rss.gr.GrConstants
-//import com.seazon.feedme.rss.gr.bo.GrItem
-//import com.seazon.feedme.rss.gr.bo.GrStream
-//import com.seazon.feedme.rss.gr.bo.GrSubscription
-//import com.seazon.feedme.rss.gr.bo.GrUnreadCount
-//import com.seazon.feedme.rss.gr.bo.GrUnreadCounts
-//import com.seazon.feedme.rss.ttrss.bo.TtrssItem
-//import com.seazon.feedme.rss.ttrss.bo.TtrssStream
-//import com.seazon.feedme.rss.ttrss.bo.TtrssTag
-//import com.seazon.utils.StringUtil
-//import com.seazon.utils.orZero
-import java.util.Date
 
 fun GrStream.convert(): RssStream {
     return RssStream(
@@ -51,22 +16,6 @@ fun GrStream.convert(): RssStream {
         items?.map { it.convert() } ?: ArrayList(),
         itemRefs?.map {
             convertToLongForm(it.id.orEmpty())
-        }.orEmpty()
-    )
-}
-
-fun GrUnreadCounts.convert(): RssUnreadCounts {
-    return RssUnreadCounts(
-        max,
-        unreadcounts?.map {
-            (it as GrUnreadCount).run {
-                val updated: Long = try {
-                    newestItemTimestampUsec?.toLong().orZero()
-                } catch (e: Exception) {
-                    0L
-                }
-                RssUnreadCount(id, count, updated)
-            }
         }.orEmpty()
     )
 }

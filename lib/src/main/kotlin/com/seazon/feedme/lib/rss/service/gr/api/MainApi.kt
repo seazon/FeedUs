@@ -4,23 +4,21 @@ import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
-import com.seazon.feedme.lib.network.toType
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.gr.GrConfig
 import com.seazon.feedme.lib.rss.service.gr.GrConstants
 import com.seazon.feedme.lib.rss.service.gr.bo.GrStream
 import com.seazon.feedme.lib.rss.service.gr.bo.GrSubscriptions
 import com.seazon.feedme.lib.rss.service.gr.bo.GrTags
+import com.seazon.feedme.lib.rss.service.gr.bo.GrUnreadCounts
 import com.seazon.feedme.lib.rss.service.gr.bo.GrUserInfo
-import io.ktor.client.call.body
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class MainApi( token: RssToken, config: GrConfig,api: RssApi) : AuthedApi(token,config,  api) {
+class MainApi(token: RssToken, config: GrConfig, api: RssApi) : AuthedApi(token, config, api) {
 
-    suspend fun getUnreadCounts(): RssUnreadCounts? {
+    suspend fun getUnreadCounts(): GrUnreadCounts? {
         val parameters = listOf(
             NameValuePair("output", "json")
         )

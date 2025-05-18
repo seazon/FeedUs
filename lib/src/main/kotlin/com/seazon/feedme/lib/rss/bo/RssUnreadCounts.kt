@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 open class RssUnreadCounts(
     val max: Int = 0,
     @SerialName("unreadcounts")
-    val unreadCounts: List<RssUnreadCount> = ArrayList()
+    val unreadCounts: List<RssUnreadCount> = emptyList()
 ) : Entity()
