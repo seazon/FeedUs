@@ -13,7 +13,8 @@ import com.seazon.feedme.lib.rss.service.gr.bo.convert
 import com.seazon.feedme.lib.rss.service.gr.bo.convert2
 import com.seazon.feedme.lib.utils.orZero
 
-abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Long) : RssApi, SelfHostedRssApi {
+abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Long) : RssApi,
+    SelfHostedRssApi {
     protected var config: GrConfig
     protected var _token: RssToken? = null
     protected var authenticationApi: AuthenticationApi
@@ -66,7 +67,7 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         }
     }
 
-    override fun setUserWithAccessToken(token: RssToken, response: String) {
+    override suspend fun setUserWithAccessToken(token: RssToken, response: String) {
         if (getAuthType() == RssApi.AUTH_TYPE_OAUTH2) {
             authenticationApi.setUserWithAccessTokenOAuth2(token, response)
         } else if (getAuthType() == RssApi.AUTH_TYPE_BASE) {
@@ -75,7 +76,7 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         }
     }
 
-    override fun setUserWithRefreshToken(token: RssToken, response: String) {
+    override suspend fun setUserWithRefreshToken(token: RssToken, response: String) {
         if (getAuthType() == RssApi.AUTH_TYPE_OAUTH2) {
             authenticationApi.setUserWithRefreshToken(token, response)
         } else {
@@ -140,30 +141,67 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
     }
 
     override suspend fun getUnraedStreamIds(count: Int, continuation: String?): RssStream? {
-        return mainApi?.getContentsIds("user/-/state/com.google/reading-list", count, true, continuation)?.convert()
+        return mainApi?.getContentsIds(
+            "user/-/state/com.google/reading-list",
+            count,
+            true,
+            continuation
+        )?.convert()
     }
 
-    override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream? {
+    override suspend fun getFeedStreamIds(
+        feedId: String,
+        count: Int,
+        continuation: String?
+    ): RssStream? {
         return mainApi?.getContentsIds(feedId, count, true, continuation)?.convert()
     }
 
-    override suspend fun getCategoryStreamIds(category: String, count: Int, continuation: String?): RssStream? {
+    override suspend fun getCategoryStreamIds(
+        category: String,
+        count: Int,
+        continuation: String?
+    ): RssStream? {
         return mainApi?.getContentsIds(category, count, true, continuation)?.convert()
     }
 
-    override suspend fun getUnraedStream(count: Int, since: String?, continuation: String?): RssStream? {
-        return mainApi?.getContents("user/-/state/com.google/reading-list", count, true, since, continuation)?.convert()
+    override suspend fun getUnraedStream(
+        count: Int,
+        since: String?,
+        continuation: String?
+    ): RssStream? {
+        return mainApi?.getContents(
+            "user/-/state/com.google/reading-list",
+            count,
+            true,
+            since,
+            continuation
+        )?.convert()
     }
 
-    override suspend fun getFeedStream(feedId: String, count: Int, since: String?, continuation: String?): RssStream? {
+    override suspend fun getFeedStream(
+        feedId: String,
+        count: Int,
+        since: String?,
+        continuation: String?
+    ): RssStream? {
         return mainApi?.getContents(feedId, count, true, since, continuation)?.convert()
     }
 
-    override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream? {
+    override suspend fun getCategoryStream(
+        category: String,
+        count: Int,
+        since: String?,
+        continuation: String?
+    ): RssStream? {
         return mainApi?.getContents(category, count, true, since, continuation)?.convert()
     }
 
-    override suspend fun getTagStreamIds(tag: String, count: Int, continuation: String?): RssStream? {
+    override suspend fun getTagStreamIds(
+        tag: String,
+        count: Int,
+        continuation: String?
+    ): RssStream? {
         return mainApi?.getContentsIds("user/-/label/$tag", count, false, continuation)?.convert()
     }
 
@@ -186,7 +224,11 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
 
     override fun supportUpdateSubscription() = false
 
-    override suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean {
+    override suspend fun subscribeFeed(
+        title: String,
+        feedId: String,
+        categories: Array<String>
+    ): Boolean {
 //        String feedIdPrefix = "feed/";
 //        String feedUrl = feedId.substring(feedIdPrefix.length());
 //        GrQuickAdd quickAdd = GrQuickAdd.parse(mainApi.quickadd(feedUrl));

@@ -163,8 +163,12 @@ class LoginViewModel(
             if (a[i].startsWith("code=")) {
                 code = a[i].substring(5)
                 break
+            } else if (a[i].startsWith("token=")) { // folo case
+                code = a[i].substring(6)
+                break
             }
         }
+
         if (code.isNullOrEmpty()) return
 
         viewModelScope.launch {
@@ -185,8 +189,7 @@ class LoginViewModel(
         }
     }
 
-
-    suspend fun refreshTokenAndGetUserInfo(
+    private suspend fun refreshTokenAndGetUserInfo(
         code: String,
         onSuccess: () -> Unit,
         onError: (e: HttpException) -> Unit
@@ -264,6 +267,13 @@ class LoginViewModel(
                 Static.ACCOUNT_TYPE_GOOGLE_READER_API,
                 RssTypeGroup.SELF_HOST,
                 Res.drawable.ic_service_google
+            ),
+            LoginRssModel(
+                "Folo",
+                Static.ACCOUNT_TYPE_FOLO,
+                RssTypeGroup.SERVICE,
+                Res.drawable.ic_service_folo,
+                listOf("OAuth")
             ),
             LoginRssModel(
                 "Local RSS",

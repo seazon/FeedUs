@@ -21,6 +21,7 @@ object Static {
     const val ACCOUNT_TYPE_GOOGLE_READER_API = "Google Reader API"
     const val ACCOUNT_TYPE_LOCAL_RSS = "Local RSS"
     const val ACCOUNT_TYPE_MINIFLUX = "Miniflux"
+    const val ACCOUNT_TYPE_FOLO = "Folo"
 
     //    public static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
     const val REDIRECT_URI_OLD: String = "feedme://oauth"

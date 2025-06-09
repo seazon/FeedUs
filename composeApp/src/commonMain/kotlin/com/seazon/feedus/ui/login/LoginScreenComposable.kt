@@ -187,7 +187,10 @@ private fun MainContent(
 @Composable
 private fun getDialogLabels(type: String): AuthDialogLabels? {
     return when (type) {
-        Static.ACCOUNT_TYPE_FEEDLY, Static.ACCOUNT_TYPE_INOREADER_OAUTH2 -> null
+        Static.ACCOUNT_TYPE_FEEDLY,
+        Static.ACCOUNT_TYPE_INOREADER_OAUTH2,
+        Static.ACCOUNT_TYPE_FOLO -> null
+
         Static.ACCOUNT_TYPE_INOREADER -> AuthDialogLabels(
             stringResource(Res.string.login_username_inoreader),
             stringResource(Res.string.login_tip_inoreader),
@@ -253,7 +256,9 @@ private fun onItemClick(
     startOAuth: (accountType: String) -> Unit,
 ) {
     when (type) {
-        Static.ACCOUNT_TYPE_FEEDLY, Static.ACCOUNT_TYPE_INOREADER_OAUTH2 -> startOAuth(type)
+        Static.ACCOUNT_TYPE_FEEDLY,
+        Static.ACCOUNT_TYPE_INOREADER_OAUTH2,
+        Static.ACCOUNT_TYPE_FOLO -> startOAuth(type)
         Static.ACCOUNT_TYPE_LOCAL_RSS -> {
             loginForLocalRss()
         }

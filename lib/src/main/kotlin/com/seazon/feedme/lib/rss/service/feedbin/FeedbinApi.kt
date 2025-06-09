@@ -45,14 +45,14 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return RssApi.AUTH_TYPE_BASE
     }
 
-    override fun setUserWithRefreshToken(token: RssToken, response: String) {
+    override suspend fun setUserWithRefreshToken(token: RssToken, response: String) {
     }
 
     override suspend fun getAccessToken(token: RssToken): String {
         return authenticationApi.getAccessToken(token.username, token.password)
     }
 
-    override fun setUserWithAccessToken(token: RssToken, response: String) {
+    override suspend fun setUserWithAccessToken(token: RssToken, response: String) {
         authenticationApi.setUserWithAccessToken(token, response)
     }
 

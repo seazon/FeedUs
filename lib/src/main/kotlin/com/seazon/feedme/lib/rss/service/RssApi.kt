@@ -29,7 +29,7 @@ interface RssApi {
     /**
      * 首次保存access token和refresh token，用于oauth2
      */
-    fun setUserWithRefreshToken(token: RssToken, response: String)
+    suspend fun setUserWithRefreshToken(token: RssToken, response: String)
 
     /**
      * 获取 access token
@@ -39,7 +39,7 @@ interface RssApi {
     /**
      * 保存 access token
      */
-    fun setUserWithAccessToken(token: RssToken, response: String)
+    suspend fun setUserWithAccessToken(token: RssToken, response: String)
 
     /**
      * 可选

@@ -41,14 +41,14 @@ class LocalRssApi() : RssApi {
         return ""
     }
 
-    override fun setUserWithRefreshToken(token: RssToken, response: String) {
+    override suspend fun setUserWithRefreshToken(token: RssToken, response: String) {
     }
 
     override suspend fun getAccessToken(token: RssToken): String {
         return ""
     }
 
-    override fun setUserWithAccessToken(token: RssToken, response: String) {
+    override suspend fun setUserWithAccessToken(token: RssToken, response: String) {
     }
 
     override suspend fun setUserInfo(token: RssToken) {

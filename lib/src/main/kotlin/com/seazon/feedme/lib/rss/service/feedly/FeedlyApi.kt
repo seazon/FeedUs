@@ -68,11 +68,11 @@ class FeedlyApi : RssApi {
         return authenticationApi.getAccessToken(token.refreshToken)
     }
 
-    override fun setUserWithAccessToken(token: RssToken, response: String) {
+    override suspend fun setUserWithAccessToken(token: RssToken, response: String) {
         authenticationApi.setUserWithAccessToken(token, response)
     }
 
-    override fun setUserWithRefreshToken(token: RssToken, response: String) {
+    override suspend fun setUserWithRefreshToken(token: RssToken, response: String) {
         authenticationApi.setUserWithRefreshToken(token, response)
     }
 

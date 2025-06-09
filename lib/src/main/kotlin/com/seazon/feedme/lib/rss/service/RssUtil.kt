@@ -5,6 +5,7 @@ import com.seazon.feedme.lib.rss.service.bazqux.BazquxApi
 import com.seazon.feedme.lib.rss.service.feedbin.FeedbinApi
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyApi
 import com.seazon.feedme.lib.rss.service.fever.FeverApi
+import com.seazon.feedme.lib.rss.service.folo.FoloApi
 import com.seazon.feedme.lib.rss.service.freshrss.FreshRssApi
 import com.seazon.feedme.lib.rss.service.gr.GReaderApi
 import com.seazon.feedme.lib.rss.service.inoreader.InoreaderApi
@@ -30,6 +31,7 @@ object RssUtil {
             Static.ACCOUNT_TYPE_MINIFLUX -> FeverApi(token)
             Static.ACCOUNT_TYPE_FEEDBIN -> FeedbinApi(token)
             Static.ACCOUNT_TYPE_TTRSS -> TtrssApi(token)
+            Static.ACCOUNT_TYPE_FOLO -> FoloApi()
             Static.ACCOUNT_TYPE_LOCAL_RSS -> LocalRssApi()
             else -> LocalRssApi()
         }
