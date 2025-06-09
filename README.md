@@ -9,6 +9,11 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 <img width="270" alt="ui-Android-login" src="https://github.com/user-attachments/assets/36c833e9-f402-4b00-ba9a-1bd52dafcad0" />
 
 ### macOS
+```
+./gradlew clean
+./gradlew build
+./gradlew run
+```
 <img width="801" alt="ui-macOS-login" src="https://github.com/user-attachments/assets/231b3316-9e38-4e95-842f-57d8e303a6be" />
 
 ## KMP
