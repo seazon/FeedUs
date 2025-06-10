@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 class AuthenticationApi : BaseApi() {
 
     fun getOAuth2Url(state: String?): String {
-        return "https://app.follow.is/"
+        return "https://app.follow.is/login"
     }
 
     suspend fun applyOneTimeTokenAndSetUser(rssToken: RssToken, token: String?) {
