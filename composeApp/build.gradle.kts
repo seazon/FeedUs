@@ -10,7 +10,9 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 
-val appVersion = "1.0.0"
+val mobileVersionCode = 1
+val mobileAppVersion = "0.1.0"
+val desktopAppVersion = "1.0.0"
 
 kotlin {
     androidTarget {
@@ -118,8 +120,8 @@ android {
         applicationId = "com.seazon.feedus"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = appVersion
+        versionCode = mobileVersionCode
+        versionName = mobileAppVersion
     }
     packaging {
         resources {
@@ -149,7 +151,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.seazon.feedus"
-            packageVersion = appVersion
+            packageVersion = desktopAppVersion
         }
     }
 }

@@ -203,7 +203,6 @@ class FoloApi : RssApi {
      * SubscriptionsApi
      */
     override suspend fun getSubscriptions(): List<RssFeed>? {
-//        return subscriptionsApi?.getSubscriptions()?.convert()
         return mainApi?.getSubscriptions()
     }
 
