@@ -6,6 +6,7 @@ import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.RssApi
+import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.localrss.LocalRssApi
 import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedus.data.AppSettings
@@ -134,7 +135,7 @@ class FeedsViewModel(
         try {
             // TODO use in app
             val tags = api.getTags()
-            val stars = api.getStarredStreamIds(100, null)
+            val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
         } catch (e: Exception) {
             e.printStackTrace()
         }

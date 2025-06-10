@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedme.lib.rss.bo.Item
 import com.seazon.feedme.lib.rss.bo.RssItem
+import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.utils.jsonOf
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
 import com.seazon.feedus.ui.BaseViewModel
@@ -32,15 +34,22 @@ class ArticlesViewModel(
                     rssDatabase.getCategoryById(categoryId).let { category ->
                         title = category?.title
                     }
-                    api.getCategoryStream(categoryId, 100, null, null)
+                    if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
+                        val feedIds =
+                            rssDatabase.getFeeds().filter { it.categories?.contains(title.orEmpty()) ?: false }
+                                .map { it.id }.toTypedArray()
+                        api.getCategoryStream(jsonOf(feedIds), Static.FETCH_COUNT, null, null)
+                    } else {
+                        api.getCategoryStream(categoryId, Static.FETCH_COUNT, null, null)
+                    }
                 } else if (!feedId.isNullOrEmpty()) {
                     rssDatabase.getFeedById(feedId).let { feed ->
                         title = feed?.title
                     }
-                    api.getFeedStream(feedId, 100, null, null)
+                    api.getFeedStream(feedId, Static.FETCH_COUNT, null, null)
                 } else {
                     title = null
-                    api.getUnraedStream(100, null, null)
+                    api.getUnraedStream(Static.FETCH_COUNT, null, null)
                 }
                 val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }

@@ -1,6 +1,7 @@
 package com.seazon.feedme.lib.utils
 
 import com.seazon.feedme.lib.rss.service.Static
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -16,6 +17,10 @@ inline fun <reified T> toJson(json: String): T {
 
 fun jsonOf(vararg pairs: Pair<String, Any?> = emptyArray()): JsonElement {
     return mapOf(*pairs).toJsonElement()
+}
+
+fun jsonOf(array: Array<String>): String {
+    return Static.defaultJson.encodeToString(array)
 }
 
 fun Any?.toJsonElement(): JsonElement = when (this) {

@@ -81,4 +81,6 @@ object Static {
     //    public final static int PLAY_SEEK_BAR_MAX = 1000;
     //
     //    public final static int TEMPORARY_TAG_MAX = 5;
+
+    const val FETCH_COUNT = 10
 }

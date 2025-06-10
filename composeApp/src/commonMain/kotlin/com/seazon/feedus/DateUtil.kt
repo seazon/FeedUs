@@ -12,10 +12,6 @@ import org.jetbrains.compose.resources.stringResource
 
 object DateUtil {
 
-    fun format(time: Long): String {
-        return Instant.fromEpochMilliseconds(time).toString()
-    }
-
     @Composable
     fun toXAgo(time2: Long): String {
 //        try {

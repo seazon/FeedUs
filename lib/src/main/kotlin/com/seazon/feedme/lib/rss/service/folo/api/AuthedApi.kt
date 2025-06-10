@@ -12,6 +12,7 @@ open class AuthedApi(val token: RssToken) : BaseApi() {
 
     private fun setHeaderToken(headers: MutableMap<String, String>) {
         headers["Cookie"] = "__Secure-better-auth.session_token=${token.accessToken.orEmpty()}"
+        headers["Content-Type"] = "application/json"
     }
 
     protected suspend fun execute(

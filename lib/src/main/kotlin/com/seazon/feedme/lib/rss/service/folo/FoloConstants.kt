@@ -28,6 +28,7 @@ object FoloConstants {
     const val GLOBAL_TAG_SAVED: String = "global.saved"
 
     //
+    val URL_READS: String = API + "/reads"
     val URL_MARKERS: String = API + "/markers"
     val URL_MARKERS_COUNTS: String = API + "/markers/counts"
 
@@ -49,7 +50,7 @@ object FoloConstants {
 
     val URL_TAGS: String = API + "/tags"
 
-    val URL_ENTRIES: String = API + "/entries/.mget"
+    val URL_ENTRIES: String = API + "/entries"
 
     fun isIgnoredTag(tag: String?): Boolean {
         tag ?: return true

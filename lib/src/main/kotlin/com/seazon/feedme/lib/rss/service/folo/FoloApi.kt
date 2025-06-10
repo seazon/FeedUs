@@ -82,8 +82,7 @@ class FoloApi : RssApi {
     }
 
     override suspend fun markRead(entryIds: Array<String>?): String? {
-//        return markersApi?.markArticleRead(entryIds)
-        return null
+        return mainApi?.markArticleRead(entryIds)
     }
 
     override suspend fun markUnread(entryIds: Array<String>?): String? {
@@ -171,18 +170,16 @@ class FoloApi : RssApi {
         since: String?,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getContents(feedId, count, true, since, continuation)?.convert()
-        return mainApi?.getContents(feedId)
+        return mainApi?.getEntriesForFeed(feedId, count)
     }
 
     override suspend fun getCategoryStream(
-        category: String,
+        category: String, // folo not support, need put feedId list json here
         count: Int,
         since: String?,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getContents(category, count, true, since, continuation)?.convert()
-        return RssStream()
+        return mainApi?.getEntriesForCategory(category, count)
     }
 
     override suspend fun getTagStreamIds(
