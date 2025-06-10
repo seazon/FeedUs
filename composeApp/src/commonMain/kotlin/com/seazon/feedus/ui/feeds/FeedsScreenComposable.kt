@@ -44,7 +44,8 @@ import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedus.ui.customize.Avatar
 import com.seazon.feedus.ui.customize.noRippleClickable
-import feedus.composeapp.generated.resources.*
+import feedus.composeapp.generated.resources.Res
+import feedus.composeapp.generated.resources.all_items
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
@@ -53,7 +54,7 @@ private val ITEM_HEIGHT = 48.dp
 
 @Composable
 fun FeedsScreenComposable(
-    state: StateFlow<FeedsScreenState>,
+    stateFlow: StateFlow<FeedsScreenState>,
     navToArticles: (categoryId: String?, feedId: String?) -> Unit,
     navToDemo: () -> Unit,
     sync: () -> Unit,
@@ -62,15 +63,16 @@ fun FeedsScreenComposable(
     var openDialog by remember {
         mutableStateOf(false)
     }
-    val state2 by state.collectAsState()
+    val state by stateFlow.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        AppBar(state2.serviceName, navToDemo, sync, logout, navToSubscribe = {
+        AppBar(state.serviceName, navToDemo, sync, logout, navToSubscribe = {
             openDialog = true
         })
         MainContent(
-            state2,
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            state = state,
             onItemClick = {
                 navToArticles(null, it.id)
             },
@@ -165,16 +167,14 @@ private fun AppBar(
 
 @Composable
 private fun MainContent(
+    modifier: Modifier = Modifier,
     state: FeedsScreenState,
     onItemClick: (Feed) -> Unit,
     onCategoryClick: (Category) -> Unit,
 ) {
     val feeds = state.feeds
-    val height = ITEM_HEIGHT * (state.feeds.size + state.categories.size + 1)
     LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
+        modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
@@ -343,5 +343,10 @@ fun FeedsScreenComposablePreview() {
             feeds = feeds,
         )
     )
-    FeedsScreenComposable(state, navToArticles = { categoryId, feedId -> }, navToDemo = {}, logout = {}, sync = {})
+    FeedsScreenComposable(
+        stateFlow = state,
+        navToArticles = { categoryId, feedId -> },
+        navToDemo = {},
+        logout = {},
+        sync = {})
 }

@@ -15,7 +15,7 @@ fun FeedsScreen(
         return
     }
     FeedsScreenComposable(
-        state = viewModel.state,
+        stateFlow = viewModel.state,
         navToArticles = navToArticles,
         navToDemo = navToDemo,
         sync = {
