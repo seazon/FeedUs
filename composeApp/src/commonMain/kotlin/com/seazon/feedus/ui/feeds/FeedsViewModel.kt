@@ -24,27 +24,35 @@ class FeedsViewModel(
     val appSettings: AppSettings,
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(FeedsScreenState(serviceName = rssSDK.tokenSettings.getToken().getAccountTypeName().orEmpty()))
+    private val _state = MutableStateFlow(
+        FeedsScreenState(
+            serviceName = rssSDK.tokenSettings.getToken().getAccountTypeName().orEmpty()
+        )
+    )
     val state: StateFlow<FeedsScreenState> = _state
 
     private val _subscribeState = MutableStateFlow(SubscribeDialogState())
     val subscribeState: StateFlow<SubscribeDialogState> = _subscribeState
 
     init {
-        viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
-            val feeds = rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-            val categories = rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-            if (feeds.isEmpty()) {
-                sync()
-            } else {
-                val appPreferences = appSettings.getAppPreferences()
-                _state.update {
-                    it.copy(
-                        maxUnreadCount = appPreferences.unreadMax,
-                        feeds = feeds,
-                        categories = categories,
-                    )
+        if (isLogged()) {
+            viewModelScope.launch {
+                val api = rssSDK.getRssApi(false)
+                val feeds =
+                    rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                val categories = rssDatabase.getCategories()
+                    .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                if (feeds.isEmpty()) {
+                    sync()
+                } else {
+                    val appPreferences = appSettings.getAppPreferences()
+                    _state.update {
+                        it.copy(
+                            maxUnreadCount = appPreferences.unreadMax,
+                            feeds = feeds,
+                            categories = categories,
+                        )
+                    }
                 }
             }
         }
@@ -76,11 +84,15 @@ class FeedsViewModel(
             fetchSubscription(api)
             fetchUnreadCount(api)
 
-            val feeds = rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-            val categories = rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+            val feeds =
+                rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+            val categories =
+                rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
             val appPreferences = appSettings.getAppPreferences()
             _state.update {
-                it.copy(maxUnreadCount = appPreferences.unreadMax, feeds = feeds, categories = categories)
+                it.copy(
+                    maxUnreadCount = appPreferences.unreadMax, feeds = feeds, categories = categories
+                )
             }
         }
     }

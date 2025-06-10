@@ -102,7 +102,7 @@ class LoginViewModel(
         }
     }
 
-    suspend fun getUserInfo(
+    private suspend fun getUserInfo(
         onSuccess: () -> Unit,
         onError: (e: HttpException) -> Unit
     ) {
