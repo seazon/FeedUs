@@ -77,8 +77,7 @@ class FoloApi : RssApi {
      * MarkersApi
      */
     override suspend fun getUnreadCounts(): RssUnreadCounts? {
-//        return markersApi?.getUnreadCounts()?.convert()
-        return null
+        return mainApi?.getUnreadCounts()
     }
 
     override suspend fun markRead(entryIds: Array<String>?): String? {
@@ -112,7 +111,7 @@ class FoloApi : RssApi {
      * StreamsApi
      */
     override fun supportPagingFetchIds(): Boolean {
-        return false
+        return true
     }
 
     override fun supportFetchByFeed(): Boolean {

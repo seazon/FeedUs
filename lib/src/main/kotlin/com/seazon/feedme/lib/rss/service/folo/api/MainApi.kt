@@ -7,6 +7,8 @@ import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.bo.RssToken
+import com.seazon.feedme.lib.rss.bo.RssUnreadCount
+import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.folo.FoloConstants
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloData
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloEntries
@@ -80,6 +82,18 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         return RssStream(
             items = data?.data?.mapNotNull { entries ->
                 entries.convert()
+            }.orEmpty()
+        )
+    }
+
+    suspend fun getUnreadCounts(): RssUnreadCounts? {
+        val data = execute(HttpMethod.GET, FoloConstants.URL_READS).toType<FoloData<Map<String, Int>>>()
+        return RssUnreadCounts(
+            unreadCounts = data?.data?.entries?.map {
+                RssUnreadCount(
+                    id = it.key,
+                    count = it.value
+                )
             }.orEmpty()
         )
     }
