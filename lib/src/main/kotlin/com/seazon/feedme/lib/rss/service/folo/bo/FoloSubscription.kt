@@ -14,6 +14,7 @@ data class FoloSubscription(
 @Serializable
 data class FoloFeed(
     val id: String? = null,
+    val title: String? = null,
     val url: String? = null,
     val siteUrl: String? = null,
     val image: String? = null,

@@ -29,7 +29,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         return data?.data?.map {
             RssFeed(
                 id = it.feedId,
-                title = it.title,
+                title = if (it.title.isNullOrEmpty()) it.feeds?.title else it.title,
                 url = it.feeds?.siteUrl,
                 feedUrl = it.feeds?.url,
                 categories = listOf(RssTag(it.category, it.category)),
@@ -92,7 +92,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             unreadCounts = data?.data?.entries?.map {
                 RssUnreadCount(
                     id = it.key,
-                    count = it.value
+                    count = it.value,
                 )
             }.orEmpty()
         )
