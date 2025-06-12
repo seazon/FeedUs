@@ -189,6 +189,10 @@ class LoginViewModel(
         }
     }
 
+    fun resetEvent() {
+        _eventFlow.value = null
+    }
+
     private suspend fun refreshTokenAndGetUserInfo(
         code: String,
         onSuccess: () -> Unit,
@@ -237,16 +241,36 @@ class LoginViewModel(
                 Res.drawable.ic_service_inoreader,
                 listOf("OAuth")
             ),
-            LoginRssModel("Inoreader", Static.ACCOUNT_TYPE_INOREADER, RssTypeGroup.SERVICE, Res.drawable.ic_service_inoreader),
-            LoginRssModel("BazQux", Static.ACCOUNT_TYPE_BAZQUX_READER, RssTypeGroup.SERVICE, Res.drawable.ic_service_bazqux),
+            LoginRssModel(
+                "Inoreader",
+                Static.ACCOUNT_TYPE_INOREADER,
+                RssTypeGroup.SERVICE,
+                Res.drawable.ic_service_inoreader
+            ),
+            LoginRssModel(
+                "BazQux",
+                Static.ACCOUNT_TYPE_BAZQUX_READER,
+                RssTypeGroup.SERVICE,
+                Res.drawable.ic_service_bazqux
+            ),
             LoginRssModel(
                 "The Old Reader",
                 Static.ACCOUNT_TYPE_THE_OLD_READER,
                 RssTypeGroup.SERVICE,
                 Res.drawable.ic_service_theoldreader
             ),
-            LoginRssModel("Feedbin", Static.ACCOUNT_TYPE_FEEDBIN, RssTypeGroup.SERVICE, Res.drawable.ic_service_feedbin),
-            LoginRssModel("Tiny Tiny RSS", Static.ACCOUNT_TYPE_TTRSS, RssTypeGroup.SELF_HOST, Res.drawable.ic_service_ttrss),
+            LoginRssModel(
+                "Feedbin",
+                Static.ACCOUNT_TYPE_FEEDBIN,
+                RssTypeGroup.SERVICE,
+                Res.drawable.ic_service_feedbin
+            ),
+            LoginRssModel(
+                "Tiny Tiny RSS",
+                Static.ACCOUNT_TYPE_TTRSS,
+                RssTypeGroup.SELF_HOST,
+                Res.drawable.ic_service_ttrss
+            ),
             LoginRssModel(
                 "FreshRSS",
                 Static.ACCOUNT_TYPE_FRESH_RSS,
@@ -254,7 +278,12 @@ class LoginViewModel(
                 Res.drawable.ic_service_freshrss,
                 listOf("Google Reader API")
             ),
-            LoginRssModel("Fever API", Static.ACCOUNT_TYPE_FEVER, RssTypeGroup.SELF_HOST, Res.drawable.ic_service_fever),
+            LoginRssModel(
+                "Fever API",
+                Static.ACCOUNT_TYPE_FEVER,
+                RssTypeGroup.SELF_HOST,
+                Res.drawable.ic_service_fever
+            ),
             LoginRssModel(
                 "Miniflux",
                 Static.ACCOUNT_TYPE_MINIFLUX,

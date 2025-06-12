@@ -16,7 +16,11 @@ fun LoginScreen(
     LaunchedEffect(viewModel.eventFlow) {
         viewModel.eventFlow.collect {
             when (it) {
-                is Event.OAuthSuccess -> navToFeeds()
+                is Event.OAuthSuccess -> {
+                    viewModel.resetEvent()
+                    navToFeeds()
+                }
+
                 is Event.OAuthFailed -> toaster.show(it.message)
                 else -> {}
             }
