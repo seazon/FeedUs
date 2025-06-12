@@ -8,6 +8,11 @@ data class ArticlesScreenState(
     val categoryId: String? = null,
     val feedId: String? = null,
     val title: String? = null,
+    val listType: ListType = ListType.NORMAL,
     val items: List<Item> = emptyList(),
     val feedMap: Map<String, Feed> = emptyMap(),
 )
+
+enum class ListType {
+    NORMAL, STARRED, TAG
+}

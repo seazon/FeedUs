@@ -5,7 +5,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FeedsScreen(
-    navToArticles: (categoryId: String?, feedId: String?) -> Unit,
+    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
     navToLogin: () -> Unit,
     navToDemo: () -> Unit,
 ) {

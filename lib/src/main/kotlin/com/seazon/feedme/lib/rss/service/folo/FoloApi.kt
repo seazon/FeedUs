@@ -187,8 +187,7 @@ class FoloApi : RssApi {
     }
 
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream? {
-//        return streamsApi?.getIds("user/" + token!!.id + "/tag/" + tagStarred, count, false, continuation)?.convert()
-        return RssStream()
+        return mainApi?.getEntriesForCollection(count)
     }
 
     override fun supportStar(): Boolean {

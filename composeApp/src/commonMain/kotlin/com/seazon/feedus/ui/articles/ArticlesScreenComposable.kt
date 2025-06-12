@@ -84,7 +84,11 @@ fun ArticlesScreenComposable(
 
 @Composable
 fun AppBar(state: ArticlesScreenState, navBack: () -> Unit, markAllRead: () -> Unit) {
-    val title = state.title ?: stringResource(Res.string.all_items)
+    val title = state.title ?: if (state.listType == ListType.STARRED)
+        stringResource(Res.string.starred_items)
+    else
+        stringResource(Res.string.all_items)
+
     TopAppBar(
         title = {
             Text(

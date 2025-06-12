@@ -9,7 +9,8 @@ class AppSettings {
     fun getAppPreferences(): AppPreferences {
         if (appPreferences == null) {
             appPreferences = AppPreferences(
-                settings.getInt("unreadMax", 0),
+                unreadMax = settings.getInt("unreadMax", 0),
+                starredCount = settings.getInt("starredCount", 0),
             )
         }
         return appPreferences!!
@@ -19,15 +20,16 @@ class AppSettings {
     fun saveAppPreferences(appPreferences: AppPreferences) {
         this.appPreferences = appPreferences
         settings.putInt("unreadMax", appPreferences.unreadMax)
+        settings.putInt("starredCount", appPreferences.starredCount)
     }
 
     fun clear() {
         settings.clear()
         appPreferences = null
     }
-
 }
 
 data class AppPreferences(
     val unreadMax: Int,
+    val starredCount: Int,
 )

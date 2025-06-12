@@ -50,6 +50,7 @@ class FeedsViewModel(
                     _state.update {
                         it.copy(
                             maxUnreadCount = appPreferences.unreadMax,
+                            starredCount = appPreferences.starredCount,
                             feeds = feeds,
                             categories = categories,
                         )
@@ -92,7 +93,10 @@ class FeedsViewModel(
             val appPreferences = appSettings.getAppPreferences()
             _state.update {
                 it.copy(
-                    maxUnreadCount = appPreferences.unreadMax, feeds = feeds, categories = categories
+                    maxUnreadCount = appPreferences.unreadMax,
+                    starredCount = appPreferences.starredCount,
+                    feeds = feeds,
+                    categories = categories,
                 )
             }
         }
@@ -138,35 +142,42 @@ class FeedsViewModel(
             // TODO use in app
             val tags = api.getTags()
             val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
+            val starredCount = stars?.items?.size.orZero() // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
+            if (api.supportPagingFetchIds()) {
+                val unreadCounts = api.getUnreadCounts()
+                val categoryMap = rssDatabase.getCategories().apply {
+                    this.forEach {
+                        it.cntClientUnread = 0
+                    }
+                }.associateBy { it.id }
+                val feedMap = rssDatabase.getFeeds().associateBy { it.id }
+                var max = 0
+                unreadCounts?.unreadCounts?.forEach {
+                    feedMap[it.id]?.let { feed ->
+                        feed.cntClientUnread = it.count
+                        max += it.count
+                        // for folo or similar case which unread counts api won't provide count for category
+                        categoryMap[feed.categories]?.cntClientUnread += it.count
+                    } ?: run {
+                        categoryMap[it.id]?.cntClientUnread = it.count
+                    }
+                }
+                val unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()
+                rssDatabase.saveCategories(categoryMap.values.toList())
+                rssDatabase.saveFeeds(feedMap.values.toList())
+                appSettings.getAppPreferences().apply {
+                    appSettings.saveAppPreferences(
+                        appPreferences = this.copy(
+                            unreadMax = unreadMax,
+                            starredCount = starredCount,
+                        )
+                    )
+                }
+            } else {
+                // TODO for the rss services which not support supportPagingFetchIds(), need a way to show feeds
+            }
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-        if (api.supportPagingFetchIds()) {
-            val unreadCounts = api.getUnreadCounts()
-            val categoryMap = rssDatabase.getCategories().apply {
-                this.forEach {
-                    it.cntClientUnread = 0
-                }
-            }.associateBy { it.id }
-            val feedMap = rssDatabase.getFeeds().associateBy { it.id }
-            var max = 0
-            unreadCounts?.unreadCounts?.forEach {
-                feedMap[it.id]?.let { feed ->
-                    feed.cntClientUnread = it.count
-                    max += it.count
-                    // for folo or similar case which unread counts api won't provide count for category
-                    categoryMap[feed.categories]?.cntClientUnread += it.count
-                } ?: run {
-                    categoryMap[it.id]?.cntClientUnread = it.count
-                }
-            }
-            rssDatabase.saveCategories(categoryMap.values.toList())
-            rssDatabase.saveFeeds(feedMap.values.toList())
-            appSettings.getAppPreferences().apply {
-                appSettings.saveAppPreferences(this.copy(unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()))
-            }
-        } else {
-            // TODO for the rss services which not support supportPagingFetchIds(), need a way to show feeds
         }
     }
 

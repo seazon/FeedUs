@@ -46,6 +46,7 @@ import com.seazon.feedus.ui.customize.Avatar
 import com.seazon.feedus.ui.customize.noRippleClickable
 import feedus.composeapp.generated.resources.Res
 import feedus.composeapp.generated.resources.all_items
+import feedus.composeapp.generated.resources.starred_items
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +56,7 @@ private val ITEM_HEIGHT = 48.dp
 @Composable
 fun FeedsScreenComposable(
     stateFlow: StateFlow<FeedsScreenState>,
-    navToArticles: (categoryId: String?, feedId: String?) -> Unit,
+    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
     navToDemo: () -> Unit,
     sync: () -> Unit,
     logout: () -> Unit,
@@ -74,10 +75,13 @@ fun FeedsScreenComposable(
             modifier = Modifier.fillMaxWidth().weight(1f),
             state = state,
             onItemClick = {
-                navToArticles(null, it.id)
+                navToArticles(null, it.id, false)
             },
             onCategoryClick = {
-                navToArticles(it.id, null)
+                navToArticles(it.id, null, false)
+            },
+            onStarredClick = {
+                navToArticles(null, null, true)
             },
         )
     }
@@ -171,6 +175,7 @@ private fun MainContent(
     state: FeedsScreenState,
     onItemClick: (Feed) -> Unit,
     onCategoryClick: (Category) -> Unit,
+    onStarredClick: () -> Unit,
 ) {
     val feeds = state.feeds
     LazyColumn(
@@ -191,6 +196,18 @@ private fun MainContent(
                 cntClientUnread = state.maxUnreadCount,
             )
             ItemGroup(allItemsCategory, false, onCategoryClick, onExpandClick = { e -> })
+        }
+        item {
+            val starredItemsCategory = Category(
+                id = "",
+                title = stringResource(resource = Res.string.starred_items),
+                sortId = null,
+                cntClientAll = 0,
+                cntClientUnread = state.starredCount,
+            )
+            ItemGroup(starredItemsCategory, false, onItemClick = {
+                onStarredClick()
+            }, onExpandClick = { e -> })
         }
         items(count = state.categories.size, itemContent = {
             ItemGroup(state.categories[it], false, onCategoryClick, onExpandClick = { e ->
@@ -345,7 +362,7 @@ fun FeedsScreenComposablePreview() {
     )
     FeedsScreenComposable(
         stateFlow = state,
-        navToArticles = { categoryId, feedId -> },
+        navToArticles = { categoryId, feedId, starred -> },
         navToDemo = {},
         logout = {},
         sync = {})

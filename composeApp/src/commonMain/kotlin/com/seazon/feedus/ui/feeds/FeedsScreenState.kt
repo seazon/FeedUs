@@ -7,6 +7,7 @@ data class FeedsScreenState(
     val isLoading: Boolean = false,
     val serviceName: String = "",
     val maxUnreadCount: Int = 0,
+    val starredCount: Int = 0,
     val feeds: List<Feed> = emptyList(),
     val categories: List<Category> = emptyList(),
 )

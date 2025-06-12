@@ -85,6 +85,7 @@
     <string name="category_all_items">All items icon</string>
 
     <string name="all_items">All items</string>
+    <string name="starred_items">Starred items</string>
 
     <string name="ui_artlist_collapse">Collapse</string>
     <string name="ui_artlist_expand">Expand</string>

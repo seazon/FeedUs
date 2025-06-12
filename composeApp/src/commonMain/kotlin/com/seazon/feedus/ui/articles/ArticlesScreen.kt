@@ -8,13 +8,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ArticlesScreen(
     categoryId: String?,
     feedId: String?,
+    starred: Boolean,
     navBack: () -> Unit,
     navToArticle: (item: Item) -> Unit,
 ) {
     val viewModel = koinViewModel<ArticlesViewModel>()
-    viewModel.load(categoryId, feedId)
+    viewModel.load(categoryId, feedId, starred)
     ArticlesScreenComposable(
-        viewModel.state,
+        stateFlow = viewModel.state,
         onItemClick = {
             viewModel.markRead(it)
             navToArticle(it)

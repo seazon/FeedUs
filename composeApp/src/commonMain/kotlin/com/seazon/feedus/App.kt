@@ -20,6 +20,7 @@ import com.seazon.feedus.ui.login.LoginScreen
 object A {
     var categoryId: String? = null
     var feedId: String? = null
+    var starred: Boolean = false
 }
 
 @Composable
@@ -49,9 +50,10 @@ fun App() {
         }
         composable(route = Screen.Feeds.name) {
             FeedsScreen(
-                navToArticles = { categoryId, feedId ->
+                navToArticles = { categoryId, feedId, starred ->
                     A.categoryId = categoryId
                     A.feedId = feedId
+                    A.starred = starred
                     navController.navigate(Screen.Articles.name)
                 },
                 navToLogin = {
@@ -64,8 +66,9 @@ fun App() {
         }
         composable(route = Screen.Articles.name) {
             ArticlesScreen(
-                A.categoryId,
-                A.feedId,
+                categoryId = A.categoryId,
+                feedId = A.feedId,
+                starred = A.starred,
                 navBack = {
                     navController.popBackStack()
                 },

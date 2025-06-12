@@ -22,18 +22,33 @@ class ArticlesViewModel(
     private val _state = MutableStateFlow(ArticlesScreenState())
     val state: StateFlow<ArticlesScreenState> = _state
 
-    fun load(categoryId: String?, feedId: String?) {
+    fun load(categoryId: String?, feedId: String?, starred: Boolean) {
         viewModelScope.launch {
-            _state.update {
-                it.copy(isLoading = true)
-            }
-            var title: String? = null
-            val api = rssSDK.getRssApi(false)
             try {
-                val rssStream = if (!categoryId.isNullOrEmpty()) {
+                // render title bar
+                var title: String? = null
+                var listType = ListType.NORMAL
+                if (!categoryId.isNullOrEmpty()) {
                     rssDatabase.getCategoryById(categoryId).let { category ->
                         title = category?.title
                     }
+                } else if (!feedId.isNullOrEmpty()) {
+                    rssDatabase.getFeedById(feedId).let { feed ->
+                        title = feed?.title
+                    }
+                } else if (starred) {
+                    title = null
+                    listType = ListType.STARRED
+                } else {
+                    title = null
+                }
+                _state.update {
+                    it.copy(isLoading = true, title = title, listType = listType)
+                }
+
+                // fetch item and render list
+                val api = rssSDK.getRssApi(false)
+                val rssStream = if (!categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
                         val feedIds =
                             rssDatabase.getFeeds().filter { it.categories?.contains(title.orEmpty()) ?: false }
@@ -43,23 +58,21 @@ class ArticlesViewModel(
                         api.getCategoryStream(categoryId, Static.FETCH_COUNT, null, null)
                     }
                 } else if (!feedId.isNullOrEmpty()) {
-                    rssDatabase.getFeedById(feedId).let { feed ->
-                        title = feed?.title
-                    }
                     api.getFeedStream(feedId, Static.FETCH_COUNT, null, null)
+                } else if (starred) {
+                    api.getStarredStreamIds(Static.FETCH_COUNT, null)
                 } else {
-                    title = null
                     api.getUnraedStream(Static.FETCH_COUNT, null, null)
                 }
                 val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
                 _state.update {
-                    it.copy(isLoading = false, items = items, feedMap = feedMap, title = title)
+                    it.copy(isLoading = false, items = items, feedMap = feedMap)
                 }
             } catch (e: Exception) {
                 e.printStackTrace() // TODO error handing
                 _state.update {
-                    it.copy(isLoading = false, title = title)
+                    it.copy(isLoading = false)
                 }
             }
         }
