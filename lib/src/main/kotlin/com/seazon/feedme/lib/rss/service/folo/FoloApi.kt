@@ -156,11 +156,7 @@ class FoloApi : RssApi {
         since: String?,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getContents(
-//            "user/" + token!!.id + "/category/" + FeedlyConstants.GLOBAL_CATEGORY_ALL,
-//            count, true, since, continuation
-//        )?.convert()
-        return RssStream()
+        return mainApi?.getEntriesForAll(count)
     }
 
     override suspend fun getFeedStream(

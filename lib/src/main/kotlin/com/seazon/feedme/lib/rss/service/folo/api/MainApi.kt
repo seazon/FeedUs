@@ -52,6 +52,17 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         return data?.data?.convert()
     }
 
+    suspend fun getEntriesForAll(limit: Int): RssStream? {
+        return getEntries(
+            jsonOf(
+                "read" to false,
+//                "view" to 0, // if view is not right, won't return data
+                "withContent" to true,
+                "limit" to limit,
+            )
+        )
+    }
+
     suspend fun getEntriesForFeed(feedId: String, limit: Int): RssStream? {
         return getEntries(
             jsonOf(
