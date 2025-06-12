@@ -30,6 +30,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             RssFeed(
                 id = it.feedId,
                 title = if (it.title.isNullOrEmpty()) it.feeds?.title else it.title,
+//                title = if (it.title.isNullOrEmpty()) "${it.viewString}${it.feeds?.title}" else "${it.viewString}${it.title}",
                 url = it.feeds?.siteUrl,
                 feedUrl = it.feeds?.url,
                 categories = listOf(RssTag(it.category, it.category)),

@@ -103,7 +103,9 @@ class FeedsViewModel(
         val tagMap = mutableMapOf<String, RssTag>()
         val feeds = subscriptions?.map { feed ->
             feed.categories?.forEach { tag ->
-                tagMap[tag.id.orEmpty()] = tag
+                if (!tag.id.isNullOrEmpty()) {
+                    tagMap[tag.id.orEmpty()] = tag
+                }
             }
             Feed(
                 id = feed.id.orEmpty(),
@@ -141,14 +143,21 @@ class FeedsViewModel(
         }
         if (api.supportPagingFetchIds()) {
             val unreadCounts = api.getUnreadCounts()
-            val categoryMap = rssDatabase.getCategories().associateBy { it.id }
+            val categoryMap = rssDatabase.getCategories().apply {
+                this.forEach {
+                    it.cntClientUnread = 0
+                }
+            }.associateBy { it.id }
             val feedMap = rssDatabase.getFeeds().associateBy { it.id }
             var max = 0
             unreadCounts?.unreadCounts?.forEach {
-                categoryMap[it.id]?.cntClientUnread = it.count
                 feedMap[it.id]?.let { feed ->
                     feed.cntClientUnread = it.count
                     max += it.count
+                    // for folo or similar case which unread counts api won't provide count for category
+                    categoryMap[feed.categories]?.cntClientUnread += it.count
+                } ?: run {
+                    categoryMap[it.id]?.cntClientUnread = it.count
                 }
             }
             rssDatabase.saveCategories(categoryMap.values.toList())
