@@ -51,8 +51,8 @@ class FeedsViewModel(
                         it.copy(
                             maxUnreadCount = appPreferences.unreadMax,
                             starredCount = appPreferences.starredCount,
-                            feeds = feeds,
-                            categories = categories,
+                            feeds = feeds.sortedBy { it.title },
+                            categories = categories.sortedBy { it.title },
                         )
                     }
                 }
@@ -95,8 +95,8 @@ class FeedsViewModel(
                 it.copy(
                     maxUnreadCount = appPreferences.unreadMax,
                     starredCount = appPreferences.starredCount,
-                    feeds = feeds,
-                    categories = categories,
+                    feeds = feeds.sortedBy { it.title },
+                    categories = categories.sortedBy { it.title },
                 )
             }
         }
