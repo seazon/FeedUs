@@ -31,9 +31,9 @@ data class FoloEntry(
     fun convert(feed: FoloFeed?, read: Boolean?): RssItem {
         return RssItem(
             id = id,
-            fid = feed?.id,
-            title = title,
-            link = url,
+            fid = feed?.id.orEmpty(),
+            title = title.orEmpty(),
+            link = url.orEmpty(),
             author = author,
             publisheddate = DateUtil.isoStringToTimestamp(publishedAt),
             updateddate = DateUtil.isoStringToTimestamp(publishedAt),

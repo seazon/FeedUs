@@ -156,7 +156,7 @@ class FoloApi : RssApi {
         since: String?,
         continuation: String?
     ): RssStream? {
-        return mainApi?.getEntriesForAll(count)
+        return mainApi?.getEntriesForAll(count, continuation)
     }
 
     override suspend fun getFeedStream(
@@ -165,7 +165,7 @@ class FoloApi : RssApi {
         since: String?,
         continuation: String?
     ): RssStream? {
-        return mainApi?.getEntriesForFeed(feedId, count)
+        return mainApi?.getEntriesForFeed(feedId, count, continuation)
     }
 
     override suspend fun getCategoryStream(
@@ -174,7 +174,7 @@ class FoloApi : RssApi {
         since: String?,
         continuation: String?
     ): RssStream? {
-        return mainApi?.getEntriesForCategory(category, count)
+        return mainApi?.getEntriesForCategory(category, count, continuation)
     }
 
     override suspend fun getTagStreamIds(
@@ -187,7 +187,7 @@ class FoloApi : RssApi {
     }
 
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream? {
-        return mainApi?.getEntriesForCollection(count)
+        return mainApi?.getEntriesForCollection(count, continuation)
     }
 
     override fun supportStar(): Boolean {

@@ -22,7 +22,7 @@ class ArticlesViewModel(
     private val _state = MutableStateFlow(ArticlesScreenState())
     val state: StateFlow<ArticlesScreenState> = _state
 
-    fun load(categoryId: String?, feedId: String?, starred: Boolean) {
+    fun init(categoryId: String?, feedId: String?, starred: Boolean) {
         viewModelScope.launch {
             try {
                 // render title bar
@@ -43,31 +43,71 @@ class ArticlesViewModel(
                     title = null
                 }
                 _state.update {
-                    it.copy(isLoading = true, title = title, listType = listType)
+                    it.copy(
+                        categoryId = categoryId,
+                        feedId = feedId,
+                        starred = starred,
+                        title = title,
+                        listType = listType,
+                    )
                 }
+            } catch (e: Exception) {
+                e.printStackTrace() // TODO error handing
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        categoryId = categoryId,
+                        feedId = feedId,
+                        starred = starred,
+                    )
+                }
+            }
+        }
+    }
 
+    fun load() {
+        _state.update {
+            it.copy(
+                isLoading = true,
+            )
+        }
+        viewModelScope.launch {
+            try {
                 // fetch item and render list
                 val api = rssSDK.getRssApi(false)
-                val rssStream = if (!categoryId.isNullOrEmpty()) {
+                val rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
                         val feedIds =
-                            rssDatabase.getFeeds().filter { it.categories?.contains(title.orEmpty()) ?: false }
+                            rssDatabase.getFeeds()
+                                .filter { it.categories?.contains(state.value.title.orEmpty()) ?: false }
                                 .map { it.id }.toTypedArray()
-                        api.getCategoryStream(jsonOf(feedIds), Static.FETCH_COUNT, null, null)
+                        api.getCategoryStream(jsonOf(feedIds), Static.FETCH_COUNT, null, state.value.continuation)
                     } else {
-                        api.getCategoryStream(categoryId, Static.FETCH_COUNT, null, null)
+                        api.getCategoryStream(
+                            state.value.categoryId.orEmpty(),
+                            Static.FETCH_COUNT,
+                            null,
+                            state.value.continuation
+                        )
                     }
-                } else if (!feedId.isNullOrEmpty()) {
-                    api.getFeedStream(feedId, Static.FETCH_COUNT, null, null)
-                } else if (starred) {
-                    api.getStarredStreamIds(Static.FETCH_COUNT, null)
+                } else if (!state.value.feedId.isNullOrEmpty()) {
+                    api.getFeedStream(state.value.feedId.orEmpty(), Static.FETCH_COUNT, null, state.value.continuation)
+                } else if (state.value.starred) {
+                    api.getStarredStreamIds(Static.FETCH_COUNT, state.value.continuation)
                 } else {
-                    api.getUnraedStream(Static.FETCH_COUNT, null, null)
+                    api.getUnraedStream(Static.FETCH_COUNT, null, state.value.continuation)
                 }
                 val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
+                val hasMore = items.size >= Static.FETCH_COUNT
                 _state.update {
-                    it.copy(isLoading = false, items = items, feedMap = feedMap)
+                    it.copy(
+                        isLoading = false,
+                        hasMore = hasMore,
+                        items = it.items + items,
+                        feedMap = feedMap,
+                        continuation = rssStream?.continuation,
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace() // TODO error handing

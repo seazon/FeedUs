@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -24,8 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +43,9 @@ import com.seazon.feedus.DateUtil
 import com.seazon.feedus.ui.customize.EmptyView
 import com.seazon.feedus.ui.customize.LoadingView
 import com.seazon.feedus.ui.customize.noRippleClickable
-import feedus.composeapp.generated.resources.*
+import feedus.composeapp.generated.resources.Res
+import feedus.composeapp.generated.resources.all_items
+import feedus.composeapp.generated.resources.starred_items
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
@@ -51,8 +56,18 @@ fun ArticlesScreenComposable(
     onItemClick: (item: Item) -> Unit,
     navBack: () -> Unit,
     markAllRead: () -> Unit,
+    loadMoreData: () -> Unit,
 ) {
     val state by stateFlow.collectAsState()
+    val listState = rememberLazyListState()
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo }.collect { visibleItems ->
+            val lastVisibleItemIndex = visibleItems.lastOrNull()?.index.orZero()
+            if (lastVisibleItemIndex >= state.items.size - 5 && !state.isLoading && state.hasMore) {
+                loadMoreData()
+            }
+        }
+    }
     Column(modifier = Modifier.fillMaxSize()) {
         AppBar(state, navBack, markAllRead)
         Box(
@@ -64,6 +79,7 @@ fun ArticlesScreenComposable(
         ) {
             if (state.items.isNotEmpty()) {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
@@ -208,5 +224,11 @@ fun ArticlesScreenPreview() {
             feedMap = feeds.associateBy { it.id }
         )
     )
-    ArticlesScreenComposable(state, onItemClick = {}, navBack = {}, markAllRead = {})
+    ArticlesScreenComposable(
+        stateFlow = state,
+        onItemClick = {},
+        navBack = {},
+        markAllRead = {},
+        loadMoreData = {},
+    )
 }

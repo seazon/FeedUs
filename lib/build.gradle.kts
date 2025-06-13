@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.seazon.feedme"
-version = "0.48"
+version = "0.54"
 
 publishing {
     repositories {
@@ -42,7 +42,6 @@ kotlin {
         implementation(libs.koin.compose.viewmodel)
         implementation(libs.koin.compose.viewmodel.navigation)
         implementation(libs.coil)
-        implementation(libs.kotlinx.datetime)
         api(libs.ksoup.html)
         api(libs.ksoup.entities)
         implementation(kotlin("reflect"))

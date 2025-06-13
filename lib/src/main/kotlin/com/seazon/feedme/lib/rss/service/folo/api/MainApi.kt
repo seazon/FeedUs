@@ -18,7 +18,6 @@ import com.seazon.feedme.lib.rss.service.folo.bo.FoloSubscription
 import com.seazon.feedme.lib.utils.jsonOf
 import com.seazon.feedme.lib.utils.toJson
 import io.ktor.client.call.body
-import kotlinx.serialization.json.JsonElement
 
 class MainApi(token: RssToken) : AuthedApi(token) {
 
@@ -33,7 +32,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
 //                title = if (it.title.isNullOrEmpty()) "${it.viewString}${it.feeds?.title}" else "${it.viewString}${it.title}",
                 url = it.feeds?.siteUrl,
                 feedUrl = it.feeds?.url,
-                categories = listOf(RssTag(it.category, it.category)),
+                categories = listOfNotNull(if (it.category.isNullOrEmpty()) null else RssTag(it.category, it.category)),
                 favicon = it.feeds?.image,
             )
         }
@@ -52,60 +51,44 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         return data?.data?.convert()
     }
 
-    suspend fun getEntriesForAll(limit: Int): RssStream? {
-        return getEntries(
-            jsonOf(
-                "read" to false,
-//                "view" to 0, // if view is not right, won't return data
-                "withContent" to true,
-                "limit" to limit,
-            )
-        )
+    suspend fun getEntriesForAll(limit: Int, publishedAfter: String?): RssStream? {
+        return getEntries(limit, publishedAfter)
     }
 
-    suspend fun getEntriesForCollection(limit: Int): RssStream? {
-        return getEntries(
-            jsonOf(
-                "isCollection" to true,
-//                "view" to 0, // if view is not right, won't return data
-                "withContent" to true,
-                "limit" to limit,
-            )
-        )
+    suspend fun getEntriesForCollection(limit: Int, publishedAfter: String?): RssStream? {
+        return getEntries(limit, publishedAfter, arrayOf("isCollection" to true))
     }
 
-    suspend fun getEntriesForFeed(feedId: String, limit: Int): RssStream? {
-        return getEntries(
-            jsonOf(
-                "feedId" to feedId,
-                "read" to false,
-//                "view" to 0, // if view is not right, won't return data
-                "withContent" to true,
-                "limit" to limit,
-            )
-        )
+    suspend fun getEntriesForFeed(feedId: String, limit: Int, publishedAfter: String?): RssStream? {
+        return getEntries(limit, publishedAfter, arrayOf("feedId" to feedId))
     }
 
-    suspend fun getEntriesForCategory(category: String, limit: Int): RssStream? {
+    suspend fun getEntriesForCategory(category: String, limit: Int, publishedAfter: String?): RssStream? {
         val feedIds = toJson<Array<String>>(category)
-        return getEntries(
-            jsonOf(
-                "feedIdList" to feedIds,
-                "read" to false,
-//                "view" to 0, // if view is not right, won't return data
-                "withContent" to true,
-                "limit" to limit,
-            )
-        )
+        return getEntries(limit, publishedAfter, arrayOf("feedIdList" to feedIds))
     }
 
-    private suspend fun getEntries(o: JsonElement): RssStream? {
+    private suspend fun getEntries(
+        limit: Int,
+        publishedAfter: String?,
+        array: Array<Pair<String, Any?>> = emptyArray()
+    ): RssStream? {
+        val o = jsonOf(
+            "read" to false,
+//                "view" to 0, // if view is not right, won't return data
+            "withContent" to true,
+            "limit" to limit,
+            *array,
+            *if (!publishedAfter.isNullOrEmpty()) arrayOf("publishedAfter" to publishedAfter) else emptyArray()
+        )
         val data =
             execute(HttpMethod.POST, FoloConstants.URL_ENTRIES, body = o.toString()).toType<FoloListData<FoloEntries>>()
+        val items = data?.data?.mapNotNull { entries ->
+            entries.convert()
+        }.orEmpty()
         return RssStream(
-            items = data?.data?.mapNotNull { entries ->
-                entries.convert()
-            }.orEmpty()
+            items = items,
+            continuation = data?.data?.lastOrNull()?.entries?.publishedAt
         )
     }
 

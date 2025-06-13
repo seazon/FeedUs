@@ -13,7 +13,7 @@ fun ArticlesScreen(
     navToArticle: (item: Item) -> Unit,
 ) {
     val viewModel = koinViewModel<ArticlesViewModel>()
-    viewModel.load(categoryId, feedId, starred)
+    viewModel.init(categoryId, feedId, starred)
     ArticlesScreenComposable(
         stateFlow = viewModel.state,
         onItemClick = {
@@ -24,5 +24,8 @@ fun ArticlesScreen(
         markAllRead = {
             viewModel.markAllRead()
         },
+        loadMoreData = {
+            viewModel.load()
+        }
     )
 }
