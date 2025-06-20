@@ -113,6 +113,7 @@ class LoginViewModel(
                 api.setUserInfo(token)
 //                updateProvider(token)
                 tokenSettings.saveToken(token)
+                api.setToken(token)
 //                checkAndUpdateSyncMode(api)
             }
             if (tokenSettings.getToken().isAuthed()) {
