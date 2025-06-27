@@ -1,6 +1,7 @@
 package com.seazon.feedme.lib.summary
 
 import com.seazon.feedme.lib.ai.gemini.GeminiApi
+import io.ktor.client.network.sockets.SocketTimeoutException
 
 object SummaryUtil {
 
@@ -13,8 +14,11 @@ object SummaryUtil {
                     val api = GeminiApi()
                     val result = api.summary(query, language, key)
                     result?.dst
+                } catch (e: SocketTimeoutException) {
+                    e.printStackTrace()
+                    throw Exception("[gemini]summary error: socket timeout")
                 } catch (e: Exception) {
-                    throw Exception("[gemini]summary error: ${e.message}, query: ${query.take(50)}")
+                    throw Exception("[gemini]summary error: request failed")
                 }
             }
 
