@@ -14,6 +14,7 @@ import com.seazon.feedme.lib.rss.service.folo.bo.FoloData
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloEntries
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloFeeds
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloListData
+import com.seazon.feedme.lib.rss.service.folo.bo.FoloSubscribeResponse
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloSubscription
 import com.seazon.feedme.lib.utils.jsonOf
 import com.seazon.feedme.lib.utils.toJson
@@ -111,5 +112,28 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "readHistories" to entryIds?.mapNotNull { it },
         )
         return execute(HttpMethod.POST, FoloConstants.URL_READS, null, null, o.toString()).body()
+    }
+
+    suspend fun subscribeFeed(
+        title: String,
+        feedId: String, // here is feed url
+        category: String?,
+    ): FoloSubscribeResponse {
+        val o = jsonOf(
+            "url" to feedId,
+            "title" to title,
+            "view" to 0,
+            "category" to category,
+        )
+        return execute(HttpMethod.POST, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
+    }
+
+    suspend fun unsubscribeFeed(
+        feedId: String,
+    ): String? {
+        val o = jsonOf(
+            "feedIdList" to listOf(feedId),
+        )
+        return execute(HttpMethod.DELETE, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
     }
 }

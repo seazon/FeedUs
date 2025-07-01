@@ -2,6 +2,7 @@ package com.seazon.feedus.ui.feeds
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -34,23 +38,26 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil3.compose.AsyncImage
+import com.seazon.feedme.lib.rss.service.explore.ExploreResult
 import com.seazon.feedus.ui.customize.FmOutlinedTextField
-import feedus.composeapp.generated.resources.*
+import feedus.composeapp.generated.resources.Res
+import feedus.composeapp.generated.resources.common_cancel
+import feedus.composeapp.generated.resources.login_host
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SubscribeDialogComposable(
-    state: StateFlow<SubscribeDialogState>,
+    stateFlow: StateFlow<SubscribeDialogState>,
     onDismiss: () -> Unit = {},
-    subscribe: (
-        host: String?,
-    ) -> Unit,
+    subscribe: (query: String?) -> Unit,
+    onItemClick: (item: ExploreResult) -> Unit,
 ) {
-    val state2 by state.collectAsState()
-    var host by remember {
-        mutableStateOf(state2.rssUrl)
+    val state by stateFlow.collectAsState()
+    var query by remember {
+        mutableStateOf(state.query)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     Dialog(
@@ -70,9 +77,9 @@ fun SubscribeDialogComposable(
                 )
                 .padding(24.dp)
         ) {
-            if (state2.errorTips.isNotEmpty()) {
+            if (state.errorTips.isNotEmpty()) {
                 Text(
-                    text = state2.errorTips,
+                    text = state.errorTips,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.error,
@@ -80,16 +87,22 @@ fun SubscribeDialogComposable(
                 Spacer(modifier = Modifier.height(8.dp))
             }
             FmOutlinedTextField(
-                text = host,
+                text = query,
                 placeHolder = stringResource(resource = Res.string.login_host),
-                enabled = !state2.isLoading,
+                enabled = !state.isLoading,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                 ),
                 onValueChange = {
-                    host = it
+                    query = it
                 },
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn {
+                items(count = state.results.size, itemContent = {
+                    Item(state.results[it], onItemClick = onItemClick)
+                })
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -109,7 +122,7 @@ fun SubscribeDialogComposable(
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                if (state2.isLoading) {
+                if (state.isLoading) {
                     Spacer(modifier = Modifier.width(24.dp))
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
@@ -120,11 +133,12 @@ fun SubscribeDialogComposable(
                     )
                     Spacer(modifier = Modifier.width(24.dp))
                 } else {
-                    TextButton(modifier = Modifier.widthIn(max = 140.dp),
+                    TextButton(
+                        modifier = Modifier.widthIn(max = 140.dp),
                         onClick = {
 //                        errorTips.value = ""
                             keyboardController?.hide()
-                            subscribe(host)
+                            subscribe(query)
                         }) {
                         Text(
                             text = "subscribe".uppercase(),
@@ -139,14 +153,42 @@ fun SubscribeDialogComposable(
     }
 }
 
+@Composable
+private fun Item(item: ExploreResult, onItemClick: (ExploreResult) -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth().clickable {
+        onItemClick(item)
+    }) {
+        AsyncImage(
+            modifier = Modifier.size(72.dp).clip(RoundedCornerShape(8.dp)),
+            model = item.iconUrl,
+            contentDescription = "rss logo",
+            contentScale = ContentScale.Crop,
+        )
+        Column(modifier = Modifier.padding(start = 16.dp)) {
+            Text(
+                item.title.orEmpty(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                "${item.subscribers.toString()} - ${item.description.orEmpty()}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
+    }
+
+}
+
 @Preview
 @Composable
 fun SubscribeDialogComposablePreview() {
     val state = MutableStateFlow(SubscribeDialogState(isLoading = true, errorTips = "hello"))
     SubscribeDialogComposable(
-        state = state,
+        stateFlow = state,
         subscribe = { host ->
 
-        }
+        },
+        onItemClick = {}
     )
 }

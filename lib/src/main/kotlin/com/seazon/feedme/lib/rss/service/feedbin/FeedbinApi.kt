@@ -139,7 +139,7 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean {
         val url = RssApi.id2url(feedId)
-        subscriptionsApi!!.createSubscriptions(url)
+        subscriptionsApi?.createSubscriptions(url)
         return true // TODO should check response for error case
     }
 

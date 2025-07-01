@@ -146,7 +146,7 @@ fun AppBar(state: ArticlesScreenState, navBack: () -> Unit, markAllRead: () -> U
 }
 
 @Composable
-fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit) {
+private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

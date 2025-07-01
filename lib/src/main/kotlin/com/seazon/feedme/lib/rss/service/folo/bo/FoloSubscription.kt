@@ -26,6 +26,7 @@ data class FoloSubscription(
 data class FoloFeed(
     val id: String? = null,
     val title: String? = null,
+    val description: String? = null,
     val url: String? = null,
     val siteUrl: String? = null,
     val image: String? = null,

@@ -7,6 +7,7 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.folo.api.AuthenticationApi
+import com.seazon.feedme.lib.rss.service.folo.api.DiscoverApi
 import com.seazon.feedme.lib.rss.service.folo.api.MainApi
 
 class FoloApi : RssApi {
@@ -14,6 +15,7 @@ class FoloApi : RssApi {
     private var token: RssToken? = null
     private val authenticationApi: AuthenticationApi
     private var mainApi: MainApi? = null
+    var discoverApi: DiscoverApi? = null
 
     init {
         authenticationApi = AuthenticationApi()
@@ -22,6 +24,7 @@ class FoloApi : RssApi {
     override fun setToken(token: RssToken) {
         this.token = token
         mainApi = MainApi(token)
+        discoverApi = DiscoverApi(token)
     }
 
     override fun getToken(): RssToken? {
@@ -203,25 +206,19 @@ class FoloApi : RssApi {
 
     override fun supportSubscribe() = true
 
-    override fun supportUpdateSubscription() = true
+    override fun supportUpdateSubscription() = false
 
     override suspend fun subscribeFeed(
         title: String,
-        feedId: String,
+        feedId: String, // here is feed url
         categories: Array<String>
     ): Boolean {
-//        val response = subscriptionsApi?.subscribeFeed(title, feedId, categories)
-//        //        {
-////            "errorCode":400, "errorId":"ap5int-sv2.2019123000.2410146", "errorMessage":
-////            "invalid feed id"
-////        }
-//        return response != null && !response.contains("errorMessage")
-        return false
+        val response = mainApi?.subscribeFeed(title, feedId, categories.firstOrNull())
+        return response?.feed != null
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String? {
-//        return subscriptionsApi?.unsubscribeFeed(feedId)
-        return null
+        return mainApi?.unsubscribeFeed(feedId)
     }
 
     override suspend fun editFeed(

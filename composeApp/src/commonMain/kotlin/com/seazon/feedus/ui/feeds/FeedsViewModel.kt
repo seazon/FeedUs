@@ -1,14 +1,15 @@
 package com.seazon.feedus.ui.feeds
 
 import androidx.lifecycle.viewModelScope
-import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.Static
+import com.seazon.feedme.lib.rss.service.explore.ExploreApi
 import com.seazon.feedme.lib.rss.service.localrss.LocalRssApi
 import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedus.data.AppSettings
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
@@ -142,7 +143,8 @@ class FeedsViewModel(
             // TODO use in app
             val tags = api.getTags()
             val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
-            val starredCount = stars?.items?.size.orZero() // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
+            val starredCount =
+                stars?.items?.size.orZero() // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             if (api.supportPagingFetchIds()) {
                 val unreadCounts = api.getUnreadCounts()
                 val categoryMap = rssDatabase.getCategories().apply {
@@ -182,14 +184,16 @@ class FeedsViewModel(
     }
 
     fun subscribe(
-        host: String?,
+        query: String?,
         onSuccess: () -> Unit,
     ) {
+        if (query.isNullOrEmpty()) return
+
         viewModelScope.launch {
             val api = rssSDK.getRssApi(false)
-            when (api) {
-                is LocalRssApi -> {
-                    api.search(host)?.let {
+            when (api.getToken()?.accoutType) {
+                Static.ACCOUNT_TYPE_LOCAL_RSS -> {
+                    (api as LocalRssApi).search(query)?.let {
                         if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>())) {
                             onSuccess()
                         } else {
@@ -199,7 +203,6 @@ class FeedsViewModel(
                                 )
                             }
                         }
-
                     } ?: run {
                         _subscribeState.update {
                             it.copy(
@@ -210,7 +213,42 @@ class FeedsViewModel(
                 }
 
                 else -> {
-                    // TODO handle other cases
+                    val results = ExploreApi.search(query, api)
+                    if (results.isEmpty()) {
+                        _subscribeState.update {
+                            it.copy(
+                                errorTips = "Not found",
+                            )
+                        }
+                    } else {
+                        _subscribeState.update {
+                            it.copy(
+                                results = results,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun subscribe2(
+        title: String,
+        feedId: String,
+        feedUrl: String,
+        onSuccess: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            val api = rssSDK.getRssApi(false)
+            val subscribeFeedUrl = if (api.getToken()?.accoutType == Static.ACCOUNT_TYPE_FOLO) feedUrl else feedId
+            val success = api.subscribeFeed(title, subscribeFeedUrl, arrayOf())
+            if (success) {
+                onSuccess()
+            } else {
+                _subscribeState.update {
+                    it.copy(
+                        errorTips = "Subscribe failed",
+                    )
                 }
             }
         }

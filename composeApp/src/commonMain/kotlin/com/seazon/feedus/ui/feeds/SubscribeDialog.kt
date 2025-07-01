@@ -10,11 +10,19 @@ fun SubscribeDialog(
 ) {
     val vm: FeedsViewModel = koinViewModel<FeedsViewModel>()
     SubscribeDialogComposable(
-        state = vm.subscribeState,
+        stateFlow = vm.subscribeState,
         onDismiss = onDismiss,
-        subscribe = { host ->
+        subscribe = { query ->
             vm.subscribe(
-                host = host,
+                query = query,
+                onSuccess = onSuccess,
+            )
+        },
+        onItemClick = {
+            vm.subscribe2(
+                title = it.title.orEmpty(),
+                feedId = it.feedId.orEmpty(),
+                feedUrl = it.feedUrl.orEmpty(),
                 onSuccess = onSuccess,
             )
         }

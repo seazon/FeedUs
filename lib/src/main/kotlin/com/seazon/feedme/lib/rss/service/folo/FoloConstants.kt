@@ -43,7 +43,7 @@ object FoloConstants {
     val URL_STREAMS_IDS: String = API + "/streams/ids"
     val URL_STREAMS_CONTENTS: String = API + "/streams/contents"
 
-    val URL_SEARCH_FEEDS: String = API + "/search/feeds"
+    val URL_DISCOVER: String = API + "/discover"
 
     val URL_ENTRIES_CONTENT: String = API + "/entries/%s"
     val URL_ENTRIES_IDS: String = API + "/entries/.mget"
