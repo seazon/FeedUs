@@ -37,8 +37,7 @@ class HttpManager {
                     proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(host, port))
                 }
             }
-
-            expectSuccess = true
+            expectSuccess = false
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true

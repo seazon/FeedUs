@@ -26,7 +26,10 @@ class GeminiApi {
     }
 
     suspend fun summary(query: String, language: String, key: String): Translation? {
-        val result = generateContent("Summary the text in $language, JSON format output, key is dst, dst should be a string, no more than 500 words, use markdown to improve readability if need. Text: $query", key)
+        val result = generateContent(
+            prompt = "Summary the text in $language, JSON format output, key is dst, dst should be a string, and no more than 400 words, use markdown to improve readability if need. Text: $query",
+            key = key
+        )
         val text = result?.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
         return if (text.isNullOrEmpty()) {
             null
@@ -46,7 +49,7 @@ class GeminiApi {
             ),
         )
         val body = Json.encodeToString(requestBody).trimIndent()
-        return HttpManager.request(
+        val result: Result? = HttpManager.request(
             httpMethod = HttpMethod.POST,
             url = URL,
             headers = mapOf(
@@ -57,6 +60,10 @@ class GeminiApi {
             ),
             body = body,
         ).toType()
+        if (result?.error != null) {
+            throw GeminiException(result.error.code, result.error.message)
+        }
+        return result
     }
 }
 
@@ -68,7 +75,14 @@ data class RequestBody(
 @Serializable
 data class Result(
     val candidates: List<Candidates>? = null,
-)
+    val error: Error? = null,
+) {
+    @Serializable
+    data class Error(
+        val code: Int,
+        val message: String,
+    )
+}
 
 @Serializable
 data class Candidates(
@@ -89,3 +103,5 @@ data class Part(
 data class Translation(
     val dst: String? = null,
 )
+
+class GeminiException(val code: Int, message: String) : Exception(message)

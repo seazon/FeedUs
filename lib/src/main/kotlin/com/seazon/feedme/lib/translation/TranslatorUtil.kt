@@ -1,9 +1,11 @@
 package com.seazon.feedme.lib.translation
 
 import com.seazon.feedme.lib.ai.gemini.GeminiApi
+import com.seazon.feedme.lib.ai.gemini.GeminiException
 import com.seazon.feedme.lib.translation.baidu.BaiduTranslateApi
 import com.seazon.feedme.lib.translation.google.GoogleTranslateApi
 import com.seazon.feedme.lib.translation.microsoft.MicrosoftTranslateApi
+import io.ktor.client.network.sockets.SocketTimeoutException
 
 object TranslatorUtil {
 
@@ -29,6 +31,12 @@ object TranslatorUtil {
                     val api = GeminiApi()
                     val result = api.translate(query, language, key)
                     result?.dst
+                } catch (e: GeminiException) {
+                    e.printStackTrace()
+                    throw Exception("[gemini]translate error: [${e.code}]${e.message}")
+                } catch (e: SocketTimeoutException) {
+                    e.printStackTrace()
+                    throw Exception("[gemini]translate error: socket timeout")
                 } catch (e: Exception) {
                     throw Exception("[gemini]translate error: ${e.message}, query: $query")
                 }
