@@ -1,7 +1,9 @@
 package com.seazon.feedme.lib.utils
 
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 object DateUtil {
     fun format(time: Long): String {
         return Instant.fromEpochMilliseconds(time).toString()

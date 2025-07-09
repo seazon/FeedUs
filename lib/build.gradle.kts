@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -10,7 +9,7 @@ plugins {
 }
 
 group = "com.seazon.feedme"
-version = "0.68"
+version = "0.69"
 
 publishing {
     repositories {
