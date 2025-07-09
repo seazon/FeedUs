@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -19,10 +18,6 @@ kotlin {
             kotlinOptions {
                 jvmTarget = "11"
             }
-//            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-//            compilerOptions {
-//                jvmTarget.set(JvmTarget.JVM_11)
-//            }
         }
     }
 
@@ -58,7 +53,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
-//            implementation(libs.androidx.compose.material3)
             implementation(libs.koin.androidx.compose)
         }
         val commonMain by getting {
@@ -71,32 +65,26 @@ kotlin {
             implementation(project(":lib"))
             implementation(compose.runtime)
             implementation(compose.foundation)
-//            implementation(compose.material)
             implementation(compose.ui)
-            implementation(libs.bundles.compose)
             implementation(compose.components.resources)
-//            implementation(compose.components.uiToolingPreview)
-            implementation(libs.ktor.client.core)
+            implementation(libs.bundles.compose)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
-//            implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.runtime)
-            implementation(libs.kotlinx.datetime)
-//            implementation(libs.koin.core)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
-//            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
-//            implementation("tech.annexflow.compose:constraintlayout-compose-multiplatform:0.5.0")
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha13")
-            implementation("com.russhwolf:multiplatform-settings:1.1.1")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
-            implementation("io.coil-kt.coil3:coil-compose:3.0.4")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.4")
-            implementation("io.github.dokar3:sonner:0.3.8")
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.coil)
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.sonner)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
