@@ -4,9 +4,9 @@ import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.network.toType
+import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class GeminiApi {
@@ -39,6 +39,9 @@ class GeminiApi {
     }
 
     private suspend fun generateContent(prompt: String, key: String): Result? {
+        if (key.isEmpty()) {
+            throw GeminiException(-1, "API key is required for Gemini API")
+        }
         val requestBody = RequestBody(
             listOf(
                 Content(
@@ -61,7 +64,7 @@ class GeminiApi {
             body = body,
         ).toType()
         if (result?.error != null) {
-            throw GeminiException(result.error.code, result.error.message)
+            throw GeminiException(result.error.code.orZero(), result.error.message.orEmpty())
         }
         return result
     }
@@ -79,8 +82,8 @@ data class Result(
 ) {
     @Serializable
     data class Error(
-        val code: Int,
-        val message: String,
+        val code: Int? = null,
+        val message: String? = null,
     )
 }
 
