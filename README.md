@@ -25,5 +25,5 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 | normal login | ✅      | ✅  | ✅     | ❌      |❌     |
 | auth login   | ✅      | ❌  | ❌     | ❌      |❌     |
 | sync         | ✅      | ✅  | ✅     | ❌      |❌     |
-| subscribe    | ✅      | ❌  | ✅     | ❌      |❌     |
+| subscribe    | ✅      | ✅  | ✅     | ❌      |❌     |
 | mark read    | ✅      | ✅  | ✅     | ❌      |❌     |
