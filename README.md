@@ -6,14 +6,10 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 
 ## Screenshots
 ### Android
-<img width="250" alt="ui-Android-login" src="./docs/imgs/android-login.png" />
-<img width="250" alt="ui-Android-login" src="./docs/imgs/android-feeds.png" />
-<img width="250" alt="ui-Android-login" src="./docs/imgs/android-articles.png" />
+<img width="250" alt="ui-Android-login" src="./docs/imgs/android-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/android-feeds.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/android-articles.png" />
 
 ### iOS
-<img width="250" alt="ui-Android-login" src="./docs/imgs/ios-login.png" />
-<img width="250" alt="ui-Android-login" src="./docs/imgs/ios-feeds.png" />
-<img width="250" alt="ui-Android-login" src="./docs/imgs/ios-articles.png" />
+<img width="250" alt="ui-Android-login" src="./docs/imgs/ios-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-feeds.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-articles.png" />
 
 ### macOS
 ```
@@ -21,14 +17,13 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 ./gradlew build
 ./gradlew run
 ```
-<img width="250" alt="ui-Android-login" src="./docs/imgs/macos-login.png" />
-<img width="250" alt="ui-Android-login" src="./docs/imgs/macos-feeds.png" />
+<img width="250" alt="ui-Android-login" src="./docs/imgs/macos-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/macos-feeds.png" />
 
-## Features
-| services     | Android | iOS | macOS | Windows | Linux |
-|--------------|---------|-----|----- -|---------|-------|
-| normal login | ✅      | ✅  | ✅    | ❌     |❌     |
-| auth login   | ✅      | ❌  | ❌    | ❌     |❌     |
-| sync         | ✅      | ✅  | ❌    | ❌     |❌     |
-| subscribe    | ✅      | ❌  | ❌    | ❌     |❌     |
-| mark read    | ✅      | ✅  | ❌    | ❌     |❌     |
+## Progress
+| function     | Android | iOS | macOS | Windows | Linux |
+|--------------|---------|-----|-------|---------|-------|
+| normal login | ✅      | ✅  | ✅     | ❌      |❌     |
+| auth login   | ✅      | ❌  | ❌     | ❌      |❌     |
+| sync         | ✅      | ✅  | ❌     | ❌      |❌     |
+| subscribe    | ✅      | ❌  | ❌     | ❌      |❌     |
+| mark read    | ✅      | ✅  | ❌     | ❌      |❌     |
