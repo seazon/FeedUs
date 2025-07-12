@@ -4,19 +4,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeedlySearchResponse(
-    val results: List<SearchResult>
+    val results: List<SearchResult>? = null,
 ) {
     @Serializable
     data class SearchResult(
-        val feedId: String?,
-        val updated: Long?,
-        val lastUpdated: Long?,
-        val title: String?,
-        val subscribers: Int?,
-        val website: String?,
-        val description: String?,
-        val iconUrl: String?,
-        val visualUrl: String?
+        val feedId: String? = null,
+        val updated: Long? = null,
+        val lastUpdated: Long? = null,
+        val title: String? = null,
+        val subscribers: Int? = null,
+        val website: String? = null,
+        val description: String? = null,
+        val iconUrl: String? = null,
+        val visualUrl: String? = null,
     ) {
         val feedUrl: String
             get() = feedId?.substring(5) ?: ""

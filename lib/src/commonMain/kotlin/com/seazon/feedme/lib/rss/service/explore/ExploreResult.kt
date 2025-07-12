@@ -20,7 +20,7 @@ data class ExploreResult(
     companion object {
 
         fun parseFeedlySearch(r: FeedlySearchResponse): List<ExploreResult> {
-            return r.results.map {
+            return r.results?.map {
                 ExploreResult(
                     it.feedId,
                     it.updated,
@@ -31,7 +31,7 @@ data class ExploreResult(
                     it.description,
                     it.iconUrl,
                 )
-            }
+            }.orEmpty()
         }
 
         fun parseFoloSearch(r: FoloListData<DiscoverFeed>?): List<ExploreResult> {
