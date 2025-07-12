@@ -1,4 +1,4 @@
-package com.seazon.feedus.cache
+package com.seazon.feedus.platform
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver

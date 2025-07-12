@@ -8,6 +8,7 @@ import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.SelfHostedRssApi
 import com.seazon.feedme.lib.utils.LogUtils
 import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedme.platform.TimeProvider
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
 import com.seazon.feedus.ui.BaseViewModel
@@ -49,7 +50,7 @@ class LoginViewModel(
     ) {
         setTokenAccountTypeAndResetApi(Static.ACCOUNT_TYPE_LOCAL_RSS)
         val token = tokenSettings.getToken()
-        token.expiresTimestamp = System.currentTimeMillis() + 1000L * 3600 * 24 * 365 * 99
+        token.expiresTimestamp = TimeProvider.currentTimeMillis() + 1000L * 3600 * 24 * 365 * 99
         tokenSettings.saveToken(token)
         onSuccess()
     }

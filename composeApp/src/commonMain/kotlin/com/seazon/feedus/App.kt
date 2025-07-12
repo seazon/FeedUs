@@ -1,10 +1,6 @@
 package com.seazon.feedus
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,13 +23,9 @@ object A {
 fun App() {
     val navController: NavHostController = rememberNavController()
     val uriHandler = LocalUriHandler.current
-
     NavHost(
         navController = navController,
         startDestination = Screen.Feeds.name,
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         composable(route = Screen.Login.name) {
             LoginScreen(
@@ -79,6 +71,9 @@ fun App() {
         }
         composable(route = Screen.Demo.name) {
             DemoScreen(
+                navBack = {
+                    navController.popBackStack()
+                },
                 navToTranslator = {
                     navController.navigate(Screen.Translator.name)
                 },

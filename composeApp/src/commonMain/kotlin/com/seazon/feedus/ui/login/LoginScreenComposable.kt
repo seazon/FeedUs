@@ -107,7 +107,7 @@ private fun MainContent(
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -118,17 +118,14 @@ private fun MainContent(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(resource = Res.drawable.ic_launcher_monochrome),
+                painter = painterResource(resource = Res.drawable.ic_logo),
                 contentDescription = "FeedUs logo",
-                modifier = Modifier
-                    .fillMaxSize(),
-                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surface)
+                modifier = Modifier.fillMaxSize(),
             )
         }
-
         Box(
             modifier = Modifier
-                .padding(bottom = 24.dp)
+                .fillMaxWidth()
                 .weight(2f),
             contentAlignment = Alignment.TopCenter,
         ) {
@@ -137,16 +134,14 @@ private fun MainContent(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .padding(horizontal = 24.dp)
-                    .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))
+                    .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(20.dp))
                     .padding(vertical = 20.dp),
             ) {
                 items(count = displayServices.value.size.orZero(), itemContent = {
                     RssServiceItem(displayServices.value[it], onItemClick = onItemClick)
                 })
             }
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-            ) {
+            SingleChoiceSegmentedButtonRow {
                 SegmentedButton(selected = index.intValue == 0, onClick = {
                     index.intValue = 0
                     displayServices.value = items.filter { it.group == RssTypeGroup.SERVICE }

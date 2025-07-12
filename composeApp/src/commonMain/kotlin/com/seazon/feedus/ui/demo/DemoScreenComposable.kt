@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,10 +25,12 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DemoScreenComposable(
+    navBack: () -> Unit,
     navToTranslator: () -> Unit,
     navToSummary: () -> Unit,
 ) {
     MainContent(
+        navBack = navBack,
         navToTranslator = navToTranslator,
         navToSummary = navToSummary,
     )
@@ -32,6 +38,7 @@ fun DemoScreenComposable(
 
 @Composable
 private fun MainContent(
+    navBack: () -> Unit,
     navToTranslator: () -> Unit,
     navToSummary: () -> Unit,
 ) {
@@ -42,7 +49,7 @@ private fun MainContent(
             .padding(WindowInsets.systemBars.asPaddingValues()),
         horizontalAlignment = Alignment.Start,
     ) {
-        AppBar()
+        AppBar(navBack)
         Text(
             text = stringResource(Res.string.translator_title),
             color = MaterialTheme.colorScheme.onSurface,
@@ -63,8 +70,22 @@ private fun MainContent(
 }
 
 @Composable
-fun AppBar() {
+fun AppBar(navBack: () -> Unit) {
     TopAppBar(
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    navBack()
+                },
+                modifier = Modifier.padding(start = 2.dp, top = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         title = {
             Text(
                 text = stringResource(Res.string.demo_title),
@@ -82,6 +103,7 @@ fun AppBar() {
 @Composable
 fun DemoScreenComposablePreview() {
     DemoScreenComposable(
+        navBack = {},
         navToTranslator = {},
         navToSummary = {},
     )

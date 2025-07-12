@@ -1,0 +1,32 @@
+package com.seazon.feedme.lib.rss.service.feedbin.api
+
+import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.rss.bo.RssToken
+import com.seazon.feedme.lib.rss.service.feedbin.FeedbinConstants
+import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinSubscription
+import com.seazon.feedme.lib.utils.format
+import com.seazon.feedme.lib.utils.jsonOf
+
+class SubscriptionsApi(token: RssToken) : AuthedApi(token) {
+
+    suspend fun getSubscriptions(): List<FeedbinSubscription>? {
+        return execute(HttpMethod.GET, FeedbinConstants.URL_SUBSCRIPTIONS).convertBody()
+    }
+
+    suspend fun createSubscriptions(url: String?): String? {
+        val o = jsonOf(
+            "feed_url" to url
+        )
+        return execute(
+            HttpMethod.POST,
+            FeedbinConstants.URL_SUBSCRIPTIONS,
+            null,
+            null,
+            o.toString()
+        ).body
+    }
+
+    suspend fun deleteSubscriptions(id: String): String? {
+        return execute(HttpMethod.DELETE, FeedbinConstants.URL_SUBSCRIPTIONS_DELETE.format(id)).body
+    }
+}

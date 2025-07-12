@@ -2,7 +2,7 @@ package com.seazon.feedus.data
 
 import com.russhwolf.settings.Settings
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.utils.Helper
+import com.seazon.feedme.lib.utils.DateUtil
 import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedme.lib.utils.orZero
 
@@ -27,7 +27,7 @@ class TokenSettings {
                 settings.getStringOrNull("httpUsername"),
                 settings.getStringOrNull("httpPassword")
             )
-            debug("get user, expire date:" + Helper.formatDateLog(token?.expiresTimestamp.orZero()))
+            debug("get user, expire date:" + DateUtil.formatDateLog(token?.expiresTimestamp.orZero()))
         }
         return token!!
     }

@@ -25,7 +25,7 @@ import coil3.compose.AsyncImage
 import com.seazon.feedme.lib.utils.StringUtil
 import feedus.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import java.io.File
+//import java.io.File
 
 /**
  * Avatar supports
@@ -86,7 +86,9 @@ fun Avatar(
 private fun showImage(imageUrl: String?): Boolean {
     if (imageUrl.isNullOrEmpty()) return false
     if (StringUtil.isHttpUrl(imageUrl)) return true
-    return File(imageUrl).exists()
+    // TODO: support local file path
+//    return File(imageUrl).exists()
+    return false
 }
 
 @Preview

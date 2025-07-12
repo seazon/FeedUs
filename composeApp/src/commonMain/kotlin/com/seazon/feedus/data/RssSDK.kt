@@ -4,6 +4,7 @@ import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.RssUtil
+import com.seazon.feedme.platform.TimeProvider
 
 class RssSDK(val tokenSettings: TokenSettings) {
 
@@ -14,7 +15,7 @@ class RssSDK(val tokenSettings: TokenSettings) {
      */
     suspend fun getRssApi(forceExpire: Boolean): RssApi {
         val token: RssToken = tokenSettings.getToken()
-        if (forceExpire || token.expiresTimestamp < System.currentTimeMillis()) {
+        if (forceExpire || token.expiresTimestamp < TimeProvider.currentTimeMillis()) {
             api = initRssApi(token)
         }
         if (api == null) {

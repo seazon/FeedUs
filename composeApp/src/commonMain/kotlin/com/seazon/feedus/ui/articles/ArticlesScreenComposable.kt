@@ -40,6 +40,7 @@ import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.Item
 import com.seazon.feedme.lib.utils.HtmlUtils
 import com.seazon.feedme.lib.utils.orZero
+import com.seazon.feedme.platform.TimeProvider
 import com.seazon.feedus.DateUtil
 import com.seazon.feedus.ui.customize.EmptyView
 import com.seazon.feedus.ui.customize.LoadingView
@@ -209,7 +210,7 @@ fun ArticlesScreenPreview() {
             fid = "1",
             title = "[$it]this is title, it should be very very very very very very very very very very long",
             visual = "https://img.daofm.cn/wp-content/uploads/2020/09/Logo_Aroga-01.jpg",
-            publishedDate = System.currentTimeMillis(),
+            publishedDate = TimeProvider.currentTimeMillis(),
         )
     }
     val feeds = listOf(

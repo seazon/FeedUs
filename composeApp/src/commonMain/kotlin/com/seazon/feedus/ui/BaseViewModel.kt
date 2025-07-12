@@ -2,6 +2,7 @@ package com.seazon.feedus.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel : ViewModel() {
