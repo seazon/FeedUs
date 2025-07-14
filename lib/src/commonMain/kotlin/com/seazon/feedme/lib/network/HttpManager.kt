@@ -24,8 +24,8 @@ class HttpManager {
 
     companion object {
 
-        public const val IMAGE_MAX_SIZE = 1024 * 1024 * 15
-        private const val EXT_SVG = "svg"
+        const val IMAGE_MAX_SIZE = 1024 * 1024 * 15
+        const val EXT_SVG = "svg"
 
         private var host: String? = null
         private var port: Int = 0
@@ -173,7 +173,7 @@ class HttpManager {
 //            return request(httpMethod, url, params, headers, body, json).bodyAsChannel().toInputStream()
 //        }
 
-        private fun HttpResponse.contentLength(): Long {
+        fun HttpResponse.contentLength(): Long {
             val contentLengthHeader = headers["Content-Length"]
             if (contentLengthHeader != null) {
                 try {
@@ -192,7 +192,7 @@ class HttpManager {
             return headers["Content-Type"]
         }
 
-        private fun HttpResponse.imageType(): String? {
+        fun HttpResponse.imageType(): String? {
             return contentType()?.let {
                 it.split("/").lastOrNull()?.let {
                     if (it.contains(EXT_SVG) == true) {
