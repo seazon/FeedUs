@@ -43,13 +43,13 @@ data class FeedbinItem(
 
     @Serializable
     data class Image(
-        val original_url: String?,
-        val size_1: Size?,
+        val original_url: String? = null,
+        val size_1: Size? = null,
     ) : Entity() {
 
         @Serializable
         data class Size(
-            val cdn_url: String?,
+            val cdn_url: String? = null,
         ) : Entity()
     }
 }

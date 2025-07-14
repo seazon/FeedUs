@@ -37,14 +37,14 @@ data class ExploreResult(
         fun parseFoloSearch(r: FoloListData<DiscoverFeed>?): List<ExploreResult> {
             return r?.data?.map {
                 ExploreResult(
-                    it.feed.id,
+                    it.feed?.id,
                     DateUtil.isoStringToTimestamp(it.entries?.firstOrNull()?.publishedAt),
-                    it.feed.title,
+                    it.feed?.title,
                     it.subscriptionCount,
-                    it.feed.url,
-                    it.feed.siteUrl,
-                    it.feed.description,
-                    it.feed.image,
+                    it.feed?.url,
+                    it.feed?.siteUrl,
+                    it.feed?.description,
+                    it.feed?.image,
                 )
             }.orEmpty()
         }

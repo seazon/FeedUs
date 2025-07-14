@@ -37,15 +37,15 @@ data class FeverStream(
 
 @Serializable
 data class FeverItem(
-    var id: Long,
-    var feed_id: Long,
-    var title: String,
-    var author: String?,
-    var html: String,
-    var url: String,
-    var is_saved: Int,
-    var is_read: Int,
-    var created_on_time: Long
+    var id: Long? = null,
+    var feed_id: Long? = null,
+    var title: String? = null,
+    var author: String? = null,
+    var html: String? = null,
+    var url: String? = null,
+    var is_saved: Int? = null,
+    var is_read: Int? = null,
+    var created_on_time: Long? = null,
 ) : Entity() {
 
     fun convert(): RssItem {

@@ -4,19 +4,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OneTimeTokenResponse(
-    val user: User
+    val user: User? = null,
 ) {
     @Serializable
     data class User(
-        val name: String,
-        val email: String,
-        val emailVerified: Boolean,
-        val image: String,
-        val createdAt: String,
-        val updatedAt: String,
-//    val twoFactorEnabled:String,
-//    val handle:String,
-        val id: String,
+        val name: String? = null,
+        val email: String? = null,
+        val emailVerified: Boolean? = null,
+        val image: String? = null,
+        val createdAt: String? = null,
+        val updatedAt: String? = null,
+//    val twoFactorEnabled:String? = null,
+//    val handle:String? = null,
+        val id: String? = null,
     )
 }
 

@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Feeds(
-    val feeds: List<Feed>,
-    val feeds_groups: List<FeedGroup>
+    val feeds: List<Feed>? = null,
+    val feeds_groups: List<FeedGroup>? = null,
 ) {
     companion object {
 
@@ -19,9 +19,9 @@ data class Feeds(
             val feeds = toJson<Feeds>(json)
 
             val feedGroupMap = mutableMapOf<Int, MutableList<Group>>()
-            feeds.feeds_groups.forEach {
+            feeds.feeds_groups?.forEach {
                 groups.firstOrNull { group -> group.id == it.group_id }?.let { group ->
-                    it.feed_ids.split(",").forEach { feedId ->
+                    it.feed_ids?.split(",")?.forEach { feedId ->
                         feedGroupMap[feedId.toInt()]?.run {
                             this
                         } ?: run {
@@ -31,7 +31,7 @@ data class Feeds(
                 }
             }
 
-            return feeds.feeds.map {
+            return feeds.feeds?.map {
                 FeverSubscription(
                     it.id,
                     it.favicon_id,
@@ -44,7 +44,7 @@ data class Feeds(
                 ).apply {
                     categories = feedGroupMap[id]
                 }.convert()
-            }
+            }.orEmpty()
         }
     }
 }

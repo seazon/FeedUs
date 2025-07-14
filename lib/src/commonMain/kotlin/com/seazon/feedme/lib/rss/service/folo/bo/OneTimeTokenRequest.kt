@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OneTimeTokenRequest(
-    val token: String
+    val token: String? = null,
 )

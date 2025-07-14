@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FoloSubscription(
-    val feedId: String,
-    val view: Int,
+    val feedId: String? = null,
+    val view: Int? = null,
     val category: String? = null,
     val title: String? = null,
     val feeds: FoloFeed? = null,
-    val createdAt: String, // "2024-12-10T15:49:20.231Z"
+    val createdAt: String? = null, // "2024-12-10T15:49:20.231Z"
 ) {
     val viewString: String
         get() = when (view) {

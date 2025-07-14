@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeedlySummary(
-    val content: String?
+    val content: String? = null,
 ) : Entity()

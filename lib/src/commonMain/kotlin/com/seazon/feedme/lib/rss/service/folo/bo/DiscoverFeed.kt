@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiscoverFeed(
-    val feed: FoloFeed,
-    val entries: List<FoloEntry>?,
-    val subscriptionCount: Int,
+    val feed: FoloFeed? = null,
+    val entries: List<FoloEntry>? = null,
+    val subscriptionCount: Int? = null,
 )

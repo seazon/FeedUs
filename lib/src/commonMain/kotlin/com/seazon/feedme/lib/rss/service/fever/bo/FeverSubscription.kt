@@ -7,14 +7,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeverSubscription(
-    var id: Int,
-    var favicon_id: Int,
-    var title: String,
-    var url: String,
-    var site_url: String,
-    var is_spark: Int,
-    var last_updated_on_time: Long,
-    var categories: MutableList<Group>?
+    var id: Int? = null,
+    var favicon_id: Int? = null,
+    var title: String? = null,
+    var url: String? = null,
+    var site_url: String? = null,
+    var is_spark: Int? = null,
+    var last_updated_on_time: Long? = null,
+    var categories: MutableList<Group>? = null,
 ) : Entity() {
 
     fun convert(): RssFeed {
