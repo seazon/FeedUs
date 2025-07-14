@@ -13,6 +13,7 @@ open class AuthedApi(token: RssToken) : BaseApi(token) {
 
     protected fun setHeaderToken(headers: MutableMap<String, String>) {
         headers.put(FeedbinConstants.HTTP_HEADER_AUTHORIZATION_KEY, token.auth.orEmpty())
+        headers.put("Content-Type", "application/json")
     }
 
     protected suspend fun execute(
