@@ -11,7 +11,7 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 ### iOS
 <img width="250" alt="ui-Android-login" src="./docs/imgs/ios-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-feeds.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-articles.png" />
 
-### macOS
+### macOS / Windows
 ```
 ./gradlew clean
 ./gradlew build
@@ -19,11 +19,13 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 ```
 <img width="250" alt="ui-Android-login" src="./docs/imgs/macos-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/macos-feeds.png" />
 
+<img width="250" alt="ui-Android-login" src="./docs/imgs/windows-login.jpg" /><img width="250" alt="ui-Android-login" src="./docs/imgs/windows-feeds.jpg" /><img width="250" alt="ui-Android-login" src="./docs/imgs/windows-articles.jpg" />
+
 ## Progress
 | function     | Android | iOS | macOS | Windows | Linux |
-|--------------|---------|-----|-------|---------|-------|
-| normal login | ✅      | ✅  | ✅     | ❌      |❌     |
-| auth login   | ✅      | ❌  | ❌     | ❌      |❌     |
-| sync         | ✅      | ✅  | ✅     | ❌      |❌     |
-| subscribe    | ✅      | ✅  | ✅     | ❌      |❌     |
-| mark read    | ✅      | ✅  | ✅     | ❌      |❌     |
+|--------------|---------|-----|-------|---------|------|
+| normal login | ✅      | ✅  | ✅     | ✅      | ❓    |
+| auth login   | ✅      | ❌  | ❌     | ❌      | ❌    |
+| sync         | ✅      | ✅  | ✅     | ✅      | ❓    |
+| subscribe    | ✅      | ✅  | ✅     | ✅      | ❓    |
+| mark read    | ✅      | ✅  | ✅     | ✅      | ❓    |
