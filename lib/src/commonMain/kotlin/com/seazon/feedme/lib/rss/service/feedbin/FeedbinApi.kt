@@ -126,7 +126,7 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
                     } else {
                         maps[category.name.orEmpty()] = category.id.toInt()
                     }
-                    subscription.categories?.add(category)
+                    subscription.addCategory(category)
                 }
             }
         }

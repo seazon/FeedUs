@@ -39,6 +39,13 @@ data class FeedbinSubscription(
     fun getFavicon(): String? {
         return null
     }
+
+    fun addCategory(category: FeedbinCategory) {
+        if (categories == null) {
+            categories = mutableListOf()
+        }
+        categories!!.add(category)
+    }
 }
 
 fun Collection<FeedbinSubscription>.convert(): List<RssFeed> {
