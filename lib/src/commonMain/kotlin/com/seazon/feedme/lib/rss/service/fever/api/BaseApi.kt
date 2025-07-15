@@ -22,7 +22,10 @@ open class BaseApi(val token: RssToken) {
     ): SimpleResponse {
         params.add(NameValuePair("api", ""))
         params.add(NameValuePair(method, ""))
-        val response = HttpManager.requestWrap(HttpMethod.POST, getSchema(), params, null, null)
+        val headers = mapOf(
+            "Content-Type" to "application/x-www-form-urlencoded"
+        )
+        val response = HttpManager.requestWrap(HttpMethod.POST, getSchema(), params, headers, null)
 
         if (response.code != 200) {
             throw HttpException(HttpException.Type.EREMOTE, "HTTP code: ${response.code}")
