@@ -2,6 +2,7 @@ package com.seazon.feedme.lib.rss.service.folo.api
 
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.toType
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.folo.FoloConstants
@@ -20,7 +21,7 @@ class AuthenticationApi : BaseApi() {
 
     suspend fun applyOneTimeTokenAndSetUser(rssToken: RssToken, token: String?) {
         val headers = mutableMapOf(
-            "Content-Type" to "application/json"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_JSON
         )
         val body = Json.encodeToString(OneTimeTokenRequest(token.orEmpty())).trimIndent()
         val rsp =

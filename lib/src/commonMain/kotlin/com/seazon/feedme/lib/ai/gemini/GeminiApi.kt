@@ -2,6 +2,7 @@ package com.seazon.feedme.lib.ai.gemini
 
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.network.toType
 import com.seazon.feedme.lib.utils.orZero
@@ -56,7 +57,7 @@ class GeminiApi {
             httpMethod = HttpMethod.POST,
             url = URL,
             headers = mapOf(
-                "Content-Type" to "application/json",
+                HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_JSON,
             ),
             params = listOf(
                 NameValuePair("key", key),

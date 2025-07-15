@@ -3,6 +3,7 @@ package com.seazon.feedme.lib.rss.service.fever.api
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.network.SimpleResponse
 import com.seazon.feedme.lib.rss.bo.RssToken
@@ -23,7 +24,7 @@ open class BaseApi(val token: RssToken) {
         params.add(NameValuePair("api", ""))
         params.add(NameValuePair(method, ""))
         val headers = mapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         val response = HttpManager.requestWrap(HttpMethod.POST, getSchema(), params, headers, null)
 

@@ -112,6 +112,10 @@ class HttpManager {
                     }"
                 )
             }
+            val headersNew = headers.orEmpty().toMutableMap()
+            if (!headersNew.contains(HttpUtils.HTTP_HEADERS_ACCEPT)) {
+                headersNew[HttpUtils.HTTP_HEADERS_ACCEPT] = HttpUtils.HTTP_HEADERS_ACCEPT_DEFAULT_VALUE
+            }
             if (!body.isNullOrEmpty()) {
                 LogUtils.debug("body: $body")
             }
@@ -139,7 +143,7 @@ class HttpManager {
                     setBody(body)
                 }
                 headers {
-                    headers?.forEach {
+                    headersNew.forEach {
                         append(it.key, it.value)
                     }
                 }
@@ -189,7 +193,7 @@ class HttpManager {
         }
 
         private fun HttpResponse.contentType(): String? {
-            return headers["Content-Type"]
+            return headers[HttpUtils.HTTP_HEADERS_CONTENT_TYPE]
         }
 
         fun HttpResponse.imageType(): String? {

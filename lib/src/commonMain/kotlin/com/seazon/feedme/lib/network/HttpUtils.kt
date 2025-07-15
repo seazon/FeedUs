@@ -23,6 +23,14 @@ object HttpUtils {
     private const val NAME_VALUE_SEPARATOR = "="
     val PAGE_MAX_SIZE: Int = 1024 * 1024 * 3
 
+    const val HTTP_HEADERS_USER_AGENT = "User-Agent"
+    const val HTTP_HEADERS_CONTENT_TYPE = "Content-Type"
+    const val HTTP_HEADERS_CONTENT_TYPE_JSON = "application/json"
+    const val HTTP_HEADERS_CONTENT_TYPE_WWW_FORM = "application/x-www-form-urlencoded"
+
+    const val HTTP_HEADERS_ACCEPT = "Accept"
+    const val HTTP_HEADERS_ACCEPT_DEFAULT_VALUE = "*/*"
+
 //    /**
 //     * 此方法在使用完InputStream后会关闭它。
 //     *

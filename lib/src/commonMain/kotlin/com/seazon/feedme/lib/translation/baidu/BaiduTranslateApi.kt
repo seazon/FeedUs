@@ -2,6 +2,7 @@ package com.seazon.feedme.lib.translation.baidu
 
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.platform.Crypto
 import io.ktor.client.call.body
@@ -21,7 +22,7 @@ class BaiduTranslateApi {
             httpMethod = HttpMethod.POST,
             url = url,
             headers = mapOf(
-                "Content-Type" to "application/x-www-form-urlencoded",
+                HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM,
             ),
             params = listOf(
                 NameValuePair("q", query),

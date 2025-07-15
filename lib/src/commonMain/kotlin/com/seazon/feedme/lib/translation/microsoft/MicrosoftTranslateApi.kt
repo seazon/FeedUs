@@ -2,6 +2,7 @@ package com.seazon.feedme.lib.translation.microsoft
 
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.utils.format
 import io.ktor.client.call.body
 import kotlinx.serialization.Serializable
@@ -18,7 +19,7 @@ class MicrosoftTranslateApi {
             url = url,
             headers = mapOf(
                 "Ocp-Apim-Subscription-Key" to key,
-                "Content-Type" to "application/json",
+                HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_JSON,
             ),
             body = """[{"Text":"$query"}]""",
         ).body()

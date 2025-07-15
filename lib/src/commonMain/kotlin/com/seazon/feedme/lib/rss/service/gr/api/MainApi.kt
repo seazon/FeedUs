@@ -53,7 +53,7 @@ class MainApi(token: RssToken, config: GrConfig, api: RssApi) : AuthedApi(token,
             NameValuePair("output", "json"),
         )
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return execute(
             HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_QUICKADD, null, headers,
@@ -107,7 +107,7 @@ class MainApi(token: RssToken, config: GrConfig, api: RssApi) : AuthedApi(token,
             }
         }
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return execute(
             HttpMethod.POST, GrConstants.URL_SUBSCRIPTION_EDIT, null, headers,
@@ -251,7 +251,7 @@ class MainApi(token: RssToken, config: GrConfig, api: RssApi) : AuthedApi(token,
             parameters2.add(NameValuePair("i", entryIds[i]))
         }
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return execute(
             HttpMethod.POST, GrConstants.URL_STREAM_ITEMS_CONTENTS, parameters, headers,
@@ -282,7 +282,7 @@ class MainApi(token: RssToken, config: GrConfig, api: RssApi) : AuthedApi(token,
         }
 
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return execute(
             httpMethod = HttpMethod.POST,

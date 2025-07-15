@@ -3,6 +3,7 @@ package com.seazon.feedme.lib.rss.service.feedbin.api
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.network.SimpleResponse
 import com.seazon.feedme.lib.rss.bo.RssToken
@@ -13,7 +14,7 @@ open class AuthedApi(token: RssToken) : BaseApi(token) {
 
     protected fun setHeaderToken(headers: MutableMap<String, String>) {
         headers.put(FeedbinConstants.HTTP_HEADER_AUTHORIZATION_KEY, token.auth.orEmpty())
-        headers.put("Content-Type", "application/json")
+        headers.put(HttpUtils.HTTP_HEADERS_CONTENT_TYPE, HttpUtils.HTTP_HEADERS_CONTENT_TYPE_JSON)
     }
 
     protected suspend fun execute(

@@ -3,6 +3,7 @@ package com.seazon.feedme.lib.rss.service.gr.api
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
+import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.Oauth2Response
 import com.seazon.feedme.lib.rss.bo.RssToken
@@ -61,7 +62,7 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val params = StringUtil.format(a, code, Static.REDIRECT_URI, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET)
 
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
     }
@@ -70,7 +71,7 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val a = "client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s"
         val params = StringUtil.format(a, GrConstants.CLIENT_ID, GrConstants.CLIENT_SECRET, refreshToken)
         val headers = mutableMapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+            HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
         return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
     }

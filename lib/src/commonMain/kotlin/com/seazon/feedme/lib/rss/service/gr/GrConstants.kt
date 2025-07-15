@@ -12,7 +12,6 @@ object GrConstants {
     const val HTTP_HEADER_AUTHORIZATION_KEY: String = "Authorization"
     const val HTTP_HEADER_AUTHORIZATION_VALUE: String = "GoogleLogin auth=%s"
     const val HTTP_HEADER_AUTHORIZATION_VALUE_OAUTH2: String = "Bearer %s"
-    const val HTTP_HEADER_USER_AGENT_KEY: String = "User-Agent"
     const val HTTP_HEADER_USER_AGENT_VALUE: String = "FeedMe"
 
     const val GLOBAL_STATE_STARRED: String = "com.google/starred"
