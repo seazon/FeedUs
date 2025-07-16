@@ -1,8 +1,8 @@
 package com.seazon.feedme.lib.rss.service.fever.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +25,7 @@ data class FeverSubscription(
         feed.feedUrl = url
         feed.favicon = null
         feed.categories = categories?.map {
-            RssTag(it.id.toString(), it.title)
+            RssCategory(it.id.toString(), it.title)
         } ?: ArrayList()
 
         return feed

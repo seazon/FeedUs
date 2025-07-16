@@ -36,6 +36,8 @@ class RssSDK(val tokenSettings: TokenSettings) {
             val accessTokenResponse = api.getAccessToken(token)
             api.setUserWithAccessToken(token, accessTokenResponse!!)
             tokenSettings.saveToken(token)
+        } catch (e: HttpException) {
+            throw e
         } catch (e: Exception) {
             throw HttpException(HttpException.Type.EEXPIRED, e)
         }
