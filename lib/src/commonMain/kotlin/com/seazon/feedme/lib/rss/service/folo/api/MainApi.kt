@@ -2,9 +2,9 @@ package com.seazon.feedme.lib.rss.service.folo.api
 
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssStream
-import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.bo.RssUnreadCount
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
@@ -31,7 +31,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
 //                title = if (it.title.isNullOrEmpty()) "${it.viewString}${it.feeds?.title}" else "${it.viewString}${it.title}",
                 url = it.feeds?.siteUrl,
                 feedUrl = it.feeds?.url,
-                categories = listOfNotNull(if (it.category.isNullOrEmpty()) null else RssTag(it.category, it.category)),
+                categories = listOfNotNull(if (it.category.isNullOrEmpty()) null else RssCategory(it.category, it.category)),
                 favicon = it.feeds?.image,
             )
         }

@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.service.ttrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
-import com.seazon.feedme.lib.rss.bo.RssTag
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import com.seazon.feedme.lib.utils.toJson
@@ -38,12 +38,12 @@ data class TtrssCategory(
          * @return
          * @throws JsonSyntaxException
          */
-        fun parse(json: String, useIdAsKey: Boolean): Map<String, RssTag> {
+        fun parse(json: String, useIdAsKey: Boolean): Map<String, RssCategory> {
             return toJson<TtrssTag2List>(json).content?.mapNotNull {
                 try {
                     val idid = it.id?.toInt() ?: -1
                     if (idid >= 0) {
-                        RssTag(
+                        RssCategory(
                             id = TtrssApi.wrapCategoryId(it.id.orEmpty()),
                             label = it.title
                         )

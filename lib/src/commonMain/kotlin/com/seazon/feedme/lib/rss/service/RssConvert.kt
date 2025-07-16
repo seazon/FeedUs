@@ -1,8 +1,8 @@
 package com.seazon.feedme.lib.rss.service
 
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssStream
-import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinStream
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinSubscription
 import com.seazon.feedme.lib.rss.service.gr.bo.GrStream
@@ -100,7 +100,7 @@ fun Collection<FeedbinSubscription>.convert(): List<RssFeed> {
             it.site_url ?: it.feed_url,
             it.feed_url,
             it.categories?.map { category ->
-                RssTag(category.id.toString(), category.name)
+                RssCategory(category.id.toString(), category.name)
             },
             null
         )

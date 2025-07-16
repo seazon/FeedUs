@@ -1,6 +1,7 @@
 package com.seazon.feedme.lib.rss.service.feedly.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
@@ -27,7 +28,7 @@ class FeedlySubscription : Entity() {
         feed.feedUrl = id.substring(5)
         feed.favicon = visualUrl
         feed.categories = categories?.map {
-            RssTag(it.id, it.label)
+            RssCategory(it.id, it.label)
         }?.filter {
             !FeedlyConstants.isIgnoredTag(it.label) && !FeedlyConstants.isIgnoredForTag(it.label)
         } ?: ArrayList()

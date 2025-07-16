@@ -1,8 +1,8 @@
 package com.seazon.feedme.lib.rss.service.feedbin.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -56,7 +56,7 @@ fun Collection<FeedbinSubscription>.convert(): List<RssFeed> {
             it.site_url ?: it.feed_url,
             it.feed_url,
             it.categories?.map { category ->
-                RssTag(category.id.toString(), category.name)
+                RssCategory(category.id.toString(), category.name)
             },
             null
         )

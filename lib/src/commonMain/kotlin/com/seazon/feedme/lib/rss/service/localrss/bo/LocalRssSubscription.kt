@@ -1,8 +1,8 @@
 package com.seazon.feedme.lib.rss.service.localrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
 
@@ -24,7 +24,7 @@ class LocalRssSubscription : Entity() {
             it.url = url
             it.feedUrl = feedUrl
             it.categories = this.categories.map { lc ->
-                RssTag(lc.id, lc.label)
+                RssCategory(lc.id, lc.label)
             }
             it.favicon = favicon
         }

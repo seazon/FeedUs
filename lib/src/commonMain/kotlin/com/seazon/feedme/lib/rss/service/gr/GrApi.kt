@@ -229,13 +229,6 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         feedId: String,
         categories: Array<String>
     ): Boolean {
-//        String feedIdPrefix = "feed/";
-//        String feedUrl = feedId.substring(feedIdPrefix.length());
-//        GrQuickAdd quickAdd = GrQuickAdd.parse(mainApi.quickadd(feedUrl));
-//        if (quickAdd.getError() != null) {
-//            return quickAdd.getError();
-//        }
-//          mainApi.editSubscription("subscribe", feedId, title, categories, null);
         mainApi?.editSubscription("subscribe", feedId, title, categories, null)
         return true // TODO should check response for error case
     }
