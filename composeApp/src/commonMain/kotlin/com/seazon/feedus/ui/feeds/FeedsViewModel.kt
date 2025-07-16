@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.Label
-import com.seazon.feedme.lib.rss.bo.RssTag
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.explore.ExploreApi
@@ -135,7 +135,7 @@ class FeedsViewModel(
 
     private suspend fun fetchSubscription(api: RssApi) {
         val subscriptions = api.getSubscriptions()
-        val tagMap = mutableMapOf<String, RssTag>()
+        val tagMap = mutableMapOf<String, RssCategory>()
         val feeds = subscriptions?.map { feed ->
             feed.categories?.forEach { tag ->
                 if (!tag.id.isNullOrEmpty()) {

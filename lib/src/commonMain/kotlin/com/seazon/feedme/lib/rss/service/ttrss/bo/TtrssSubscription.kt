@@ -1,6 +1,7 @@
 package com.seazon.feedme.lib.rss.service.ttrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
@@ -38,7 +39,7 @@ data class TtrssSubscription(
     companion object {
         const val ID_PREFIX: String = "feed/"
 
-        fun parse(json: String?, map: Map<String, RssTag>): List<RssFeed> {
+        fun parse(json: String?, map: Map<String, RssCategory>): List<RssFeed> {
             val list = toJson<TtrssFeedList>(json.orEmpty())
             return list.content?.map {
                 val c = RssFeed()

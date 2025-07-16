@@ -1,8 +1,8 @@
 package com.seazon.feedme.lib.rss.service.gr.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.gr.GrConstants
 import kotlinx.serialization.Serializable
 
@@ -19,7 +19,7 @@ fun Collection<GrSubscription>?.convert2(): List<RssFeed>? {
             it.htmlUrl ?: it.url,
             it.url,
             it.categories?.map { category ->
-                RssTag(category.id, category.label)
+                RssCategory(category.id, category.label)
             }?.filter {
                 !GrConstants.isIgnoredTag(it.label.orEmpty()) && !GrConstants.isIgnoredForTag(it.label.orEmpty())
             },
