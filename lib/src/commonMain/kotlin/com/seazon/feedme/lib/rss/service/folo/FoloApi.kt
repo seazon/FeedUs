@@ -76,6 +76,8 @@ class FoloApi : RssApi {
         return mainApi?.getUnreadCounts()
     }
 
+    override fun supportUnreadCounts() = true
+
     override suspend fun markRead(entryIds: Array<String>?): String? {
         return mainApi?.markArticleRead(entryIds)
     }

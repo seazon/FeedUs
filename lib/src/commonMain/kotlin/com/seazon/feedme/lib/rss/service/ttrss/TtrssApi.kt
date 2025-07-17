@@ -68,6 +68,8 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
         return TtrssCounterList.parse(mainApi?.getCounters())
     }
 
+    override fun supportUnreadCounts() = true
+
     override suspend fun markRead(entryIds: Array<String>?): String? {
         return mainApi?.updateArticle(entryIds, 0, 2)
     }

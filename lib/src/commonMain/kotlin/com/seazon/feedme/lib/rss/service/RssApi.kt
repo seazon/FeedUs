@@ -67,6 +67,8 @@ interface RssApi {
      */
     suspend fun getUnreadCounts(): RssUnreadCounts? = null
 
+    fun supportUnreadCounts(): Boolean
+
     suspend fun markRead(entryIds: Array<String>?): String?
 
     suspend fun markUnread(entryIds: Array<String>?): String?

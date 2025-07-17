@@ -95,6 +95,8 @@ class FeedlyApi : RssApi {
         return markersApi?.getUnreadCounts()?.convert()
     }
 
+    override fun supportUnreadCounts() = true
+
     override suspend fun markRead(entryIds: Array<String>?): String? {
         return markersApi?.markArticleRead(entryIds)
     }
