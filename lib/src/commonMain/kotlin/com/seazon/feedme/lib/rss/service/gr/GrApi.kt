@@ -99,6 +99,8 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         return mainApi?.getUnreadCounts()?.convert()
     }
 
+    override fun supportUnreadCounts() = true
+
     override suspend fun markRead(entryIds: Array<String>?): String? {
         return mainApi?.editTag(GrConstants.TAG_ACTION_ADD, GrConstants.TAG_READ, entryIds)
     }
