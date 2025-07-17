@@ -107,6 +107,9 @@ class ArticlesViewModel(
                 if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
                     rssStream = api.getStreamByIds(rssStream.ids.take(api.getFetchCnt()).toTypedArray())
                 }
+                if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
+                    rssStream = api.getStreamByIds(rssStream.ids.toTypedArray())
+                }
                 val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
                 val hasMore = items.size >= api.getFetchCnt()

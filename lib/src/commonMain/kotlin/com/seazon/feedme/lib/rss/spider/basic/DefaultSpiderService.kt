@@ -28,6 +28,7 @@ class DefaultSpiderService : BaseSpiderService() {
 //                    null
 //                } else {
 //                    SpiderFeed().apply {
+//                        this.id = "feed/$url"
 //                        this.url = it.link
 //                        this.title = it.title
 //                        this.feedUrl = url

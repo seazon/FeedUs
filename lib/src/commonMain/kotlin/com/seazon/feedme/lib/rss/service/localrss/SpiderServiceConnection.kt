@@ -29,7 +29,7 @@ class SpiderServiceConnection {
                 spider = s!!.getFeed(url)
                 if (spider != null) {
                     feed = LocalRssSubscription()
-                    feed.id = RssApi.url2id(url)
+                    feed.id = spider.id
                     feed.title = spider.title
                     feed.feedUrl = spider.feedUrl
                     feed.url = spider.url

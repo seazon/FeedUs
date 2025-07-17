@@ -2,7 +2,6 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssCategory
-import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.IntAsStringSerializer
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
@@ -30,8 +29,6 @@ data class TtrssCategory(
     }
 
     companion object {
-        const val ID_PREFIX: String = "category/"
-
         /**
          * @param json
          * @param useIdAsKey true表示返回map的key为id，false表示为title
@@ -44,7 +41,7 @@ data class TtrssCategory(
                     val idid = it.id?.toInt() ?: -1
                     if (idid >= 0) {
                         RssCategory(
-                            id = TtrssApi.wrapCategoryId(it.id.orEmpty()),
+                            id = it.id,
                             label = it.title
                         )
                     } else {

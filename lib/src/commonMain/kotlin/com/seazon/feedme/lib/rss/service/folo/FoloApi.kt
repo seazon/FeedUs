@@ -206,10 +206,11 @@ class FoloApi : RssApi {
 
     override suspend fun subscribeFeed(
         title: String,
-        feedId: String, // here is feed url
+        feedId: String?,
+        feedUrl: String?,
         categories: Array<String>
     ): Boolean {
-        val response = mainApi?.subscribeFeed(title, feedId, categories.firstOrNull())
+        val response = mainApi?.subscribeFeed(title, feedUrl.orEmpty(), categories.firstOrNull())
         return response?.feed != null
     }
 

@@ -132,11 +132,11 @@ class MainApi(token: RssToken) : AuthedApi(token) {
 
     suspend fun subscribeFeed(
         title: String,
-        feedId: String, // here is feed url
+        feedUrl: String,
         category: String?,
     ): FoloSubscribeResponse {
         val o = jsonOf(
-            "url" to feedId,
+            "url" to feedUrl,
             "title" to title,
             "view" to 0,
             "category" to category,

@@ -37,7 +37,7 @@ data class TtrssItem(
         item.author = if (author == null) "" else author
         item.link = link
         item.feed?.let {
-            it.id = TtrssApi.wrapFeedId(feed_id.orEmpty())
+            it.id = feed_id.orEmpty()
             it.title = feed_title
         }
         item.fid = item.feed?.id

@@ -116,7 +116,7 @@ interface RssApi {
      * 由于最早支持的是feedly，而所有的源搜索都来自feedly的所有接口，
      * 所以传入的feedId都是以feedly的feed id作为标准，即：feed/{feed_url}
      */
-    suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean
+    suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean
 
     suspend fun unsubscribeFeed(feedId: String): String?
 
@@ -162,15 +162,5 @@ interface RssApi {
         const val AUTH_TYPE_OAUTH2 = 3
         const val HTTP_CODE_BAD_REQUEST = 400
         const val HTTP_CODE_UNAUTHORIZED = 401
-
-        private const val FEED_ID_PREFIX = "feed/"
-
-        fun id2url(id: String): String {
-            return id.substring(FEED_ID_PREFIX.length)
-        }
-
-        fun url2id(url: String): String {
-            return FEED_ID_PREFIX + url
-        }
     }
 }
