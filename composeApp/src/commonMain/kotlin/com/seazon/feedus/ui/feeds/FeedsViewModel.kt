@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 sealed class Event {
     data class GeneralErrorEvent(val message: String) : Event()
@@ -92,7 +93,15 @@ class FeedsViewModel(
             rssDatabase.clearItems()
             rssDatabase.clearFeeds()
             rssDatabase.clearLabels()
-
+            _state.update {
+                it.copy(
+                    serviceName = "",
+                    maxUnreadCount = 0,
+                    starredCount = 0,
+                    feeds = emptyList(),
+                    categories = emptyList(),
+                )
+            }
             callback()
         }
     }
@@ -172,7 +181,11 @@ class FeedsViewModel(
         try {
             val stars = api.getStarredStreamIds(api.getFetchCnt(), null)
             // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
-            val starredCount = stars?.size.orZero()
+            val starredCount =
+                max(
+                    stars?.items?.size.orZero(),
+                    stars?.ids?.size.orZero()
+                )// TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             var unreadMax = 0
             if (api.supportUnreadCounts()) {
                 val unreadCounts = api.getUnreadCounts()
@@ -280,8 +293,7 @@ class FeedsViewModel(
         viewModelScope.launch {
             try {
                 val api = rssSDK.getRssApi(false)
-                val subscribeFeedUrl = if (api.getToken()?.accoutType == Static.ACCOUNT_TYPE_FOLO) feedUrl else feedId
-                val success = api.subscribeFeed(title, subscribeFeedUrl, arrayOf())
+                val success = api.subscribeFeed(title, feedId, feedUrl, arrayOf())
                 if (success) {
                     onSuccess()
                 } else {

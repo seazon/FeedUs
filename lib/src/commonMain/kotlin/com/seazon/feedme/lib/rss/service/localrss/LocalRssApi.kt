@@ -200,9 +200,8 @@ class LocalRssApi() : RssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean {
-        val url = RssApi.id2url(feedId)
-        val subscription = spiderServiceConnection.getFeed(url)
+    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean {
+        val subscription = spiderServiceConnection.getFeed(feedUrl.orEmpty())
         subscription?.categories = ArrayList()
         if (categories != null) {
             for (i in categories.indices) {

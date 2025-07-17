@@ -3,7 +3,6 @@ package com.seazon.feedme.lib.rss.service.ttrss.bo
 import com.seazon.feedme.lib.rss.bo.Entity
 import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.ttrss.TtrssApi
 import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.Serializable
@@ -37,15 +36,14 @@ data class TtrssSubscription(
     }
 
     companion object {
-        const val ID_PREFIX: String = "feed/"
 
         fun parse(json: String?, map: Map<String, RssCategory>): List<RssFeed> {
             val list = toJson<TtrssFeedList>(json.orEmpty())
             return list.content?.map {
                 val c = RssFeed()
-                c.id = TtrssApi.wrapFeedId(it.id.orEmpty())
+                c.id = it.id.orEmpty()
                 c.title = it.title
-                c.categories = listOfNotNull(map[TtrssApi.wrapCategoryId(it.cat_id.orEmpty())])
+                c.categories = listOfNotNull(map[it.cat_id.orEmpty()])
                 c.url = it.feed_url
                 c.feedUrl = c.url
                 c.favicon = null

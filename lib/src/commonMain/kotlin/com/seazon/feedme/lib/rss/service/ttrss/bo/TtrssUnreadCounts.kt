@@ -16,7 +16,7 @@ data class TtrssCounterList(
             return RssUnreadCounts(
                 unreadCounts = list.content?.filter { it.kind != "cat" }?.map {
                     RssUnreadCount(
-                        id = "feed/${it.id.orEmpty()}",
+                        id = it.id,
                         count = it.counter,
                     )
                 }.orEmpty()

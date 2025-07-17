@@ -1,7 +1,6 @@
 package com.seazon.feedme.lib.utils
 
 import com.seazon.feedme.platform.PlatformString
-import org.jetbrains.skia.Pattern
 
 //import java.math.BigInteger
 //import java.security.MessageDigest
