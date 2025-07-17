@@ -6,7 +6,6 @@ import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.RssApi
-import com.seazon.feedme.lib.rss.service.RssApi.Companion.id2url
 import com.seazon.feedme.lib.rss.service.SelfHostedRssApi
 import com.seazon.feedme.lib.rss.service.convert
 import com.seazon.feedme.lib.rss.service.ttrss.api.AuthenticationApi
@@ -127,16 +126,16 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
             mainApi?.getHeadlines(
-                unwrapFeedId(feedId), false, false,
+                feedId, false, false,
                 true, count, "0", continuation
             ), continuation
         )
     }
 
-    override suspend fun getCategoryStreamIds(category: String, count: Int, continuation: String?): RssStream {
+    override suspend fun getCategoryStreamIds(categoryId: String, count: Int, continuation: String?): RssStream {
         return TtrssStream.parseIds(
             mainApi?.getHeadlines(
-                unwrapCategoryId(category), true, false,
+                categoryId, true, false,
                 true, count, "0", continuation
             ), continuation
         )
@@ -154,16 +153,16 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     override suspend fun getFeedStream(feedId: String, count: Int, since: String?, continuation: String?): RssStream {
         return TtrssStream.parseIds(
             mainApi?.getHeadlines(
-                unwrapFeedId(feedId), false, true,
+                feedId, false, true,
                 true, count, since, continuation
             ), continuation
         )
     }
 
-    override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream {
+    override suspend fun getCategoryStream(categoryId: String, count: Int, since: String?, continuation: String?): RssStream {
         return TtrssStream.parseIds(
             mainApi?.getHeadlines(
-                unwrapCategoryId(category), true, true,
+                categoryId, true, true,
                 true, count, since, continuation
             ), continuation
         )
@@ -191,9 +190,8 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>): Boolean {
+    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean {
         // 需要订阅到其他类别，但是由于ttrss api不支持添加类别，所以暂时默认添加到未分类的，或者已有分类
-        val url = id2url(feedId)
         val map = TtrssCategory.parse(mainApi?.getCategories().orEmpty(), false)
         for (i in categories.indices) {
             if (categories[i].isEmpty()) {
@@ -201,16 +199,16 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
             }
             val category = map[categories[i]]
             if (category != null) {
-                mainApi?.subscribeToFeed(url, category.id.orEmpty())
+                mainApi?.subscribeToFeed(feedUrl.orEmpty(), category.id.orEmpty())
             } else {
-                mainApi?.subscribeToFeed(url, "0")
+                mainApi?.subscribeToFeed(feedUrl.orEmpty(), "0")
             }
         }
         return true
     }
 
     override suspend fun unsubscribeFeed(id: String): String? {
-        return mainApi?.unsubscribeFeed(unwrapFeedId(id))
+        return mainApi?.unsubscribeFeed(id)
     }
 
     override fun supportCreateTag(): Boolean {
@@ -227,31 +225,5 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun deleteTags(tagIds: Array<String>) {
-    }
-
-    companion object {
-        fun wrapFeedId(id: String): String {
-            return TtrssSubscription.ID_PREFIX + id
-        }
-
-        fun unwrapFeedId(id: String): String {
-            return if (id.startsWith(TtrssSubscription.ID_PREFIX)) {
-                id.substring(TtrssSubscription.ID_PREFIX.length)
-            } else {
-                id
-            }
-        }
-
-        fun wrapCategoryId(id: String): String {
-            return TtrssCategory.ID_PREFIX + id
-        }
-
-        fun unwrapCategoryId(id: String): String {
-            return if (id.startsWith(TtrssCategory.ID_PREFIX)) {
-                id.substring(TtrssCategory.ID_PREFIX.length)
-            } else {
-                id
-            }
-        }
     }
 }

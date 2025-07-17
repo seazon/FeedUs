@@ -5,6 +5,7 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.RssUtil
 import com.seazon.feedme.platform.TimeProvider
+import io.ktor.client.plugins.HttpRequestTimeoutException
 
 class RssSDK(val tokenSettings: TokenSettings) {
 
@@ -38,6 +39,8 @@ class RssSDK(val tokenSettings: TokenSettings) {
             tokenSettings.saveToken(token)
         } catch (e: HttpException) {
             throw e
+        } catch (e: HttpRequestTimeoutException) {
+            throw HttpException(HttpException.Type.ESKTTOEX, e)
         } catch (e: Exception) {
             throw HttpException(HttpException.Type.EEXPIRED, e)
         }

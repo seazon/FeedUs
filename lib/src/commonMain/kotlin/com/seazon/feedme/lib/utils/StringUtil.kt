@@ -1,7 +1,6 @@
 package com.seazon.feedme.lib.utils
 
 import com.seazon.feedme.platform.PlatformString
-import org.jetbrains.skia.Pattern
 
 //import java.math.BigInteger
 //import java.security.MessageDigest
@@ -86,9 +85,7 @@ object StringUtil {
 //}
 
 fun String.format(vararg args: Any?): String {
-    LogUtils.debug("format: $this, args: ${args.joinToString(",")}")
     val result = PlatformString.format(this, *args)
-    LogUtils.debug("format result: $result")
     return result
 }
 

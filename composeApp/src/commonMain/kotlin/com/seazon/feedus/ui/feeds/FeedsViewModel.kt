@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 class FeedsViewModel(
     val rssSDK: RssSDK,
@@ -72,7 +73,15 @@ class FeedsViewModel(
             rssDatabase.clearCategories()
             rssDatabase.clearItems()
             rssDatabase.clearFeeds()
-
+            _state.update {
+                it.copy(
+                    serviceName = "",
+                    maxUnreadCount = 0,
+                    starredCount = 0,
+                    feeds = emptyList(),
+                    categories = emptyList(),
+                )
+            }
             callback()
         }
     }
@@ -144,7 +153,10 @@ class FeedsViewModel(
             val tags = api.getTags()
             val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
             val starredCount =
-                stars?.items?.size.orZero() // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
+                max(
+                    stars?.items?.size.orZero(),
+                    stars?.ids?.size.orZero()
+                )// TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             if (api.supportPagingFetchIds()) {
                 val unreadCounts = api.getUnreadCounts()
                 val categoryMap = rssDatabase.getCategories().apply {
@@ -194,7 +206,13 @@ class FeedsViewModel(
             when (api.getToken()?.accoutType) {
                 Static.ACCOUNT_TYPE_LOCAL_RSS -> {
                     (api as LocalRssApi).search(query)?.let {
-                        if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>())) {
+                        if (api.subscribeFeed(
+                                title = it.title.orEmpty(),
+                                feedId = it.id,
+                                feedUrl = it.feedUrl,
+                                categories = emptyArray<String>()
+                            )
+                        ) {
                             onSuccess()
                         } else {
                             _subscribeState.update {
@@ -240,8 +258,7 @@ class FeedsViewModel(
     ) {
         viewModelScope.launch {
             val api = rssSDK.getRssApi(false)
-            val subscribeFeedUrl = if (api.getToken()?.accoutType == Static.ACCOUNT_TYPE_FOLO) feedUrl else feedId
-            val success = api.subscribeFeed(title, subscribeFeedUrl, arrayOf())
+            val success = api.subscribeFeed(title, feedId, feedUrl, arrayOf())
             if (success) {
                 onSuccess()
             } else {

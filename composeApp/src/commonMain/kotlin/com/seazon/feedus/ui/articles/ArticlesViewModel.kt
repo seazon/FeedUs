@@ -75,7 +75,7 @@ class ArticlesViewModel(
             try {
                 // fetch item and render list
                 val api = rssSDK.getRssApi(false)
-                val rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
+                var rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
                         val feedIds =
                             rssDatabase.getFeeds()
@@ -96,6 +96,9 @@ class ArticlesViewModel(
                     api.getStarredStreamIds(Static.FETCH_COUNT, state.value.continuation)
                 } else {
                     api.getUnraedStream(Static.FETCH_COUNT, null, state.value.continuation)
+                }
+                if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
+                    rssStream = api.getStreamByIds(rssStream.ids.toTypedArray())
                 }
                 val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
