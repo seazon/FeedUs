@@ -75,6 +75,10 @@ updateFlag:
 UPDATE Item
 SET flag = ? WHERE id = ?;
 
+updateStar:
+UPDATE Item
+SET star = ? WHERE id = ?;
+
 removeAllItems:
 DELETE FROM Item;
 

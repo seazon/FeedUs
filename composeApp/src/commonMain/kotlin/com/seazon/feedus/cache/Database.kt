@@ -190,6 +190,10 @@ internal class Database(sqlDriver: SqlDriver) {
         dbQuery.updateFlag(item.flag.toLong(), item.id)
     }
 
+    internal fun updateItemStar(item: Item) {
+        dbQuery.updateStar(item.star.toLong(), item.id)
+    }
+
     fun clearItems() {
         dbQuery.transaction {
             dbQuery.removeAllItems()

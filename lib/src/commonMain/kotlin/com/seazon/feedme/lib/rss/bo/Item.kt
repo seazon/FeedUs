@@ -26,9 +26,14 @@ data class Item(
     companion object {
         const val FLAG_UNREAD = 2
         const val FLAG_READ = 0
+
+        const val STAR_STARRED = 1
+        const val STAR_UNSTAR = 0
     }
 
     fun isUnread() = flag == FLAG_UNREAD
+
+    fun isStarred() = star == STAR_STARRED
 
 //    fun time(): String {
 //        return DateUtil.format(publishedDate.orZero())

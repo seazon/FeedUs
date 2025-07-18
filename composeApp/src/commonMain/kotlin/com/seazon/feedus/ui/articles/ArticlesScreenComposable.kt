@@ -47,15 +47,19 @@ import com.seazon.feedus.ui.customize.LoadingView
 import com.seazon.feedus.ui.customize.noRippleClickable
 import feedus.composeapp.generated.resources.Res
 import feedus.composeapp.generated.resources.all_items
+import feedus.composeapp.generated.resources.ic_vec_star_fill
+import feedus.composeapp.generated.resources.ic_vec_star_outline
 import feedus.composeapp.generated.resources.starred_items
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ArticlesScreenComposable(
     stateFlow: StateFlow<ArticlesScreenState>,
     onItemClick: (item: Item) -> Unit,
+    onToggleStar: (item: Item) -> Unit,
     navBack: () -> Unit,
     markAllRead: () -> Unit,
     loadMoreData: () -> Unit,
@@ -87,7 +91,7 @@ fun ArticlesScreenComposable(
                 ) {
                     items(count = state.items.size, itemContent = {
                         val item = state.items[it]
-                        Item(item, state.feedMap[item.fid], onItemClick = onItemClick)
+                        Item(item, state.feedMap[item.fid], onItemClick = onItemClick, onToggleStar = onToggleStar)
                     })
                 }
             } else {
@@ -148,7 +152,7 @@ fun AppBar(state: ArticlesScreenState, navBack: () -> Unit, markAllRead: () -> U
 }
 
 @Composable
-private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit) {
+private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit, onToggleStar: (item: Item) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -171,7 +175,7 @@ private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit) {
         ) {
             if (!feed?.title.isNullOrEmpty()) {
                 Text(
-                    text = feed?.title.orEmpty(),
+                    text = feed.title.orEmpty(),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -183,11 +187,27 @@ private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit) {
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.heightIn(4.dp))
-            Text(
-                text = DateUtil.toXAgo(item.publishedDate.orZero()),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.outline,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = {
+                        onToggleStar(item)
+                    },
+                    modifier = Modifier.size(16.dp).padding(start = 0.dp, top = 0.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(if (item.isStarred()) Res.drawable.ic_vec_star_fill else Res.drawable.ic_vec_star_outline),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = DateUtil.toXAgo(item.publishedDate.orZero()),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                )
+            }
+
         }
         if (!item.visual.isNullOrEmpty()) {
             Spacer(modifier = Modifier.width(8.dp))
@@ -229,6 +249,7 @@ fun ArticlesScreenPreview() {
     ArticlesScreenComposable(
         stateFlow = state,
         onItemClick = {},
+        onToggleStar = {},
         navBack = {},
         markAllRead = {},
         loadMoreData = {},

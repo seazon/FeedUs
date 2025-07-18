@@ -56,6 +56,10 @@ class RssDatabase(sqlDriver: SqlDriver) {
         return database.updateItemFlag(item)
     }
 
+    suspend fun updateItemStar(item: Item) {
+        return database.updateItemStar(item)
+    }
+
     suspend fun clearItems() {
         database.clearItems()
     }

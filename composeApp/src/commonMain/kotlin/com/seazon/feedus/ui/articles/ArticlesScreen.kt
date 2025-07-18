@@ -20,6 +20,9 @@ fun ArticlesScreen(
             viewModel.markRead(it)
             navToArticle(it)
         },
+        onToggleStar = {
+            viewModel.toggleStar(it)
+        },
         navBack = navBack,
         markAllRead = {
             viewModel.markAllRead()

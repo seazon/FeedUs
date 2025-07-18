@@ -1,11 +1,11 @@
 package com.seazon.feedus.ui.articles
 
 import androidx.lifecycle.viewModelScope
-import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedme.lib.rss.bo.Item
 import com.seazon.feedme.lib.rss.bo.RssItem
 import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.utils.jsonOf
+import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
 import com.seazon.feedus.ui.BaseViewModel
@@ -75,6 +75,7 @@ class ArticlesViewModel(
             try {
                 // fetch item and render list
                 val api = rssSDK.getRssApi(false)
+                var starred = false
                 var rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
                         val feedIds =
@@ -93,6 +94,7 @@ class ArticlesViewModel(
                 } else if (!state.value.feedId.isNullOrEmpty()) {
                     api.getFeedStream(state.value.feedId.orEmpty(), Static.FETCH_COUNT, null, state.value.continuation)
                 } else if (state.value.starred) {
+                    starred = true
                     api.getStarredStreamIds(Static.FETCH_COUNT, state.value.continuation)
                 } else {
                     api.getUnraedStream(Static.FETCH_COUNT, null, state.value.continuation)
@@ -100,7 +102,7 @@ class ArticlesViewModel(
                 if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
                     rssStream = api.getStreamByIds(rssStream.ids.toTypedArray())
                 }
-                val items = rssStream?.items?.map { convert(it) }.orEmpty()
+                val items = rssStream?.items?.map { convert(it, starred) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
                 val hasMore = items.size >= Static.FETCH_COUNT
                 _state.update {
@@ -121,14 +123,14 @@ class ArticlesViewModel(
         }
     }
 
-    private fun convert(it: RssItem): Item {
+    private fun convert(it: RssItem, starred: Boolean): Item {
         return Item(
             id = it.id.orEmpty(),
             fid = it.fid,
             flag = Item.FLAG_UNREAD,
             status = 0,
             process = 0,
-            star = 0,
+            star = if (starred) Item.STAR_STARRED else Item.STAR_UNSTAR,
             tag = 0,
             title = it.title,
             titleTranslated = null,
@@ -171,6 +173,27 @@ class ArticlesViewModel(
             api.markRead(state.value.items.map { it.id }.toTypedArray())
             _state.update {
                 it.copy(isLoading = false, items = emptyList())
+            }
+        }
+    }
+
+    fun toggleStar(item: Item) {
+        viewModelScope.launch {
+            val api = rssSDK.getRssApi(false)
+            val newItem = if (item.star == Item.STAR_STARRED) {
+                api.markUnstar(arrayOf(item.id))
+                item.copy(star = Item.STAR_UNSTAR)
+            } else {
+                api.markStar(arrayOf(item.id))
+                item.copy(star = Item.STAR_STARRED)
+            }
+            rssDatabase.updateItemStar(newItem)
+
+            _state.update {
+                val newItems = it.items.map { i ->
+                    if (i.id == item.id) newItem else i
+                }
+                it.copy(items = newItems)
             }
         }
     }

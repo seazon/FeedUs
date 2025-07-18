@@ -18,18 +18,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return null
         }
 
-        var tagIdsAll: String? = null
-        for (i in tagIds.indices) {
-            if (tagIds[i].isNullOrEmpty()) {
-                continue
-            }
-
-            if (tagIdsAll == null) {
-                tagIdsAll = "user/${token.id}/tag/${tagIds[i]?.urlEncode()}"
-            } else {
-                tagIdsAll += (",user/${token.id}/tag/${tagIds[i]?.urlEncode()}")
-            }
-        }
+        val tagIdsAll: String? = getTagIdsAll(tagIds)
 
         val o = jsonOf(
             "entryId" to entryId,
@@ -47,19 +36,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return ""
         }
 
-        var tagIdsAll: String? = null
-        for (i in tagIds.indices) {
-            if (tagIds[i].isNullOrEmpty()) {
-                continue
-            }
-
-            if (tagIdsAll == null) {
-                tagIdsAll = "user/" + token.id + "/tag/" + tagIds[i].urlEncode()
-            } else {
-                tagIdsAll += (","
-                        + "user/" + token.id + "/tag/" + tagIds[i].urlEncode())
-            }
-        }
+        val tagIdsAll: String? = getTagIdsAllInner(tagIds)
 
         val o = jsonOf(
             "entryIds" to entryIds.mapNotNull { it },
@@ -78,7 +55,6 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
         }
 
         var entryIdsAll: String? = null
-        var tagIdsAll: String? = null
         for (i in entryIds.indices) {
             if (entryIds[i].isNullOrEmpty()) {
                 continue
@@ -90,17 +66,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
                 entryIdsAll += "," + entryIds[i].urlEncode()
             }
         }
-        for (i in tagIds.indices) {
-            if (tagIds[i].isNullOrEmpty()) {
-                continue
-            }
-
-            if (tagIdsAll == null) {
-                tagIdsAll = "user/" + token.id + "/tag/" + tagIds[i].urlEncode()
-            } else {
-                tagIdsAll += ("," + "user/" + token.id + "/tag/" + tagIds[i].urlEncode())
-            }
-        }
+        val tagIdsAll: String? = getTagIdsAllInner(tagIds)
 
         if (tagIdsAll == null || entryIdsAll == null) {
             return null
@@ -114,6 +80,15 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return null
         }
 
+        val tagIdsAll: String? = getTagIdsAllInner(tagIds)
+        if (tagIdsAll == null) {
+            return null
+        }
+
+        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll).body
+    }
+
+    private fun getTagIdsAllInner(tagIds: Array<String>): String? {
         var tagIdsAll: String? = null
         for (i in tagIds.indices) {
             if (tagIds[i].isNullOrEmpty()) {
@@ -121,16 +96,16 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             }
 
             if (tagIdsAll == null) {
-                tagIdsAll = "user/" + token.id + "/tag/" + tagIds[i].urlEncode()
+                tagIdsAll = "user/${token.id}/tag/${tagIds[i]}".urlEncode()
             } else {
-                tagIdsAll += ("," + "user/" + token.id + "/tag/" + tagIds[i].urlEncode())
+                tagIdsAll += ("," + "user/${token.id}/tag/${tagIds[i]}".urlEncode())
             }
         }
+        return tagIdsAll
+    }
 
-        if (tagIdsAll == null) {
-            return null
-        }
-
-        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll).body
+    private fun getTagIdsAll(tagIds: Array<String?>): String? {
+        val tagIdsNew: Array<String> = tagIds.mapNotNull { it }.toTypedArray()
+        return getTagIdsAllInner(tagIdsNew)
     }
 }
