@@ -4,11 +4,11 @@ import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
+import com.seazon.feedme.lib.network.SimpleResponse
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.utils.StringUtil
-import io.ktor.client.statement.HttpResponse
 
 open class AuthedApi(val token: RssToken) : BaseApi() {
 
@@ -23,15 +23,15 @@ open class AuthedApi(val token: RssToken) : BaseApi() {
         params: List<NameValuePair>? = null,
         headers: MutableMap<String, String>? = null,
         body: String? = null,
-    ): HttpResponse {
+    ): SimpleResponse {
         var headers = headers
         if (headers == null) headers = HashMap()
         setHeaderToken(headers)
-        val response = HttpManager.request(httpMethod, getSchema() + url, params, headers, body)
-        if (response.status.value == RssApi.HTTP_CODE_UNAUTHORIZED) {
+        val response = HttpManager.requestWrap(httpMethod, getSchema() + url, params, headers, body)
+        if (response.code == RssApi.HTTP_CODE_UNAUTHORIZED) {
             throw HttpException(HttpException.Type.EEXPIRED)
-        } else if (response.status.value == RssApi.HTTP_CODE_BAD_REQUEST) {
-            throw HttpException(HttpException.Type.EREMOTE, "HTTP code: " + response.status.value)
+        } else if (response.code == RssApi.HTTP_CODE_BAD_REQUEST) {
+            throw HttpException(HttpException.Type.EREMOTE, "HTTP code: " + response.code)
         }
         return response
     }

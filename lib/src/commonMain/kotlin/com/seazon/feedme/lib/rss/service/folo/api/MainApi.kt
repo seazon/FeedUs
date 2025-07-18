@@ -2,7 +2,6 @@ package com.seazon.feedme.lib.rss.service.folo.api
 
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
-import com.seazon.feedme.lib.network.toType
 import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.bo.RssTag
@@ -18,15 +17,14 @@ import com.seazon.feedme.lib.rss.service.folo.bo.FoloSubscribeResponse
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloSubscription
 import com.seazon.feedme.lib.utils.jsonOf
 import com.seazon.feedme.lib.utils.toJson
-import io.ktor.client.call.body
 
 class MainApi(token: RssToken) : AuthedApi(token) {
 
     suspend fun getSubscriptions(): List<RssFeed>? {
         val data = execute(
             HttpMethod.GET, FoloConstants.URL_SUBSCRIPTIONS
-        ).toType<FoloListData<FoloSubscription>>()
-        return data?.data?.map {
+        ).convertBody<FoloListData<FoloSubscription>>()
+        return data.data.map {
             RssFeed(
                 id = it.feedId,
                 title = if (it.title.isNullOrEmpty()) it.feeds?.title else it.title,
@@ -48,8 +46,8 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             HttpMethod.GET,
             FoloConstants.URL_FEEDS,
             parameters,
-        ).toType<FoloData<FoloFeeds>>()
-        return data?.data?.convert()
+        ).convertBody<FoloData<FoloFeeds>>()
+        return data.data.convert()
     }
 
     suspend fun getEntriesForAll(limit: Int, publishedAfter: String?): RssStream? {
@@ -83,20 +81,20 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             *if (!publishedAfter.isNullOrEmpty()) arrayOf("publishedAfter" to publishedAfter) else emptyArray()
         )
         val data =
-            execute(HttpMethod.POST, FoloConstants.URL_ENTRIES, body = o.toString()).toType<FoloListData<FoloEntries>>()
-        val items = data?.data?.mapNotNull { entries ->
+            execute(HttpMethod.POST, FoloConstants.URL_ENTRIES, body = o.toString()).convertBody<FoloListData<FoloEntries>>()
+        val items = data.data.mapNotNull { entries ->
             entries.convert()
-        }.orEmpty()
+        }
         return RssStream(
             items = items,
-            continuation = data?.data?.lastOrNull()?.entries?.publishedAt
+            continuation = data.data.lastOrNull()?.entries?.publishedAt
         )
     }
 
     suspend fun getUnreadCounts(): RssUnreadCounts? {
-        val data = execute(HttpMethod.GET, FoloConstants.URL_READS).toType<FoloData<Map<String, Int>>>()
+        val data = execute(HttpMethod.GET, FoloConstants.URL_READS).convertBody<FoloData<Map<String, Int>>>()
         return RssUnreadCounts(
-            unreadCounts = data?.data?.entries?.map {
+            unreadCounts = data.data.entries.map {
                 RssUnreadCount(
                     id = it.key,
                     count = it.value,
@@ -111,7 +109,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "isInbox" to false,
             "readHistories" to entryIds?.mapNotNull { it },
         )
-        return execute(HttpMethod.POST, FoloConstants.URL_READS, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FoloConstants.URL_READS, null, null, o.toString()).body
     }
 
     suspend fun subscribeFeed(
@@ -125,7 +123,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "view" to 0,
             "category" to category,
         )
-        return execute(HttpMethod.POST, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).convertBody()
     }
 
     suspend fun unsubscribeFeed(
@@ -134,6 +132,6 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         val o = jsonOf(
             "feedIdList" to listOf(feedId),
         )
-        return execute(HttpMethod.DELETE, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
+        return execute(HttpMethod.DELETE, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body
     }
 }

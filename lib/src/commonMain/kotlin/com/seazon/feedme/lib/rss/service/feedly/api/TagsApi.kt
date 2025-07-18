@@ -6,12 +6,11 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.rss.service.feedly.bo.FeedlyTag
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
 
     suspend fun getTags(): List<FeedlyTag>? {
-        return execute(HttpMethod.GET, FeedlyConstants.URL_TAGS).body()
+        return execute(HttpMethod.GET, FeedlyConstants.URL_TAGS).convertBody()
     }
 
     suspend fun tagEntry(entryId: String?, tagIds: Array<String?>?): String? {
@@ -40,7 +39,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return null
         }
 
-        return execute(HttpMethod.PUT, FeedlyConstants.URL_TAGS + "/" + tagIdsAll, null, null, o.toString()).body()
+        return execute(HttpMethod.PUT, FeedlyConstants.URL_TAGS + "/" + tagIdsAll, null, null, o.toString()).body
     }
 
     suspend fun tagEntries(entryIds: Array<String>, tagIds: Array<String>): String {
@@ -70,7 +69,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return ""
         }
 
-        return execute(HttpMethod.PUT, FeedlyConstants.URL_TAGS + "/" + tagIdsAll, null, null, o.toString()).body()
+        return execute(HttpMethod.PUT, FeedlyConstants.URL_TAGS + "/" + tagIdsAll, null, null, o.toString()).body
     }
 
     suspend fun untagEntries(entryIds: Array<String>, tagIds: Array<String>): String? {
@@ -107,7 +106,7 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return null
         }
 
-        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll + "/" + entryIdsAll).body()
+        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll + "/" + entryIdsAll).body
     }
 
     suspend fun deleteTags(tagIds: Array<String>): String? {
@@ -132,6 +131,6 @@ class TagsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             return null
         }
 
-        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll).body()
+        return execute(HttpMethod.DELETE, FeedlyConstants.URL_TAGS + "/" + tagIdsAll).body
     }
 }

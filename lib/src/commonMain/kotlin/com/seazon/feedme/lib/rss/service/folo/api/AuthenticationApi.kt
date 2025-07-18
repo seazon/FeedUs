@@ -10,7 +10,6 @@ import com.seazon.feedme.lib.rss.service.folo.bo.OneTimeTokenRequest
 import com.seazon.feedme.lib.rss.service.folo.bo.OneTimeTokenResponse
 import com.seazon.feedme.platform.TimeProvider
 import io.ktor.http.setCookie
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class AuthenticationApi : BaseApi() {
@@ -26,8 +25,8 @@ class AuthenticationApi : BaseApi() {
         val body = Json.encodeToString(OneTimeTokenRequest(token.orEmpty())).trimIndent()
         val rsp =
             HttpManager.request(
-                HttpMethod.POST,
-                getSchema() + FoloConstants.TOKEN,
+                httpMethod = HttpMethod.POST,
+                url = getSchema() + FoloConstants.TOKEN,
                 headers = headers,
                 body = body
             )

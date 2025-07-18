@@ -5,7 +5,6 @@ import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.platform.Crypto
-import io.ktor.client.call.body
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,7 +17,7 @@ class BaiduTranslateApi {
     suspend fun translate(query: String, language: String, key: String, appID: String): Translation? {
         val bytes = "$appID$query$salt$key"
         val sign = Crypto.md5(bytes)
-        return HttpManager.request(
+        return HttpManager.requestWrap(
             httpMethod = HttpMethod.POST,
             url = url,
             headers = mapOf(
@@ -32,7 +31,7 @@ class BaiduTranslateApi {
                 NameValuePair("salt", salt),
                 NameValuePair("sign", sign),
             ),
-        ).body()
+        ).convertBody()
     }
 }
 

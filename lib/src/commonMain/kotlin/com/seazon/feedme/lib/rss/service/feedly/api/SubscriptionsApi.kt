@@ -6,12 +6,11 @@ import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.rss.service.feedly.bo.FeedlySubscription
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class SubscriptionsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
 
     suspend fun getSubscriptions(): List<FeedlySubscription>? {
-        return execute(HttpMethod.GET, FeedlyConstants.URL_SUBSCRIPTIONS).body()
+        return execute(HttpMethod.GET, FeedlyConstants.URL_SUBSCRIPTIONS).convertBody()
     }
 
     suspend fun subscribeFeed(title: String, feedId: String, categories: Array<String>?): String {
@@ -27,14 +26,14 @@ class SubscriptionsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             "sortid" to "",
             "categories" to array,
         )
-        return execute(HttpMethod.POST, FeedlyConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body()
+        return execute(HttpMethod.POST, FeedlyConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body
     }
 
     suspend fun unsubscribeFeed(feedId: String): String {
         return execute(
             HttpMethod.DELETE,
             FeedlyConstants.URL_SUBSCRIPTIONS + "/" + feedId.urlEncode()
-        ).body()
+        ).body
     }
 
     suspend fun updateSubscription(feedId: String, title: String, aCategories: Array<String>?): String {
@@ -52,6 +51,6 @@ class SubscriptionsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             HttpMethod.POST,
             FeedlyConstants.URL_SUBSCRIPTIONS,
             null, null, request.toString()
-        ).body()
+        ).body
     }
 }

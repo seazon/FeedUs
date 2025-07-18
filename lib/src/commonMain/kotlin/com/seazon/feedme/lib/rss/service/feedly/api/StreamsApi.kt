@@ -5,7 +5,6 @@ import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.RssToken
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.rss.service.feedly.bo.FeedlyStream
-import io.ktor.client.call.body
 
 class StreamsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
 
@@ -24,7 +23,7 @@ class StreamsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             NameValuePair("continuation", continuation.orEmpty()),
             NameValuePair("streamId", streamId),
         )
-        return execute(HttpMethod.GET, FeedlyConstants.URL_STREAMS_IDS, parameters).body()
+        return execute(HttpMethod.GET, FeedlyConstants.URL_STREAMS_IDS, parameters).convertBody()
     }
 
     suspend fun getContents(
@@ -49,6 +48,6 @@ class StreamsApi(feedlyToken: RssToken) : AuthedApi(feedlyToken) {
             NameValuePair("streamId", streamId),
         )
 
-        return execute(HttpMethod.GET, FeedlyConstants.URL_STREAMS_CONTENTS, parameters).body()
+        return execute(HttpMethod.GET, FeedlyConstants.URL_STREAMS_CONTENTS, parameters).convertBody()
     }
 }

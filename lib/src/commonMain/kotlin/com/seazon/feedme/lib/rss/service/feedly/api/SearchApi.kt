@@ -5,7 +5,6 @@ import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.rss.service.feedly.bo.FeedlySearchResponse
-import io.ktor.client.call.body
 
 class SearchApi() : BaseApi() {
 
@@ -17,7 +16,7 @@ class SearchApi() : BaseApi() {
             NameValuePair("q", query),
             NameValuePair("n", "20"),
         )
-        return HttpManager.request(HttpMethod.GET, getSchema() + FeedlyConstants.URL_SEARCH_FEEDS, parameters)
-            .body()
+        return HttpManager.requestWrap(HttpMethod.GET, getSchema() + FeedlyConstants.URL_SEARCH_FEEDS, parameters)
+            .convertBody()
     }
 }

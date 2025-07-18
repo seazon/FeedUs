@@ -1,17 +1,16 @@
 package com.seazon.feedme.lib.rss.service.feedly.api
 
-import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.rss.bo.Oauth2Response
 import com.seazon.feedme.lib.rss.bo.RssToken
+import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.feedly.FeedlyConstants
 import com.seazon.feedme.lib.utils.format
 import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedme.lib.utils.toJson
 import com.seazon.feedme.platform.TimeProvider
-import io.ktor.client.call.body
 
 class AuthenticationApi : BaseApi() {
 
@@ -30,7 +29,7 @@ class AuthenticationApi : BaseApi() {
             NameValuePair("state", "na"),
             NameValuePair("grant_type", "authorization_code"),
         )
-        return HttpManager.request(HttpMethod.POST, getSchema() + FeedlyConstants.TOKEN, parameters).body()
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + FeedlyConstants.TOKEN, parameters).body
     }
 
     suspend fun getAccessToken(refreshToken: String?): String {
@@ -40,7 +39,7 @@ class AuthenticationApi : BaseApi() {
             NameValuePair("refresh_token", refreshToken.orEmpty()),
             NameValuePair("grant_type", "refresh_token"),
         )
-        return HttpManager.request(HttpMethod.POST, getSchema() + FeedlyConstants.TOKEN, parameters).body()
+        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + FeedlyConstants.TOKEN, parameters).body
     }
 
     fun setUserWithAccessToken(token: RssToken, response: String) {

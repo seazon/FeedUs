@@ -6,7 +6,6 @@ import com.seazon.feedme.lib.rss.service.folo.FoloConstants
 import com.seazon.feedme.lib.rss.service.folo.bo.DiscoverFeed
 import com.seazon.feedme.lib.rss.service.folo.bo.FoloListData
 import com.seazon.feedme.lib.utils.jsonOf
-import io.ktor.client.call.body
 
 class DiscoverApi(token: RssToken) : AuthedApi(token) {
 
@@ -19,6 +18,6 @@ class DiscoverApi(token: RssToken) : AuthedApi(token) {
             "target" to "feeds",
         )
         return execute(HttpMethod.POST, FoloConstants.URL_DISCOVER, body = o.toString())
-            .body()
+            .convertBody()
     }
 }

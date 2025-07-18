@@ -4,7 +4,6 @@ import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.utils.format
-import io.ktor.client.call.body
 import kotlinx.serialization.Serializable
 
 class MicrosoftTranslateApi {
@@ -14,7 +13,7 @@ class MicrosoftTranslateApi {
 
     suspend fun translate(query: String, language: String, key: String): List<TranslationData>? {
         val url = url.format(language)
-        return HttpManager.request(
+        return HttpManager.requestWrap(
             httpMethod = HttpMethod.POST,
             url = url,
             headers = mapOf(
@@ -22,7 +21,7 @@ class MicrosoftTranslateApi {
                 HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_JSON,
             ),
             body = """[{"Text":"$query"}]""",
-        ).body()
+        ).convertBody()
     }
 }
 
