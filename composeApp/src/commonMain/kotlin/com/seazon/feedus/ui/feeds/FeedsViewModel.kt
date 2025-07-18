@@ -143,8 +143,8 @@ class FeedsViewModel(
             // TODO use in app
             val tags = api.getTags()
             val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
-            val starredCount =
-                stars?.items?.size.orZero() // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
+            // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
+            val starredCount = stars?.size.orZero()
             if (api.supportPagingFetchIds()) {
                 val unreadCounts = api.getUnreadCounts()
                 val categoryMap = rssDatabase.getCategories().apply {

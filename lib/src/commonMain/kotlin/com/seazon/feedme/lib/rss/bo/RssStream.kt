@@ -7,4 +7,13 @@ open class RssStream(
     var continuation: String? = null,
     var items: List<RssItem> = emptyList(),
     var ids: List<String> = emptyList()
-) : Entity()
+) : Entity() {
+
+    val size: Int
+        get() {
+            if (items.isNotEmpty()) {
+                return items.size
+            }
+            return ids.size
+        }
+}

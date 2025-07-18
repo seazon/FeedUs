@@ -41,7 +41,7 @@ data class TtrssStream(
             try {
                 val stream: RssStream = toJson<TtrssStream>(json.orEmpty()).convert()
                 stream.ids = stream.items.map { it.id.orEmpty() }
-                var c: Int = stream.items.size
+                var c: Int = stream.size
                 try {
                     c += continuation.orEmpty().toInt()
                 } catch (e: Exception) {
