@@ -8,6 +8,7 @@ import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.Static
 import com.seazon.feedme.lib.rss.service.explore.ExploreApi
 import com.seazon.feedme.lib.rss.service.localrss.LocalRssApi
+import com.seazon.feedme.lib.utils.HtmlUtils
 import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedus.data.AppSettings
@@ -194,15 +195,7 @@ class FeedsViewModel(
             when (api.getToken()?.accoutType) {
                 Static.ACCOUNT_TYPE_LOCAL_RSS -> {
                     (api as LocalRssApi).search(query)?.let {
-                        if (api.subscribeFeed(it.title.orEmpty(), it.id.orEmpty(), emptyArray<String>())) {
-                            onSuccess()
-                        } else {
-                            _subscribeState.update {
-                                it.copy(
-                                    errorTips = "Subscribe failed",
-                                )
-                            }
-                        }
+                        subscribe2(it.title.orEmpty(), it.id.orEmpty(), query, onSuccess)
                     } ?: run {
                         _subscribeState.update {
                             it.copy(
@@ -213,18 +206,22 @@ class FeedsViewModel(
                 }
 
                 else -> {
-                    val results = ExploreApi.search(query, api)
-                    if (results.isEmpty()) {
-                        _subscribeState.update {
-                            it.copy(
-                                errorTips = "Not found",
-                            )
-                        }
+                    if (HtmlUtils.isHttpUrl(query)) {
+                        subscribe2(query, "feed/${query}", query, onSuccess)
                     } else {
-                        _subscribeState.update {
-                            it.copy(
-                                results = results,
-                            )
+                        val results = ExploreApi.search(query, api)
+                        if (results.isEmpty()) {
+                            _subscribeState.update {
+                                it.copy(
+                                    errorTips = "Not found",
+                                )
+                            }
+                        } else {
+                            _subscribeState.update {
+                                it.copy(
+                                    results = results,
+                                )
+                            }
                         }
                     }
                 }
@@ -239,15 +236,23 @@ class FeedsViewModel(
         onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
-            val subscribeFeedUrl = if (api.getToken()?.accoutType == Static.ACCOUNT_TYPE_FOLO) feedUrl else feedId
-            val success = api.subscribeFeed(title, subscribeFeedUrl, arrayOf())
-            if (success) {
-                onSuccess()
-            } else {
+            try {
+                val api = rssSDK.getRssApi(false)
+                val subscribeFeedUrl = if (api.getToken()?.accoutType == Static.ACCOUNT_TYPE_FOLO) feedUrl else feedId
+                val success = api.subscribeFeed(title, subscribeFeedUrl, arrayOf())
+                if (success) {
+                    onSuccess()
+                } else {
+                    _subscribeState.update {
+                        it.copy(
+                            errorTips = "Subscribe failed",
+                        )
+                    }
+                }
+            } catch (e: Exception) {
                 _subscribeState.update {
                     it.copy(
-                        errorTips = "Subscribe failed",
+                        errorTips = "Subscribe failed: ${e.message.orEmpty()}",
                     )
                 }
             }

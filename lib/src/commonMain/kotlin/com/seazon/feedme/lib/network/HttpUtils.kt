@@ -13,8 +13,9 @@ import io.ktor.http.encodeURLParameter
 
 object HttpUtils {
     const val DEFAULT_CHARSET: String = "UTF-8"
-    const val CONNECT_TIMEOUT: Int = 15000
-    const val READ_TIMEOUT: Int = 20000
+    const val CONNECT_TIMEOUT: Long = 15000
+    const val REQUEST_TIMEOUT: Long = 25000
+    const val SOCKET_TIMEOUT: Long = 30000
     const val BUFFER_SIZE: Int = 4096
     private val CHARSET_CHARACTER =
         arrayOf("content=\"text/html;charset=", "content='text/html;charset=", "charset=\"")

@@ -5,12 +5,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsChannel
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
 //import io.ktor.utils.io.jvm.javaio.toInputStream
@@ -51,9 +49,9 @@ class HttpManager {
                 }
             }
             install(HttpTimeout) {
-                connectTimeoutMillis = 15000
-                requestTimeoutMillis = 15000
-                socketTimeoutMillis = 30000
+                connectTimeoutMillis = HttpUtils.CONNECT_TIMEOUT
+                requestTimeoutMillis = HttpUtils.REQUEST_TIMEOUT
+                socketTimeoutMillis = HttpUtils.SOCKET_TIMEOUT
             }
         }
 
