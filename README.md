@@ -6,26 +6,28 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 
 ## Screenshots
 ### Android
-<img width="250" alt="ui-Android-login" src="./docs/imgs/android-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/android-feeds.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/android-articles.png" />
+<img width="250" alt="ui-Android-login" src="./docs/imgs/android-login.png" /><img width="250" alt="ui-Android-feeds" src="./docs/imgs/android-feeds.png" /><img width="250" alt="ui-Android-articles" src="./docs/imgs/android-articles.png" />
 
 ### iOS
-<img width="250" alt="ui-Android-login" src="./docs/imgs/ios-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-feeds.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/ios-articles.png" />
+<img width="250" alt="ui-iOS-login" src="./docs/imgs/ios-login.png" /><img width="250" alt="ui-iOS-feeds" src="./docs/imgs/ios-feeds.png" /><img width="250" alt="ui-iOS-articles" src="./docs/imgs/ios-articles.png" />
 
-### macOS / Windows
+### macOS / Windows / Linux
 ```
 ./gradlew clean
 ./gradlew build
 ./gradlew run
 ```
-<img width="250" alt="ui-Android-login" src="./docs/imgs/macos-login.png" /><img width="250" alt="ui-Android-login" src="./docs/imgs/macos-feeds.png" />
+<img width="250" alt="ui-macOS-login" src="./docs/imgs/macos-login.png" /><img width="250" alt="ui-macOS-feeds" src="./docs/imgs/macos-feeds.png" />
 
-<img width="250" alt="ui-Android-login" src="./docs/imgs/windows-login.jpg" /><img width="250" alt="ui-Android-login" src="./docs/imgs/windows-feeds.jpg" /><img width="250" alt="ui-Android-login" src="./docs/imgs/windows-articles.jpg" />
+<img width="250" alt="ui-Windows-login" src="./docs/imgs/windows-login.jpg" /><img width="250" alt="ui-Windows-feeds" src="./docs/imgs/windows-feeds.jpg" /><img width="250" alt="ui-Windows-articles" src="./docs/imgs/windows-articles.jpg" />
+
+<img width="250" alt="ui-Linux-login" src="./docs/imgs/linux-login.png" /><img width="250" alt="ui-Linux-feeds" src="./docs/imgs/linux-feeds.png" />
 
 ## Progress
 | function     | Android | iOS | macOS | Windows | Linux |
 |--------------|---------|-----|-------|---------|------|
-| normal login | ✅      | ✅  | ✅     | ✅      | ❓    |
+| normal login | ✅      | ✅  | ✅     | ✅      | ✅    |
 | auth login   | ✅      | ❌  | ❌     | ❌      | ❌    |
-| sync         | ✅      | ✅  | ✅     | ✅      | ❓    |
+| sync         | ✅      | ✅  | ✅     | ✅      | ✅    |
 | subscribe    | ✅      | ✅  | ✅     | ✅      | ❓    |
 | mark read    | ✅      | ✅  | ✅     | ✅      | ❓    |
