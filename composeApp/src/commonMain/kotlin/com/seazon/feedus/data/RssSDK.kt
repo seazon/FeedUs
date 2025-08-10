@@ -21,8 +21,8 @@ class RssSDK(val tokenSettings: TokenSettings) {
         if (api == null) {
             api = initRssApiStatic(token)
         }
-        if (api!!.getToken() == null) {
-            api!!.setToken(token)
+        if (api?.getToken() == null) {
+            api?.setToken(token)
         }
         return api!!
     }
@@ -34,8 +34,9 @@ class RssSDK(val tokenSettings: TokenSettings) {
         val api = RssUtil.newApi(token)
         try {
             val accessTokenResponse = api.getAccessToken(token)
-            api.setUserWithAccessToken(token, accessTokenResponse!!)
+            api.setUserWithAccessToken(token, accessTokenResponse.orEmpty())
             tokenSettings.saveToken(token)
+            api.setToken(token)
         } catch (e: Exception) {
             throw HttpException(HttpException.Type.EEXPIRED, e)
         }
@@ -54,14 +55,13 @@ class RssSDK(val tokenSettings: TokenSettings) {
         return api!!
     }
 
-    fun resetApi() {
-        api = null
-    }
-
     private fun initRssApiStatic(token: RssToken): RssApi {
         val api = RssUtil.newApi(token)
         api.setToken(token)
         return api
     }
 
+    fun resetApi() {
+        api = null
+    }
 }
