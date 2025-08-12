@@ -262,13 +262,11 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
 
     override suspend fun getTags(): List<RssTag>? {
         return mainApi?.getTags()?.tags?.mapNotNull {
-            if (it.id.isNullOrEmpty()) {
+            if (it.id.isNullOrEmpty() || GrConstants.isIgnoredTag(it.id.orEmpty()) || GrConstants.isIgnoredForTag(it.id.orEmpty())) {
                 null
             } else {
                 RssTag(it.id, it.id?.substring(it.id?.lastIndexOf("/").orZero() + 1))
             }
-        }?.filter {
-            !GrConstants.isIgnoredTag(it.label.orEmpty()) && !GrConstants.isIgnoredForTag(it.label.orEmpty())
         }
     }
 

@@ -5,9 +5,7 @@ import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinStream
 import com.seazon.feedme.lib.rss.service.feedbin.bo.FeedbinSubscription
-import com.seazon.feedme.lib.rss.service.gr.GrConstants
 import com.seazon.feedme.lib.rss.service.gr.bo.GrStream
-import com.seazon.feedme.lib.rss.service.gr.bo.GrSubscription
 import com.seazon.feedme.lib.rss.service.ttrss.bo.TtrssStream
 
 fun GrStream.convert(): RssStream {
@@ -108,26 +106,3 @@ fun Collection<FeedbinSubscription>.convert(): List<RssFeed> {
         )
     }
 }
-
-fun Collection<GrSubscription>?.convert2(): List<RssFeed> {
-    return this?.map {
-        RssFeed(
-            it.id,
-            it.title,
-            it.htmlUrl ?: it.url,
-            it.url,
-            it.categories?.map { category ->
-                RssTag(category.id, category.label)
-            }?.filter {
-                !GrConstants.isIgnoredTag(it.label.orEmpty()) && !GrConstants.isIgnoredForTag(it.label.orEmpty())
-            },
-            it.favicon.orEmpty()
-        )
-    }.orEmpty()
-}
-
-//fun Collection<TtrssTag>.convert3(): List<RssTag> {
-//    return map {
-//        RssTag(it.id, it.caption)
-//    }
-//}
