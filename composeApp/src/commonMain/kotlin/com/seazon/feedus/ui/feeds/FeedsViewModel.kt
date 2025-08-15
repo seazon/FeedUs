@@ -14,6 +14,7 @@ import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedus.data.AppSettings
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
+import com.seazon.feedus.data.getFetchCnt
 import com.seazon.feedus.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -143,7 +144,7 @@ class FeedsViewModel(
         try {
             // TODO use in app
             val tags = api.getTags()
-            val stars = api.getStarredStreamIds(Static.FETCH_COUNT, null)
+            val stars = api.getStarredStreamIds(api.getFetchCnt(), null)
             // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             val starredCount = stars?.size.orZero()
             if (api.supportPagingFetchIds()) {

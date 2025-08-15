@@ -22,7 +22,13 @@ open class BaseApi(val token: RssToken) {
         val bodyMutableMap = bodyMap?.toMutableMap() ?: mutableMapOf<String, Any>()
         bodyMutableMap.put("op", method)
 
-        val response: SimpleResponse = HttpManager.requestWrap(HttpMethod.POST, getSchema(), null, headers, bodyMutableMap.toJsonElement().toString())
+        val response: SimpleResponse = HttpManager.requestWrap(
+            httpMethod = HttpMethod.POST,
+            url = getSchema(),
+            params = null,
+            headers = headers,
+            body = bodyMutableMap.toJsonElement().toString()
+        )
         if (response.body.contains("NOT_LOGGED_IN")) {
             throw HttpException(HttpException.Type.EEXPIRED)
         }

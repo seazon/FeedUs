@@ -30,7 +30,14 @@ open class AuthedApi(token: RssToken) : BaseApi(token) {
             headers = HashMap<String, String>()
         }
         setHeaderToken(headers)
-        val response = HttpManager.requestWrap(httpMethod, getSchema() + url, params, headers, body, json)
+        val response = HttpManager.requestWrap(
+            httpMethod = httpMethod,
+            url = getSchema() + url,
+            params = params,
+            headers = headers,
+            body = body,
+            json = json
+        )
         if (response.code == RssApi.HTTP_CODE_UNAUTHORIZED) {
             throw HttpException(HttpException.Type.EEXPIRED)
         }

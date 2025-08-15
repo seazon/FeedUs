@@ -19,6 +19,7 @@ open class BaseApi(val token: RssToken) {
     suspend fun execute(
         method: String,
         params: MutableList<NameValuePair> = mutableListOf(),
+        xFormParams: MutableList<NameValuePair> = mutableListOf(),
         authCheck: Boolean
     ): SimpleResponse {
         params.add(NameValuePair("api", ""))
@@ -26,7 +27,14 @@ open class BaseApi(val token: RssToken) {
         val headers = mapOf(
             HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
-        val response = HttpManager.requestWrap(HttpMethod.POST, getSchema(), params, headers, null)
+        val response = HttpManager.requestWrap(
+            httpMethod = HttpMethod.POST,
+            url = getSchema(),
+            params = params,
+            headers = headers,
+            xFormParams = xFormParams,
+            body = null
+        )
 
         if (response.code != 200) {
             throw HttpException(HttpException.Type.EREMOTE, "HTTP code: ${response.code}")

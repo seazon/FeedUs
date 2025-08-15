@@ -8,6 +8,7 @@ import com.seazon.feedme.lib.utils.jsonOf
 import com.seazon.feedus.cache.RssDatabase
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
+import com.seazon.feedus.data.getFetchCnt
 import com.seazon.feedus.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -82,29 +83,29 @@ class ArticlesViewModel(
                             rssDatabase.getFeeds()
                                 .filter { it.categories?.contains(state.value.title.orEmpty()) ?: false }
                                 .map { it.id }.toTypedArray()
-                        api.getCategoryStream(jsonOf(feedIds), Static.FETCH_COUNT, null, state.value.continuation)
+                        api.getCategoryStream(jsonOf(feedIds), api.getFetchCnt(), null, state.value.continuation)
                     } else {
                         api.getCategoryStream(
                             state.value.categoryId.orEmpty(),
-                            Static.FETCH_COUNT,
+                            api.getFetchCnt(),
                             null,
                             state.value.continuation
                         )
                     }
                 } else if (!state.value.feedId.isNullOrEmpty()) {
-                    api.getFeedStream(state.value.feedId.orEmpty(), Static.FETCH_COUNT, null, state.value.continuation)
+                    api.getFeedStream(state.value.feedId.orEmpty(), api.getFetchCnt(), null, state.value.continuation)
                 } else if (state.value.starred) {
                     starred = true
-                    api.getStarredStreamIds(Static.FETCH_COUNT, state.value.continuation)
+                    api.getStarredStreamIds(api.getFetchCnt(), state.value.continuation)
                 } else {
-                    api.getUnraedStream(Static.FETCH_COUNT, null, state.value.continuation)
+                    api.getUnraedStream(api.getFetchCnt(), null, state.value.continuation)
                 }
                 if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
-                    rssStream = api.getStreamByIds(rssStream.ids.take(Static.FETCH_COUNT).toTypedArray())
+                    rssStream = api.getStreamByIds(rssStream.ids.take(api.getFetchCnt()).toTypedArray())
                 }
                 val items = rssStream?.items?.map { convert(it, starred) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
-                val hasMore = items.size >= Static.FETCH_COUNT
+                val hasMore = items.size >= api.getFetchCnt()
                 _state.update {
                     it.copy(
                         isLoading = false,

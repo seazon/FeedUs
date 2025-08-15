@@ -5,11 +5,13 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.headers
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.Parameters
 import io.ktor.serialization.kotlinx.json.json
 //import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.runBlocking
@@ -69,10 +71,11 @@ class HttpManager {
             url: String,
             params: List<NameValuePair>? = null,
             headers: Map<String, String>? = null,
+            xFormParams: List<NameValuePair>? = null,
             body: String? = null,
         ): HttpResponse {
             return runBlocking {
-                request(httpMethod, url, params, headers, body, true)
+                request(httpMethod, url, params, headers, xFormParams, body, true)
             }
         }
 
@@ -81,11 +84,12 @@ class HttpManager {
             url: String,
             params: List<NameValuePair>? = null,
             headers: Map<String, String>? = null,
+            xFormParams: List<NameValuePair>? = null,
             body: String? = null,
             json: Boolean = true,
         ): HttpResponse {
             return runBlocking {
-                request(httpMethod, url, params, headers, body, json)
+                request(httpMethod, url, params, headers, xFormParams, body, json)
             }
         }
 
@@ -94,12 +98,19 @@ class HttpManager {
             url: String,
             params: List<NameValuePair>? = null,
             headers: Map<String, String>? = null,
+            xFormParams: List<NameValuePair>? = null,
             body: String? = null,
             json: Boolean = true,
         ): HttpResponse {
             LogUtils.debug("[$httpMethod]${url}")
             if (!params.isNullOrEmpty()) {
-                LogUtils.debug("params: ${params.joinToString(separator = "&", transform = { "${it.name}=${it.value}" })}")
+                LogUtils.debug(
+                    "params: ${
+                        params.joinToString(
+                            separator = "&",
+                            transform = { "${it.name}=${it.value}" })
+                    }"
+                )
             }
             if (!headers.isNullOrEmpty()) {
                 LogUtils.debug(
@@ -113,6 +124,15 @@ class HttpManager {
             val headersNew = headers.orEmpty().toMutableMap()
             if (!headersNew.contains(HttpUtils.HTTP_HEADERS_ACCEPT)) {
                 headersNew[HttpUtils.HTTP_HEADERS_ACCEPT] = HttpUtils.HTTP_HEADERS_ACCEPT_DEFAULT_VALUE
+            }
+            if (!xFormParams.isNullOrEmpty()) {
+                LogUtils.debug(
+                    "xFormParams: ${
+                        xFormParams.joinToString(
+                            separator = "&",
+                            transform = { "${it.name}=${it.value}" })
+                    }"
+                )
             }
             if (!body.isNullOrEmpty()) {
                 LogUtils.debug("body: $body")
@@ -130,15 +150,15 @@ class HttpManager {
                         parameters.append(it.name, it.value)
                     }
                 }
-                if (body.isNullOrEmpty()) {
-//                    val formParameters = Parameters.build {
-//                        params?.forEach {
-//                            append(it.name, it.value)
-//                        }
-//                    }
-//                    setBody(FormDataContent(formParameters))
-                } else {
+                if (!body.isNullOrEmpty()) {
                     setBody(body)
+                } else if (!xFormParams.isNullOrEmpty()) {
+                    val formParameters = Parameters.build {
+                        params?.forEach {
+                            append(it.name, it.value)
+                        }
+                    }
+                    setBody(FormDataContent(formParameters))
                 }
                 headers {
                     headersNew.forEach {
@@ -154,10 +174,11 @@ class HttpManager {
             url: String,
             params: List<NameValuePair>? = null,
             headers: Map<String, String>? = null,
+            xFormParams: List<NameValuePair>? = null,
             body: String? = null,
             json: Boolean = true,
         ): SimpleResponse {
-            val a = request(httpMethod, url, params, headers, body, json)
+            val a = request(httpMethod, url, params, headers, xFormParams, body, json)
             val b = SimpleResponse(a.status.value, a.bodyAsText())
             LogUtils.debug("response code: ${b.code}")
             LogUtils.debug("response body: ${b.body}")

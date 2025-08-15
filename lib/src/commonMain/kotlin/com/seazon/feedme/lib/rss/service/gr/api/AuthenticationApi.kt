@@ -46,7 +46,8 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         } else if (tokens.size == 2) {
             token.accessToken = tokens[1]!!.substring("Auth=".length)
         }
-        token.expiresTimestamp = TimeProvider.currentTimeMillis() + (getExpiredTimestamp() - 300) * 1000 // 提前5分钟过期，避免临界问题
+        token.expiresTimestamp =
+            TimeProvider.currentTimeMillis() + (getExpiredTimestamp() - 300) * 1000 // 提前5分钟过期，避免临界问题
     }
 
     // ======== oauth2 ========
@@ -64,7 +65,14 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val headers = mutableMapOf(
             HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
-        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
+        return HttpManager.requestWrap(
+            httpMethod = HttpMethod.POST,
+            url = getSchema() + GrConstants.TOKEN,
+            params = null,
+            headers = headers,
+            body = params,
+            json = false
+        ).body
     }
 
     suspend fun getAccessTokenOAuth2(refreshToken: String?): String? {
@@ -73,7 +81,14 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         val headers = mutableMapOf(
             HttpUtils.HTTP_HEADERS_CONTENT_TYPE to HttpUtils.HTTP_HEADERS_CONTENT_TYPE_WWW_FORM
         )
-        return HttpManager.requestWrap(HttpMethod.POST, getSchema() + GrConstants.TOKEN, null, headers, params, false).body
+        return HttpManager.requestWrap(
+            httpMethod = HttpMethod.POST,
+            url = getSchema() + GrConstants.TOKEN,
+            params = null,
+            headers = headers,
+            body = params,
+            json = false
+        ).body
     }
 
     fun setUserWithRefreshToken(token: RssToken, response: String) {

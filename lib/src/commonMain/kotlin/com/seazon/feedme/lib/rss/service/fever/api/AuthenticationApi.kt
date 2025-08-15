@@ -12,11 +12,15 @@ import com.seazon.feedme.platform.TimeProvider
 class AuthenticationApi(token: RssToken) : BaseApi(token) {
 
     suspend fun getAccessToken(username: String?, password: String?): String {
-        val response = execute(FeverConstants.METHOD_LOGIN, mutableListOf<NameValuePair>().apply {
-            add(NameValuePair("email", username.orEmpty()))
-            add(NameValuePair("pass", password.orEmpty()))
-            add(NameValuePair("api_key", Helper.md52("$username:$password").lowercase()))
-        }, false)
+        val response = execute(
+            method = FeverConstants.METHOD_LOGIN,
+            params = mutableListOf<NameValuePair>().apply {
+                add(NameValuePair("email", username.orEmpty()))
+                add(NameValuePair("pass", password.orEmpty()))
+                add(NameValuePair("api_key", Helper.md52("$username:$password").lowercase()))
+            },
+            authCheck = false
+        )
 
         val commonResponse = response.convertBody<CommonResponse>()
         if (commonResponse.auth != 1) {

@@ -23,6 +23,4 @@ object Static {
     const val REDIRECT_URI_OLD: String = "feedme://oauth"
 
     const val REDIRECT_URI: String = "feedme://oauth" //    public static final String URI_INDEX = "https://github.com/seazon/FeedMe/blob/master/README.md";
-
-    const val FETCH_COUNT = 10
 }

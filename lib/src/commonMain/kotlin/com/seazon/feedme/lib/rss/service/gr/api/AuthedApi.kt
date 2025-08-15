@@ -41,7 +41,14 @@ open class AuthedApi(token: RssToken, config: GrConfig, val api: RssApi) : BaseA
         if (isTheseRssType(Static.ACCOUNT_TYPE_INOREADER_OAUTH2, Static.ACCOUNT_TYPE_INOREADER)) {
             setHeaderAppAuthentication(headers)
         }
-        val response = HttpManager.requestWrap(httpMethod, getSchema() + url, params, headers, body, json)
+        val response = HttpManager.requestWrap(
+            httpMethod = httpMethod,
+            url = getSchema() + url,
+            params = params,
+            headers = headers,
+            body = body,
+            json = json
+        )
         if (response.code == RssApi.HTTP_CODE_UNAUTHORIZED) {
             throw HttpException(HttpException.Type.EEXPIRED)
         }
