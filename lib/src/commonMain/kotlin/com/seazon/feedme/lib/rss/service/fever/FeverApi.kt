@@ -93,7 +93,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getUnraedStream(count: Int, since: String?, continuation: String?): RssStream {
         val idsRssStream = getUnraedStreamIds(count, continuation)
-        return getStreamByIds(idsRssStream.ids.toTypedArray())
+        return getStreamByIds(idsRssStream.ids.take(count).toTypedArray())
     }
 
     override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream {

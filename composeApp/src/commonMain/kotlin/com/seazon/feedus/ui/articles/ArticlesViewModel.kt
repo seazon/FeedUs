@@ -100,7 +100,7 @@ class ArticlesViewModel(
                     api.getUnraedStream(Static.FETCH_COUNT, null, state.value.continuation)
                 }
                 if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
-                    rssStream = api.getStreamByIds(rssStream.ids.toTypedArray())
+                    rssStream = api.getStreamByIds(rssStream.ids.take(Static.FETCH_COUNT).toTypedArray())
                 }
                 val items = rssStream?.items?.map { convert(it, starred) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
@@ -108,7 +108,7 @@ class ArticlesViewModel(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        hasMore = hasMore,
+                        hasMore = api.supportPagingFetchIds() && hasMore,
                         items = it.items + items,
                         feedMap = feedMap,
                         continuation = rssStream?.continuation,
