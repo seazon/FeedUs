@@ -11,7 +11,7 @@ data class FoloFeeds(
     fun convert(): RssStream {
         return RssStream(
             items = entries?.map { entry ->
-                entry.convert(feed, true) // TODO check read state
+                entry.convert(feed, null, true) // TODO check read state
             }.orEmpty()
         )
     }

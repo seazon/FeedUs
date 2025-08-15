@@ -12,11 +12,12 @@ data class FoloEntries(
     val view: Int? = null,
     val entries: FoloEntry? = null,
     val feeds: FoloFeed? = null,
+    val subscriptions: FoloCategory? = null,
 ) {
     fun convert(): RssItem? {
         val entry = entries
         val feed = feeds
-        return entry?.convert(feed, read)
+        return entry?.convert(feed, subscriptions, read)
     }
 }
 
@@ -32,11 +33,12 @@ data class FoloEntry(
     val media: List<FoloMedia>? = null,
     val attachments: List<FoloAttachment>? = null,
 ) {
-    fun convert(feed: FoloFeed?, read: Boolean?): RssItem {
+    fun convert(feed: FoloFeed?, category: FoloCategory?, read: Boolean?): RssItem {
         val audioAttachment = attachments?.firstOrNull { it.mimeType?.startsWith("audio") == true }
         return RssItem(
             id = id,
             fid = feed?.id.orEmpty(),
+            feed = feed?.convert(category),
             title = title.orEmpty(),
             link = url.orEmpty(),
             author = author,
