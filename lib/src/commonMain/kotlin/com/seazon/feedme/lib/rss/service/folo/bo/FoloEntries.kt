@@ -13,11 +13,17 @@ data class FoloEntries(
     val entries: FoloEntry? = null,
     val feeds: FoloFeed? = null,
     val subscriptions: FoloCategory? = null,
+    val collections: FoloCollection? = null,
 ) {
     fun convert(): RssItem? {
         val entry = entries
         val feed = feeds
-        return entry?.convert(feed, subscriptions, read)
+        return entry?.convert(
+            feed = feed,
+            category = subscriptions,
+            read = read,
+            collections = collections
+        )
     }
 }
 
@@ -33,7 +39,7 @@ data class FoloEntry(
     val media: List<FoloMedia>? = null,
     val attachments: List<FoloAttachment>? = null,
 ) {
-    fun convert(feed: FoloFeed?, category: FoloCategory?, read: Boolean?): RssItem {
+    fun convert(feed: FoloFeed?, category: FoloCategory?, read: Boolean?, collections: FoloCollection?): RssItem {
         val audioAttachment = attachments?.firstOrNull { it.mimeType?.startsWith("audio") == true }
         return RssItem(
             id = id,
@@ -48,6 +54,7 @@ data class FoloEntry(
             tags = null,
             visual = media?.firstOrNull { it.type == "photo" }?.url,
             isUnread = !(read ?: false),
+            isStar = collections != null,
             podcastUrl = audioAttachment?.url,
             podcastSize = audioAttachment?.sizeInBytes?.toInt().orZero()
         )
@@ -69,4 +76,9 @@ data class FoloAttachment(
 data class FoloMedia(
     val url: String? = null,
     val type: String? = null, // photo
+)
+
+@Serializable
+data class FoloCollection(
+    val createdAt: String? = null,
 )

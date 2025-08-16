@@ -19,6 +19,7 @@ open class RssItem(
     var feed: RssFeed? = RssFeed(),
     var enclosure: List<RssEnclosure>? = null,
     var isUnread: Boolean = false,
+    var isStar: Boolean? = null,
     var since: String? = null
 ) : Entity() {
 

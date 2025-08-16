@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.seazon.feedme"
-version = "0.86"
+version = "0.87"
 
 publishing {
     repositories {

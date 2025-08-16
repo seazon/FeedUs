@@ -93,21 +93,17 @@ class FoloApi : RssApi {
     }
 
     override suspend fun markStar(entryIds: Array<String>): String? {
-//        return tagsApi?.tagEntries(entryIds, arrayOf(tagStarred))
-        return null
+        return mainApi?.markStar(entryIds.first())
     }
 
     override suspend fun markUnstar(entryIds: Array<String>): String? {
-//        return tagsApi?.untagEntries(entryIds, arrayOf(tagStarred))
-        return null
+        return mainApi?.markUnstar(entryIds.first())
     }
 
     override suspend fun markTag(entryIds: Array<String>, tagIds: Array<String>) {
-//        tagsApi?.tagEntries(entryIds, tagIds)
     }
 
     override suspend fun markUntag(entryIds: Array<String>, tagIds: Array<String>) {
-//        tagsApi?.untagEntries(entryIds, tagIds)
     }
 
     /*

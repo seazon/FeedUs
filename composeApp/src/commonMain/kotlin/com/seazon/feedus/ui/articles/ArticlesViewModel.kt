@@ -76,7 +76,6 @@ class ArticlesViewModel(
             try {
                 // fetch item and render list
                 val api = rssSDK.getRssApi(false)
-                var starred = false
                 var rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
                         val feedIds =
@@ -95,7 +94,6 @@ class ArticlesViewModel(
                 } else if (!state.value.feedId.isNullOrEmpty()) {
                     api.getFeedStream(state.value.feedId.orEmpty(), api.getFetchCnt(), null, state.value.continuation)
                 } else if (state.value.starred) {
-                    starred = true
                     api.getStarredStreamIds(api.getFetchCnt(), state.value.continuation)
                 } else {
                     api.getUnraedStream(api.getFetchCnt(), null, state.value.continuation)
@@ -103,7 +101,7 @@ class ArticlesViewModel(
                 if (rssStream?.items.isNullOrEmpty() && !rssStream?.ids.isNullOrEmpty()) {
                     rssStream = api.getStreamByIds(rssStream.ids.take(api.getFetchCnt()).toTypedArray())
                 }
-                val items = rssStream?.items?.map { convert(it, starred) }.orEmpty()
+                val items = rssStream?.items?.map { convert(it) }.orEmpty()
                 val feedMap = rssDatabase.getFeeds().associateBy { it.id }
                 val hasMore = items.size >= api.getFetchCnt()
                 _state.update {
@@ -124,14 +122,14 @@ class ArticlesViewModel(
         }
     }
 
-    private fun convert(it: RssItem, starred: Boolean): Item {
+    private fun convert(it: RssItem): Item {
         return Item(
             id = it.id.orEmpty(),
             fid = it.fid,
-            flag = Item.FLAG_UNREAD,
+            flag = if (it.isUnread) Item.FLAG_UNREAD else Item.FLAG_READ,
             status = 0,
             process = 0,
-            star = if (starred) Item.STAR_STARRED else Item.STAR_UNSTAR,
+            star = if (it.isStar == true) Item.STAR_STARRED else Item.STAR_UNSTAR,
             tag = 0,
             title = it.title,
             titleTranslated = null,

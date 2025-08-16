@@ -81,7 +81,11 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             *if (!publishedAfter.isNullOrEmpty()) arrayOf("publishedAfter" to publishedAfter) else emptyArray()
         )
         val data =
-            execute(HttpMethod.POST, FoloConstants.URL_ENTRIES, body = o.toString()).convertBody<FoloListData<FoloEntries>>()
+            execute(
+                httpMethod = HttpMethod.POST,
+                url = FoloConstants.URL_ENTRIES,
+                body = o.toString()
+            ).convertBody<FoloListData<FoloEntries>>()
         val items = data.data.mapNotNull { entries ->
             entries.convert()
         }
@@ -110,6 +114,20 @@ class MainApi(token: RssToken) : AuthedApi(token) {
             "readHistories" to entryIds?.mapNotNull { it },
         )
         return execute(HttpMethod.POST, FoloConstants.URL_READS, null, null, o.toString()).body
+    }
+
+    suspend fun markStar(entryId: String): String? {
+        val o = jsonOf(
+            "entryId" to entryId,
+        )
+        return execute(HttpMethod.POST, FoloConstants.URL_COLLECTIONS, null, null, o.toString()).body
+    }
+
+    suspend fun markUnstar(entryId: String): String? {
+        val o = jsonOf(
+            "entryId" to entryId,
+        )
+        return execute(HttpMethod.DELETE, FoloConstants.URL_COLLECTIONS, null, null, o.toString()).body
     }
 
     suspend fun subscribeFeed(

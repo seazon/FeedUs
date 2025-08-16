@@ -38,6 +38,8 @@ object FoloConstants {
 
     val URL_CATEGORIES: String = API + "/categories"
 
+    val URL_COLLECTIONS: String = API + "/collections"
+
     val URL_FEEDS: String = API + "/feeds"
 
     val URL_STREAMS_IDS: String = API + "/streams/ids"

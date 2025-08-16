@@ -11,7 +11,12 @@ data class FoloFeeds(
     fun convert(): RssStream {
         return RssStream(
             items = entries?.map { entry ->
-                entry.convert(feed, null, true) // TODO check read state
+                entry.convert(
+                    feed = feed,
+                    category = null,
+                    read = true,
+                    collections = null
+                ) // TODO check read state
             }.orEmpty()
         )
     }
