@@ -154,7 +154,7 @@ class HttpManager {
                     setBody(body)
                 } else if (!xFormParams.isNullOrEmpty()) {
                     val formParameters = Parameters.build {
-                        params?.forEach {
+                        xFormParams.forEach {
                             append(it.name, it.value)
                         }
                     }

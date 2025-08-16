@@ -8,7 +8,7 @@ open class AuthedApi(token: RssToken) : BaseApi(token) {
 
     suspend fun execute(method: String, xFormParams: MutableList<NameValuePair> = mutableListOf()): SimpleResponse {
         val params = mutableListOf<NameValuePair>()
-        params.add(NameValuePair("api_key", token.auth.orEmpty()))
+        xFormParams.add(NameValuePair("api_key", token.auth.orEmpty()))
         return super.execute(method = method, params = params, xFormParams = xFormParams, authCheck = true)
     }
 
