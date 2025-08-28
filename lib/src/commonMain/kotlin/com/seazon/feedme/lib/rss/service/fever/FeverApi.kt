@@ -66,9 +66,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return ""
     }
 
-    override suspend fun getUnreadCounts(): RssUnreadCounts {
-        return RssUnreadCounts()
-    }
+    override fun supportUnreadCounts() = false
 
     override suspend fun markRead(entryIds: Array<String>?): String? {
         entryIds?.forEach {

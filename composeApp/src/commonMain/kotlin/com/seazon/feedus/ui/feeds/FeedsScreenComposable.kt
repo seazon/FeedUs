@@ -22,7 +22,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeveloperMode
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,7 +62,9 @@ fun FeedsScreenComposable(
     navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
     navToDemo: () -> Unit,
     sync: () -> Unit,
+    isSupportFetchByFeedOrCategory: () -> Boolean,
     logout: () -> Unit,
+    onError: (message: String) -> Unit = {},
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -75,14 +79,25 @@ fun FeedsScreenComposable(
         MainContent(
             modifier = Modifier.fillMaxWidth().weight(1f),
             state = state,
-            onItemClick = {
+            onFeedClick = {
+                if (!isSupportFetchByFeedOrCategory()) {
+                    onError("not support fetch by feed")
+                    return@MainContent
+                }
                 navToArticles(null, it.id, false)
             },
             onCategoryClick = {
+                if (!isSupportFetchByFeedOrCategory()) {
+                    onError("not support fetch by category")
+                    return@MainContent
+                }
                 navToArticles(it.id, null, false)
             },
             onStarredClick = {
                 navToArticles(null, null, true)
+            },
+            onAllClick = {
+                navToArticles(null, null, false)
             },
         )
     }
@@ -174,8 +189,9 @@ private fun AppBar(
 private fun MainContent(
     modifier: Modifier = Modifier,
     state: FeedsScreenState,
-    onItemClick: (Feed) -> Unit,
+    onFeedClick: (Feed) -> Unit,
     onCategoryClick: (Category) -> Unit,
+    onAllClick: () -> Unit,
     onStarredClick: () -> Unit,
 ) {
     val feeds = state.feeds
@@ -196,7 +212,9 @@ private fun MainContent(
                 cntClientAll = 0,
                 cntClientUnread = state.maxUnreadCount,
             )
-            ItemGroup(allItemsCategory, false, onCategoryClick, onExpandClick = { e -> })
+            ItemGroup(allItemsCategory, GroupType.ALL, false, onItemClick = {
+                onAllClick()
+            }, onExpandClick = { e -> })
         }
         item {
             val starredItemsCategory = Category(
@@ -206,12 +224,12 @@ private fun MainContent(
                 cntClientAll = 0,
                 cntClientUnread = state.starredCount,
             )
-            ItemGroup(starredItemsCategory, false, onItemClick = {
+            ItemGroup(starredItemsCategory, GroupType.STARRED, false, onItemClick = {
                 onStarredClick()
             }, onExpandClick = { e -> })
         }
         items(count = state.categories.size, itemContent = {
-            ItemGroup(state.categories[it], false, onCategoryClick, onExpandClick = { e ->
+            ItemGroup(state.categories[it], GroupType.CATEGORY, false, onCategoryClick, onExpandClick = { e ->
 //                expandListState.value = expandListState.value.toMutableList().apply {
 //                    if (this.size > it) {
 //                        this[it] = !e
@@ -226,7 +244,7 @@ private fun MainContent(
 
 //            if (expand == null) {
 //                if (feedConfig.type == FeedConfig.TYPE_FEED) {
-            ItemChild(feeds[it], onItemClick)
+            ItemChild(feeds[it], onFeedClick)
 //                }
 //            } else {
 //                ItemGroup(groupItem, feedConfig, expand, onItemClick, onExpandClick = { e ->
@@ -250,6 +268,7 @@ private fun MainContent(
 @Composable
 private fun ItemGroup(
     category: Category,
+    type: GroupType,
 //    feedConfig: FeedConfig,
     expand: Boolean,
     onItemClick: (outline: Category) -> Unit,
@@ -262,9 +281,13 @@ private fun ItemGroup(
             .clickable { onItemClick(category) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val rotationValue by animateFloatAsState(targetValue = if (expand) 0f else -90f, label = "expandRotation")
+        val rotationValue by animateFloatAsState(targetValue = if (expand) -90f else 0f, label = "expandRotation")
         Image(
-            imageVector = Icons.Filled.Folder,
+            imageVector = when (type) {
+                GroupType.ALL -> Icons.Filled.Home
+                GroupType.STARRED -> Icons.Filled.Star
+                GroupType.CATEGORY -> Icons.Filled.Folder
+            },
             contentDescription = "",
 //            painter = painterResource(resource = Res.drawable.ic_keyboard_arrow_down_black_24dp),
 //            contentDescription = stringResource(resource = Res.string.ui_artlist_expand),
@@ -366,5 +389,12 @@ fun FeedsScreenComposablePreview() {
         navToArticles = { categoryId, feedId, starred -> },
         navToDemo = {},
         logout = {},
+        isSupportFetchByFeedOrCategory = { false },
         sync = {})
+}
+
+enum class GroupType {
+    CATEGORY,
+    ALL,
+    STARRED,
 }

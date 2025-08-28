@@ -68,6 +68,8 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return false
     }
 
+    override fun supportUnreadCounts() = false
+
     override suspend fun markRead(entryIds: Array<String>?): String? {
         return unreadEntriesApi?.deleteUnreadEntries(entryIds)
     }

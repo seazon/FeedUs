@@ -91,6 +91,15 @@ class FeedsViewModel(
         }
     }
 
+    fun isSupportFetchByFeedOrCategory(): Boolean {
+        return try {
+            val api = rssSDK.getRssApiStatic()
+            api.supportFetchByFeed()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun sync() {
         if (!isLogged()) {
             return
@@ -164,7 +173,8 @@ class FeedsViewModel(
             val stars = api.getStarredStreamIds(api.getFetchCnt(), null)
             // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             val starredCount = stars?.size.orZero()
-            if (api.supportPagingFetchIds()) {
+            var unreadMax = 0
+            if (api.supportUnreadCounts()) {
                 val unreadCounts = api.getUnreadCounts()
                 val categoryMap = rssDatabase.getCategories().apply {
                     this.forEach {
@@ -183,19 +193,19 @@ class FeedsViewModel(
                         categoryMap[it.id]?.cntClientUnread = it.count
                     }
                 }
-                val unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()
+                unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()
                 rssDatabase.saveCategories(categoryMap.values.toList())
                 rssDatabase.saveFeeds(feedMap.values.toList())
-                appSettings.getAppPreferences().apply {
-                    appSettings.saveAppPreferences(
-                        appPreferences = this.copy(
-                            unreadMax = unreadMax,
-                            starredCount = starredCount,
-                        )
-                    )
-                }
             } else {
-                // TODO for the rss services which not support supportPagingFetchIds(), need a way to show feeds
+                // TODO for the rss services which not supportUnreadCounts(), need a way to show feeds
+            }
+            appSettings.getAppPreferences().apply {
+                appSettings.saveAppPreferences(
+                    appPreferences = this.copy(
+                        unreadMax = unreadMax,
+                        starredCount = starredCount,
+                    )
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

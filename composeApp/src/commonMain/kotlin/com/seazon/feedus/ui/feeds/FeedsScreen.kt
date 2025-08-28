@@ -2,6 +2,7 @@ package com.seazon.feedus.ui.feeds
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,9 +38,14 @@ fun FeedsScreen(
         sync = {
             viewModel.sync()
         },
+        isSupportFetchByFeedOrCategory = remember { viewModel::isSupportFetchByFeedOrCategory },
         logout = {
             viewModel.logout {
                 navToLogin()
             }
-        })
+        },
+        onError = {
+            toaster.show(it)
+        }
+    )
 }
