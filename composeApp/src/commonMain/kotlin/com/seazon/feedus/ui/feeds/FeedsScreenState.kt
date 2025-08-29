@@ -5,6 +5,8 @@ import com.seazon.feedme.lib.rss.bo.Feed
 
 data class FeedsScreenState(
     val isLoading: Boolean = false,
+    val showUnreadCount: Boolean = false,
+    val isSupportFetchByFeedOrCategory: Boolean = false,
     val serviceName: String = "",
     val maxUnreadCount: Int = 0,
     val starredCount: Int = 0,

@@ -14,10 +14,13 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         return execute(FeverConstants.METHOD_FEEDS).body
     }
 
+    /**
+     * @param entryIds the max count is FeverConstants.FETCH_ITEM_IDS_MAX_COUNT
+     */
     suspend fun getItems(entryIds: Array<out String>?): String {
         return execute(FeverConstants.METHOD_ITEMS, mutableListOf<NameValuePair>().apply {
             entryIds?.let {
-                add(NameValuePair("with_ids", entryIds.joinToString()))
+                add(NameValuePair("with_ids", entryIds.take(FeverConstants.FETCH_ITEM_IDS_MAX_COUNT).joinToString()))
             }
         }).body
     }
@@ -31,7 +34,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
     }
 
     suspend fun markItem(entryId: String, _as: String): String {
-        return execute("", mutableListOf<NameValuePair>().apply {
+        return execute("", xFormParams = mutableListOf<NameValuePair>().apply {
             add(NameValuePair("mark", "item"))
             add(NameValuePair("as", _as))
             add(NameValuePair("id", entryId))

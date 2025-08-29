@@ -38,7 +38,6 @@ fun FeedsScreen(
         sync = {
             viewModel.sync()
         },
-        isSupportFetchByFeedOrCategory = remember { viewModel::isSupportFetchByFeedOrCategory },
         logout = {
             viewModel.logout {
                 navToLogin()

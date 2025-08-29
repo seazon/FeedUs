@@ -61,6 +61,8 @@ class FeedsViewModel(
                         val appPreferences = appSettings.getAppPreferences()
                         _state.update {
                             it.copy(
+                                isSupportFetchByFeedOrCategory = api.supportFetchByFeed(),
+                                showUnreadCount = api.supportUnreadCounts(),
                                 maxUnreadCount = appPreferences.unreadMax,
                                 starredCount = appPreferences.starredCount,
                                 feeds = feeds.sortedBy { it.title },
@@ -91,15 +93,6 @@ class FeedsViewModel(
         }
     }
 
-    fun isSupportFetchByFeedOrCategory(): Boolean {
-        return try {
-            val api = rssSDK.getRssApiStatic()
-            api.supportFetchByFeed()
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     fun sync() {
         if (!isLogged()) {
             return
@@ -119,6 +112,8 @@ class FeedsViewModel(
                 val appPreferences = appSettings.getAppPreferences()
                 _state.update {
                     it.copy(
+                        isSupportFetchByFeedOrCategory = api.supportFetchByFeed(),
+                        showUnreadCount = api.supportUnreadCounts(),
                         maxUnreadCount = appPreferences.unreadMax,
                         starredCount = appPreferences.starredCount,
                         feeds = feeds.sortedBy { it.title },
@@ -197,7 +192,8 @@ class FeedsViewModel(
                 rssDatabase.saveCategories(categoryMap.values.toList())
                 rssDatabase.saveFeeds(feedMap.values.toList())
             } else {
-                // TODO for the rss services which not supportUnreadCounts(), need a way to show feeds
+                val rssStream = api.getUnraedStreamIds(api.getFetchCnt(), null)
+                unreadMax = rssStream?.ids?.size.orZero()
             }
             appSettings.getAppPreferences().apply {
                 appSettings.saveAppPreferences(

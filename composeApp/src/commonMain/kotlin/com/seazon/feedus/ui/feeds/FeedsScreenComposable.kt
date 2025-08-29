@@ -62,7 +62,6 @@ fun FeedsScreenComposable(
     navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
     navToDemo: () -> Unit,
     sync: () -> Unit,
-    isSupportFetchByFeedOrCategory: () -> Boolean,
     logout: () -> Unit,
     onError: (message: String) -> Unit = {},
 ) {
@@ -80,14 +79,14 @@ fun FeedsScreenComposable(
             modifier = Modifier.fillMaxWidth().weight(1f),
             state = state,
             onFeedClick = {
-                if (!isSupportFetchByFeedOrCategory()) {
+                if (!state.isSupportFetchByFeedOrCategory) {
                     onError("not support fetch by feed")
                     return@MainContent
                 }
                 navToArticles(null, it.id, false)
             },
             onCategoryClick = {
-                if (!isSupportFetchByFeedOrCategory()) {
+                if (!state.isSupportFetchByFeedOrCategory) {
                     onError("not support fetch by category")
                     return@MainContent
                 }
@@ -212,9 +211,15 @@ private fun MainContent(
                 cntClientAll = 0,
                 cntClientUnread = state.maxUnreadCount,
             )
-            ItemGroup(allItemsCategory, GroupType.ALL, false, onItemClick = {
-                onAllClick()
-            }, onExpandClick = { e -> })
+            ItemGroup(
+                category = allItemsCategory,
+                type = GroupType.ALL,
+                showUnreadCount = true,
+                expand = false,
+                onItemClick = {
+                    onAllClick()
+                },
+                onExpandClick = { e -> })
         }
         item {
             val starredItemsCategory = Category(
@@ -224,18 +229,30 @@ private fun MainContent(
                 cntClientAll = 0,
                 cntClientUnread = state.starredCount,
             )
-            ItemGroup(starredItemsCategory, GroupType.STARRED, false, onItemClick = {
-                onStarredClick()
-            }, onExpandClick = { e -> })
+            ItemGroup(
+                category = starredItemsCategory,
+                type = GroupType.STARRED,
+                showUnreadCount = true,
+                expand = false,
+                onItemClick = {
+                    onStarredClick()
+                },
+                onExpandClick = { e -> })
         }
         items(count = state.categories.size, itemContent = {
-            ItemGroup(state.categories[it], GroupType.CATEGORY, false, onCategoryClick, onExpandClick = { e ->
-//                expandListState.value = expandListState.value.toMutableList().apply {
-//                    if (this.size > it) {
-//                        this[it] = !e
-//                    }
-//                }.toList()
-            })
+            ItemGroup(
+                category = state.categories[it],
+                type = GroupType.CATEGORY,
+                showUnreadCount = state.showUnreadCount,
+                expand = false,
+                onItemClick = onCategoryClick,
+                onExpandClick = { e ->
+                    //                expandListState.value = expandListState.value.toMutableList().apply {
+                    //                    if (this.size > it) {
+                    //                        this[it] = !e
+                    //                    }
+                    //                }.toList()
+                })
         })
         items(count = state.feeds.size, itemContent = {
 //            val expand = expandListState.value.getOrNull(it)
@@ -244,7 +261,7 @@ private fun MainContent(
 
 //            if (expand == null) {
 //                if (feedConfig.type == FeedConfig.TYPE_FEED) {
-            ItemChild(feeds[it], onFeedClick)
+            ItemChild(feeds[it], state.showUnreadCount, onFeedClick)
 //                }
 //            } else {
 //                ItemGroup(groupItem, feedConfig, expand, onItemClick, onExpandClick = { e ->
@@ -270,6 +287,7 @@ private fun ItemGroup(
     category: Category,
     type: GroupType,
 //    feedConfig: FeedConfig,
+    showUnreadCount: Boolean,
     expand: Boolean,
     onItemClick: (outline: Category) -> Unit,
     onExpandClick: (expand: Boolean) -> Unit,
@@ -316,17 +334,20 @@ private fun ItemGroup(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         }
-        Text(
-            text = "${category.cntClientUnread}",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.outline,
-        )
+        if (type == GroupType.STARRED || showUnreadCount) {
+            Text(
+                text = "${category.cntClientUnread}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
     }
 }
 
 @Composable
 private fun ItemChild(
     feed: Feed,
+    showUnreadCount: Boolean = false,
 //    feedConfig: FeedConfig,
     onItemClick: (outline: Feed) -> Unit,
 ) {
@@ -362,11 +383,13 @@ private fun ItemChild(
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = "${feed.cntClientUnread}",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.outline,
-        )
+        if (showUnreadCount) {
+            Text(
+                text = "${feed.cntClientUnread}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
     }
 }
 
@@ -381,6 +404,8 @@ fun FeedsScreenComposablePreview() {
     }
     val state = MutableStateFlow(
         FeedsScreenState(
+            showUnreadCount = false,
+            isSupportFetchByFeedOrCategory = false,
             feeds = feeds,
         )
     )
@@ -389,7 +414,6 @@ fun FeedsScreenComposablePreview() {
         navToArticles = { categoryId, feedId, starred -> },
         navToDemo = {},
         logout = {},
-        isSupportFetchByFeedOrCategory = { false },
         sync = {})
 }
 
