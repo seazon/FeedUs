@@ -2,6 +2,7 @@ package com.seazon.feedus.ui.login
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -26,6 +27,7 @@ fun LoginScreen(
             }
         }
     }
+    Toaster(state = toaster)
     LoginScreenComposable(
         setTokenAccountType = {
             viewModel.setTokenAccountTypeAndResetApi(it)

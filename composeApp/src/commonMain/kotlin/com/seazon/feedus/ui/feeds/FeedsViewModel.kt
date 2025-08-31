@@ -21,6 +21,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+sealed class Event {
+    data class GeneralErrorEvent(val message: String) : Event()
+}
+
 class FeedsViewModel(
     val rssSDK: RssSDK,
     val tokenSettings: TokenSettings,
@@ -38,26 +42,36 @@ class FeedsViewModel(
     private val _subscribeState = MutableStateFlow(SubscribeDialogState())
     val subscribeState: StateFlow<SubscribeDialogState> = _subscribeState
 
+    private val _eventFlow = MutableStateFlow<Event?>(null)
+    val eventFlow: StateFlow<Event?> = _eventFlow
+
     init {
         if (isLogged()) {
             viewModelScope.launch {
-                val api = rssSDK.getRssApi(false)
-                val feeds =
-                    rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-                val categories = rssDatabase.getCategories()
-                    .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-                if (feeds.isEmpty()) {
-                    sync()
-                } else {
-                    val appPreferences = appSettings.getAppPreferences()
-                    _state.update {
-                        it.copy(
-                            maxUnreadCount = appPreferences.unreadMax,
-                            starredCount = appPreferences.starredCount,
-                            feeds = feeds.sortedBy { it.title },
-                            categories = categories.sortedBy { it.title },
-                        )
+                try {
+                    val api = rssSDK.getRssApi(false)
+                    val feeds =
+                        rssDatabase.getFeeds()
+                            .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                    val categories = rssDatabase.getCategories()
+                        .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                    if (feeds.isEmpty()) {
+                        sync()
+                    } else {
+                        val appPreferences = appSettings.getAppPreferences()
+                        _state.update {
+                            it.copy(
+                                isSupportFetchByFeedOrCategory = api.supportFetchByFeed(),
+                                showUnreadCount = api.supportUnreadCounts(),
+                                maxUnreadCount = appPreferences.unreadMax,
+                                starredCount = appPreferences.starredCount,
+                                feeds = feeds.sortedBy { it.title },
+                                categories = categories.sortedBy { it.title },
+                            )
+                        }
                     }
+                } catch (e: Exception) {
+                    _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
                 }
             }
         }
@@ -84,23 +98,30 @@ class FeedsViewModel(
             return
         }
         viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
+            try {
+                val api = rssSDK.getRssApi(false)
 
-            fetchSubscription(api)
-            fetchUnreadCount(api)
+                fetchSubscription(api)
+                fetchUnreadCount(api)
 
-            val feeds =
-                rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-            val categories =
-                rssDatabase.getCategories().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
-            val appPreferences = appSettings.getAppPreferences()
-            _state.update {
-                it.copy(
-                    maxUnreadCount = appPreferences.unreadMax,
-                    starredCount = appPreferences.starredCount,
-                    feeds = feeds.sortedBy { it.title },
-                    categories = categories.sortedBy { it.title },
-                )
+                val feeds =
+                    rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                val categories =
+                    rssDatabase.getCategories()
+                        .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                val appPreferences = appSettings.getAppPreferences()
+                _state.update {
+                    it.copy(
+                        isSupportFetchByFeedOrCategory = api.supportFetchByFeed(),
+                        showUnreadCount = api.supportUnreadCounts(),
+                        maxUnreadCount = appPreferences.unreadMax,
+                        starredCount = appPreferences.starredCount,
+                        feeds = feeds.sortedBy { it.title },
+                        categories = categories.sortedBy { it.title },
+                    )
+                }
+            } catch (e: Exception) {
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
             }
         }
     }
@@ -147,7 +168,8 @@ class FeedsViewModel(
             val stars = api.getStarredStreamIds(api.getFetchCnt(), null)
             // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             val starredCount = stars?.size.orZero()
-            if (api.supportPagingFetchIds()) {
+            var unreadMax = 0
+            if (api.supportUnreadCounts()) {
                 val unreadCounts = api.getUnreadCounts()
                 val categoryMap = rssDatabase.getCategories().apply {
                     this.forEach {
@@ -166,19 +188,20 @@ class FeedsViewModel(
                         categoryMap[it.id]?.cntClientUnread = it.count
                     }
                 }
-                val unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()
+                unreadMax = if (unreadCounts?.max.orZero() == 0) max else unreadCounts?.max.orZero()
                 rssDatabase.saveCategories(categoryMap.values.toList())
                 rssDatabase.saveFeeds(feedMap.values.toList())
-                appSettings.getAppPreferences().apply {
-                    appSettings.saveAppPreferences(
-                        appPreferences = this.copy(
-                            unreadMax = unreadMax,
-                            starredCount = starredCount,
-                        )
-                    )
-                }
             } else {
-                // TODO for the rss services which not support supportPagingFetchIds(), need a way to show feeds
+                val rssStream = api.getUnraedStreamIds(api.getFetchCnt(), null)
+                unreadMax = rssStream?.ids?.size.orZero()
+            }
+            appSettings.getAppPreferences().apply {
+                appSettings.saveAppPreferences(
+                    appPreferences = this.copy(
+                        unreadMax = unreadMax,
+                        starredCount = starredCount,
+                    )
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -192,40 +215,44 @@ class FeedsViewModel(
         if (query.isNullOrEmpty()) return
 
         viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
-            when (api.getToken()?.accoutType) {
-                Static.ACCOUNT_TYPE_LOCAL_RSS -> {
-                    (api as LocalRssApi).search(query)?.let {
-                        subscribe2(it.title.orEmpty(), it.id.orEmpty(), query, onSuccess)
-                    } ?: run {
-                        _subscribeState.update {
-                            it.copy(
-                                errorTips = "Not found",
-                            )
-                        }
-                    }
-                }
-
-                else -> {
-                    if (HtmlUtils.isHttpUrl(query)) {
-                        subscribe2(query, "feed/${query}", query, onSuccess)
-                    } else {
-                        val results = ExploreApi.search(query, api)
-                        if (results.isEmpty()) {
+            try {
+                val api = rssSDK.getRssApi(false)
+                when (api.getToken()?.accoutType) {
+                    Static.ACCOUNT_TYPE_LOCAL_RSS -> {
+                        (api as LocalRssApi).search(query)?.let {
+                            subscribe2(it.title.orEmpty(), it.id.orEmpty(), query, onSuccess)
+                        } ?: run {
                             _subscribeState.update {
                                 it.copy(
                                     errorTips = "Not found",
                                 )
                             }
+                        }
+                    }
+
+                    else -> {
+                        if (HtmlUtils.isHttpUrl(query)) {
+                            subscribe2(query, "feed/${query}", query, onSuccess)
                         } else {
-                            _subscribeState.update {
-                                it.copy(
-                                    results = results,
-                                )
+                            val results = ExploreApi.search(query, api)
+                            if (results.isEmpty()) {
+                                _subscribeState.update {
+                                    it.copy(
+                                        errorTips = "Not found",
+                                    )
+                                }
+                            } else {
+                                _subscribeState.update {
+                                    it.copy(
+                                        results = results,
+                                    )
+                                }
                             }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
             }
         }
     }

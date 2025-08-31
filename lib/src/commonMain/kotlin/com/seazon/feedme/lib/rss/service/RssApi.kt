@@ -61,6 +61,7 @@ interface RssApi {
 
     fun getCategoryId(category: String): String? = null
 
+    fun supportUnreadCounts() = true
     /**
      * if supportPagingFetchIds=false, not need to implement this
      */

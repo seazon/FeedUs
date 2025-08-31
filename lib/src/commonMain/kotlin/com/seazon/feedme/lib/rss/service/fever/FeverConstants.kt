@@ -11,4 +11,5 @@ object FeverConstants {
     const val METHOD_UNREAD_ITEM_IDS = "unread_item_ids"
     const val METHOD_SAVED_ITEM_IDS = "saved_item_ids"
 
+    const val FETCH_ITEM_IDS_MAX_COUNT = 50
 }

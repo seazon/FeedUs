@@ -4,7 +4,6 @@ import com.seazon.feedme.lib.rss.bo.RssFeed
 import com.seazon.feedme.lib.rss.bo.RssStream
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.bo.RssToken
-import com.seazon.feedme.lib.rss.bo.RssUnreadCounts
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.SelfHostedRssApi
 import com.seazon.feedme.lib.rss.service.fever.api.AuthenticationApi
@@ -12,6 +11,9 @@ import com.seazon.feedme.lib.rss.service.fever.api.MainApi
 import com.seazon.feedme.lib.rss.service.fever.bo.Feeds
 import com.seazon.feedme.lib.rss.service.fever.bo.FeverStream
 import com.seazon.feedme.lib.rss.service.fever.bo.Groups
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
 
@@ -66,9 +68,7 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return ""
     }
 
-    override suspend fun getUnreadCounts(): RssUnreadCounts {
-        return RssUnreadCounts()
-    }
+    override fun supportUnreadCounts() = false
 
     override suspend fun markRead(entryIds: Array<String>?): String? {
         entryIds?.forEach {
@@ -84,7 +84,17 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getStreamByIds(entryIds: Array<String>): RssStream {
-        return FeverStream.parse(mainApi?.getItems(entryIds))
+        val chunks = entryIds.asList().chunked(FeverConstants.FETCH_ITEM_IDS_MAX_COUNT)
+        val allItems = coroutineScope {
+            chunks.map { chunk ->
+                async {
+                    FeverStream.parse(mainApi?.getItems(chunk.toTypedArray())).items
+                }
+            }.awaitAll()
+        }.flatten()
+        return RssStream().apply {
+            items = allItems.sortedByDescending { it.publisheddate }
+        }
     }
 
     override suspend fun getUnraedStreamIds(count: Int, continuation: String?): RssStream {
@@ -93,23 +103,9 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
 
     override suspend fun getUnraedStream(count: Int, since: String?, continuation: String?): RssStream {
         val idsRssStream = getUnraedStreamIds(count, continuation)
-        return getStreamByIds(idsRssStream.ids.take(count).toTypedArray())
-    }
-
-    override suspend fun getFeedStreamIds(feedId: String, count: Int, continuation: String?): RssStream {
-        return RssStream()
-    }
-
-    override suspend fun getFeedStream(feedId: String, count: Int, since: String?, continuation: String?): RssStream {
-        return RssStream()
-    }
-
-    override suspend fun getCategoryStreamIds(category: String, count: Int, continuation: String?): RssStream {
-        return RssStream()
-    }
-
-    override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream {
-        return RssStream()
+        return getStreamByIds(idsRssStream.ids.take(count).toTypedArray()).apply {
+            items = items.sortedByDescending { it.publisheddate }
+        }
     }
 
     override suspend fun getSubscriptions(): List<RssFeed> {

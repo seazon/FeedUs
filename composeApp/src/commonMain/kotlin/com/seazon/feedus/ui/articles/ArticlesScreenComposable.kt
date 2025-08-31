@@ -91,7 +91,13 @@ fun ArticlesScreenComposable(
                 ) {
                     items(count = state.items.size, itemContent = {
                         val item = state.items[it]
-                        Item(item, state.feedMap[item.fid], onItemClick = onItemClick, onToggleStar = onToggleStar)
+                        Item(
+                            index = it + 1,
+                            item = item,
+                            feed = state.feedMap[item.fid],
+                            onItemClick = onItemClick,
+                            onToggleStar = onToggleStar
+                        )
                     })
                 }
             } else {
@@ -152,7 +158,13 @@ fun AppBar(state: ArticlesScreenState, navBack: () -> Unit, markAllRead: () -> U
 }
 
 @Composable
-private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit, onToggleStar: (item: Item) -> Unit) {
+private fun Item(
+    index: Int,
+    item: Item,
+    feed: Feed?,
+    onItemClick: (item: Item) -> Unit,
+    onToggleStar: (item: Item) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,7 +194,7 @@ private fun Item(item: Item, feed: Feed?, onItemClick: (item: Item) -> Unit, onT
             }
             Spacer(modifier = Modifier.heightIn(4.dp))
             Text(
-                text = HtmlUtils.decode(item.title.orEmpty()),
+                text = "#$index ${HtmlUtils.decode(item.title.orEmpty())}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

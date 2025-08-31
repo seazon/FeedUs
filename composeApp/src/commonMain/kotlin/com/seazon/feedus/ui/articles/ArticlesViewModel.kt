@@ -15,6 +15,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+sealed class Event {
+    data class GeneralErrorEvent(val message: String) : Event()
+}
+
 class ArticlesViewModel(
     val rssSDK: RssSDK,
     val tokenSettings: TokenSettings,
@@ -22,6 +26,9 @@ class ArticlesViewModel(
 ) : BaseViewModel() {
     private val _state = MutableStateFlow(ArticlesScreenState())
     val state: StateFlow<ArticlesScreenState> = _state
+
+    private val _eventFlow = MutableStateFlow<Event?>(null)
+    val eventFlow: StateFlow<Event?> = _eventFlow
 
     fun init(categoryId: String?, feedId: String?, starred: Boolean) {
         viewModelScope.launch {
@@ -53,7 +60,7 @@ class ArticlesViewModel(
                     )
                 }
             } catch (e: Exception) {
-                e.printStackTrace() // TODO error handing
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -78,10 +85,9 @@ class ArticlesViewModel(
                 val api = rssSDK.getRssApi(false)
                 var rssStream = if (!state.value.categoryId.isNullOrEmpty()) {
                     if (Static.ACCOUNT_TYPE_FOLO == tokenSettings.getToken().accoutType) {
-                        val feedIds =
-                            rssDatabase.getFeeds()
-                                .filter { it.categories?.contains(state.value.title.orEmpty()) ?: false }
-                                .map { it.id }.toTypedArray()
+                        val feedIds = rssDatabase.getFeeds()
+                            .filter { it.categories?.contains(state.value.title.orEmpty()) ?: false }
+                            .map { it.id }.toTypedArray()
                         api.getCategoryStream(jsonOf(feedIds), api.getFetchCnt(), null, state.value.continuation)
                     } else {
                         api.getCategoryStream(
@@ -114,7 +120,7 @@ class ArticlesViewModel(
                     )
                 }
             } catch (e: Exception) {
-                e.printStackTrace() // TODO error handing
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
                 _state.update {
                     it.copy(isLoading = false)
                 }
@@ -147,16 +153,20 @@ class ArticlesViewModel(
         if (item.flag == Item.FLAG_READ) return
 
         viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
-            api.markRead(arrayOf(item.id))
-            item.flag = Item.FLAG_READ
-            rssDatabase.updateItemFlag(item)
-            rssDatabase.getFeedById(item.fid.orEmpty())?.let { feed ->
-                feed.cntClientUnread -= 1
-                rssDatabase.updateFeedCntClientUnread(feed)
-            }
-            _state.update {
-                it.copy(items = it.items)
+            try {
+                val api = rssSDK.getRssApi(false)
+                api.markRead(arrayOf(item.id))
+                item.flag = Item.FLAG_READ
+                rssDatabase.updateItemFlag(item)
+                rssDatabase.getFeedById(item.fid.orEmpty())?.let { feed ->
+                    feed.cntClientUnread -= 1
+                    rssDatabase.updateFeedCntClientUnread(feed)
+                }
+                _state.update {
+                    it.copy(items = it.items)
+                }
+            } catch (e: Exception) {
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
             }
         }
     }
@@ -165,36 +175,47 @@ class ArticlesViewModel(
         if (state.value.items.isEmpty()) return
 
         viewModelScope.launch {
-            _state.update {
-                it.copy(isLoading = true)
+            try {
+                _state.update {
+                    it.copy(isLoading = true)
+                }
+                val api = rssSDK.getRssApi(false)
+                api.markRead(state.value.items.map { it.id }.toTypedArray())
+                _state.update {
+                    it.copy(isLoading = false, items = emptyList())
+                }
+            } catch (e: Exception) {
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
+                _state.update {
+                    it.copy(isLoading = false)
+                }
             }
-            val api = rssSDK.getRssApi(false)
-            api.markRead(state.value.items.map { it.id }.toTypedArray())
-            _state.update {
-                it.copy(isLoading = false, items = emptyList())
-            }
+
         }
     }
 
     fun toggleStar(item: Item) {
         viewModelScope.launch {
-            val api = rssSDK.getRssApi(false)
-            val newItem = if (item.star == Item.STAR_STARRED) {
-                api.markUnstar(arrayOf(item.id))
-                item.copy(star = Item.STAR_UNSTAR)
-            } else {
-                api.markStar(arrayOf(item.id))
-                item.copy(star = Item.STAR_STARRED)
-            }
-            rssDatabase.updateItemStar(newItem)
-
-            _state.update {
-                val newItems = it.items.map { i ->
-                    if (i.id == item.id) newItem else i
+            try {
+                val api = rssSDK.getRssApi(false)
+                val newItem = if (item.star == Item.STAR_STARRED) {
+                    api.markUnstar(arrayOf(item.id))
+                    item.copy(star = Item.STAR_UNSTAR)
+                } else {
+                    api.markStar(arrayOf(item.id))
+                    item.copy(star = Item.STAR_STARRED)
                 }
-                it.copy(items = newItems)
+                rssDatabase.updateItemStar(newItem)
+
+                _state.update {
+                    val newItems = it.items.map { i ->
+                        if (i.id == item.id) newItem else i
+                    }
+                    it.copy(items = newItems)
+                }
+            } catch (e: Exception) {
+                _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
             }
         }
     }
-
 }
