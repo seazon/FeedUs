@@ -1,7 +1,7 @@
 package com.seazon.feedme.lib.rss.service.folo.bo
 
+import com.seazon.feedme.lib.rss.bo.RssCategory
 import com.seazon.feedme.lib.rss.bo.RssFeed
-import com.seazon.feedme.lib.rss.bo.RssTag
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -43,7 +43,7 @@ data class FoloFeed(
             favicon = image,
             categories = categories.mapNotNull {
                 it?.let {
-                    RssTag(null, it.category.orEmpty())
+                    RssCategory(null, it.category.orEmpty())
                 }
             }
         )
