@@ -8,14 +8,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExploreResult(
-    val feedId: String?,
-    val updated: Long?,
-    val title: String?,
-    val subscribers: Int?,
-    val feedUrl: String?,
-    val webUrl: String?,
-    val description: String?,
-    val iconUrl: String?,
+    val feedId: String? = null,
+    val updated: Long? = null,
+    val title: String? = null,
+    val subscribers: Int? = null,
+    val feedUrl: String? = null,
+    val webUrl: String? = null,
+    val description: String? = null,
+    val iconUrl: String? = null,
 ) {
     companion object {
 

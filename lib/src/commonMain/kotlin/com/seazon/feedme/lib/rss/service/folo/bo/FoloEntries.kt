@@ -68,8 +68,6 @@ data class FoloAttachment(
     val mimeType: String? = null,
     @SerialName("size_in_bytes")
     val sizeInBytes: String? = null,
-    @SerialName("duration_in_seconds")
-    val durationInSeconds: Int? = null,
 )
 
 @Serializable
