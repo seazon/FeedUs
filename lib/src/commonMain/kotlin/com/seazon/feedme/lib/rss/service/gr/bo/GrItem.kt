@@ -46,7 +46,7 @@ data class GrItem(
         item.title = title
         val publishTimeMsec = RssUtils.parsePublishTime(crawlTimeMsec, published)
         item.publisheddate = if (publishTimeMsec == 0L) null else publishTimeMsec
-        item.updateddate = if (updated == 0L) null else updated
+        item.updateddate = if (updated == 0L) (if (starred == 0L) null else starred) else updated
         if (categories != null) {
             for (tag in categories!!) {
                 if (GrApi.isLabel(tag)) {
