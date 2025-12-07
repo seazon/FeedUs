@@ -281,8 +281,7 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         return true
     }
 
-    private val tagStarred: String
-        private get() = GrConstants.TAG_STARRED
+    protected val tagStarred = GrConstants.TAG_STARRED
 
     override fun getDefaultHost(): String? {
         return config.schemaHttps

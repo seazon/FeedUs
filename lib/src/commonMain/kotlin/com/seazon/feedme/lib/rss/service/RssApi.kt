@@ -128,14 +128,29 @@ interface RssApi {
      */
     fun supportStar(): Boolean
 
+    /**
+     * if true, need implement getStarredStream()
+     */
+    fun supportStarV2(): Boolean = false
+
     suspend fun markStar(entryIds: Array<String>): String?
 
     suspend fun markUnstar(entryIds: Array<String>): String?
 
     /**
-     * 获取加星的所有条目
+     * Fetch starred items IDs
      */
     suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream?
+
+    /**
+     * Fetch starred items
+     *
+     * Why need this?
+     * Because some services (like Inoreader) missing some items while fetching starred items.
+     * In another word, when call via /reader/api/0/stream/items/contents, we attach some item ids,
+     * but not all items return. So use /reader/api/0/stream/contents to get all starred items.
+     */
+    suspend fun getStarredStream(count: Int, continuation: String?): RssStream? = null
 
     /*
      * TagsApi

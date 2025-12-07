@@ -100,7 +100,11 @@ class ArticlesViewModel(
                 } else if (!state.value.feedId.isNullOrEmpty()) {
                     api.getFeedStream(state.value.feedId.orEmpty(), api.getFetchCnt(), null, state.value.continuation)
                 } else if (state.value.starred) {
-                    api.getStarredStreamIds(api.getFetchCnt(), state.value.continuation)
+                    if (api.supportStarV2()) {
+                        api.getStarredStream(api.getFetchCnt(), state.value.continuation)
+                    } else {
+                        api.getStarredStreamIds(api.getFetchCnt(), state.value.continuation)
+                    }
                 } else {
                     api.getUnraedStream(api.getFetchCnt(), null, state.value.continuation)
                 }
