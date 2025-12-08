@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 class GeminiApi {
 
     companion object {
-        const val URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+        const val URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     }
 
     suspend fun translate(query: String, language: String, key: String): Translation? {
