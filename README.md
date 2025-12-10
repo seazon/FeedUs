@@ -33,11 +33,11 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 | mark read    | ✅      | ✅  | ✅     | ✅      | ❓    |
 
 ## API Support
-|  | Support Unread Count API | Feed ID Star with ”Feed” | Support Subscribe API | Support Tag API | Support Star API | Support Fetch by Feed / Category | Support Fetch IDs and then Stream | Support pagination | Support podcast |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Folo](https://api.follow.is/reference) | ✅ | N | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ |
+|                                                                                     | Support Unread Count API | Feed ID Star with ”Feed” | Support Subscribe API | Support Tag API | Support Star API | Support Fetch by Feed / Category | Support Fetch IDs and then Stream | Support pagination | Support podcast |
+|-------------------------------------------------------------------------------------| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Folo](https://api.folo.is/reference)                                               | ✅ | N | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ |
 | [Fever API](https://blog.badguy.top/index.php/archives/294/) (Miniflux / CommaFeed) | ❌ | N | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Tiny Tiny RSS | ✅ | N | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Feedly | ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Feedbin | ❌ | N | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Google Reader API ( Inoreader / The Old Reader / FreshRSS / BazQux)| ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Tiny Tiny RSS                                                                       | ✅ | N | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Feedly                                                                              | ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Feedbin                                                                             | ❌ | N | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Google Reader API ( Inoreader / The Old Reader / FreshRSS / BazQux)                 | ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |

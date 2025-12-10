@@ -10,7 +10,7 @@ object FoloConstants {
     const val CLIENT_ID: String = "feedme"
     const val CLIENT_SECRET: String = "VVMDWBKUHTJM4WUQ20GVCGEM"
 
-    const val SCHEMA_HTTPS: String = "https://api.follow.is"
+    const val SCHEMA_HTTPS: String = "https://api.folo.is"
     const val API: String = ""
 
     const val VALUE_SEPARATOR: String = "="
