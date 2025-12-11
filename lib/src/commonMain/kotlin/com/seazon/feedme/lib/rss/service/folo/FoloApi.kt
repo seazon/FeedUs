@@ -209,7 +209,7 @@ class FoloApi : RssApi {
         feedId: String, // here is feed url
         categories: Array<String>
     ): Boolean {
-        val response = mainApi?.subscribeFeed(title, feedId, categories.firstOrNull())
+        val response = mainApi?.subscribeFeed(title, feedId, categories.firstOrNull { !it.isNullOrEmpty() })
         return response?.feed != null
     }
 
