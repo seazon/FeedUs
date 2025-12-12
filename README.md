@@ -39,5 +39,5 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 | [Fever API](https://blog.badguy.top/index.php/archives/294/) (Miniflux / CommaFeed) | ❌ | N | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | Tiny Tiny RSS | ✅ | N | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Feedly | ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Feedbin | ❌ | N | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Feedbin | ❌ | N | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | Google Reader API ( Inoreader / The Old Reader / FreshRSS / BazQux)| ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
