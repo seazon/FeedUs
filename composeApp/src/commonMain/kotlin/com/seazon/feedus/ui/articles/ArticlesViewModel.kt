@@ -30,7 +30,7 @@ class ArticlesViewModel(
     private val _eventFlow = MutableStateFlow<Event?>(null)
     val eventFlow: StateFlow<Event?> = _eventFlow
 
-    fun init(categoryId: String?, feedId: String?, starred: Boolean) {
+    fun init(categoryId: String?, feedId: String?, starred: Boolean, labelId: String?) {
         viewModelScope.launch {
             try {
                 // render title bar
@@ -47,6 +47,11 @@ class ArticlesViewModel(
                 } else if (starred) {
                     title = null
                     listType = ListType.STARRED
+                } else if (!labelId.isNullOrEmpty()) {
+                    rssDatabase.getLabelById(labelId).let { label ->
+                        title = label?.label
+                    }
+                    listType = ListType.TAG
                 } else {
                     title = null
                 }
@@ -55,6 +60,7 @@ class ArticlesViewModel(
                         categoryId = categoryId,
                         feedId = feedId,
                         starred = starred,
+                        labelId = labelId,
                         title = title,
                         listType = listType,
                     )
@@ -67,6 +73,7 @@ class ArticlesViewModel(
                         categoryId = categoryId,
                         feedId = feedId,
                         starred = starred,
+                        labelId = labelId,
                     )
                 }
             }
@@ -104,6 +111,10 @@ class ArticlesViewModel(
                         api.getStarredStream(api.getFetchCnt(), state.value.continuation)
                     } else {
                         api.getStarredStreamIds(api.getFetchCnt(), state.value.continuation)
+                    }
+                } else if (!state.value.labelId.isNullOrEmpty()) {
+                    rssDatabase.getLabelById(state.value.labelId.orEmpty())?.let { label ->
+                        api.getTagStream(label.label.orEmpty(), api.getFetchCnt(), state.value.continuation)
                     }
                 } else {
                     api.getUnraedStream(api.getFetchCnt(), null, state.value.continuation)

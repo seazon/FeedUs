@@ -3,6 +3,7 @@ package com.seazon.feedus.ui.feeds
 import androidx.lifecycle.viewModelScope
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
+import com.seazon.feedme.lib.rss.bo.Label
 import com.seazon.feedme.lib.rss.bo.RssTag
 import com.seazon.feedme.lib.rss.service.RssApi
 import com.seazon.feedme.lib.rss.service.Static
@@ -55,6 +56,7 @@ class FeedsViewModel(
                             .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
                     val categories = rssDatabase.getCategories()
                         .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                    val labels = rssDatabase.getLabels()
                     if (feeds.isEmpty()) {
                         sync()
                     } else {
@@ -67,6 +69,7 @@ class FeedsViewModel(
                                 starredCount = appPreferences.starredCount,
                                 feeds = feeds.sortedBy { it.title },
                                 categories = categories.sortedBy { it.title },
+                                labels = labels.sortedBy { it.label }
                             )
                         }
                     }
@@ -103,12 +106,14 @@ class FeedsViewModel(
 
                 fetchSubscription(api)
                 fetchUnreadCount(api)
+                fetchLabel(api)
 
                 val feeds =
                     rssDatabase.getFeeds().filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
                 val categories =
                     rssDatabase.getCategories()
                         .filter { if (api.supportPagingFetchIds()) it.cntClientUnread > 0 else true }
+                val labels = rssDatabase.getLabels()
                 val appPreferences = appSettings.getAppPreferences()
                 _state.update {
                     it.copy(
@@ -118,6 +123,7 @@ class FeedsViewModel(
                         starredCount = appPreferences.starredCount,
                         feeds = feeds.sortedBy { it.title },
                         categories = categories.sortedBy { it.title },
+                        labels = labels.sortedBy { it.label }
                     )
                 }
             } catch (e: Exception) {
@@ -163,8 +169,6 @@ class FeedsViewModel(
 
     private suspend fun fetchUnreadCount(api: RssApi) {
         try {
-            // TODO use in app
-            val tags = api.getTags()
             val stars = api.getStarredStreamIds(api.getFetchCnt(), null)
             // TODO this count just the FETCH_COUNT or less than FETCH_COUNT
             val starredCount = stars?.size.orZero()
@@ -203,6 +207,15 @@ class FeedsViewModel(
                     )
                 )
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private suspend fun fetchLabel(api: RssApi) {
+        try {
+            val tags = api.getTags()
+            rssDatabase.saveLabels(tags.orEmpty().map { Label(it.id.orEmpty(), it.label) })
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -2,14 +2,13 @@ package com.seazon.feedus.ui.feeds
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FeedsScreen(
-    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
+    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean, labelId: String?) -> Unit,
     navToLogin: () -> Unit,
     navToDemo: () -> Unit,
 ) {

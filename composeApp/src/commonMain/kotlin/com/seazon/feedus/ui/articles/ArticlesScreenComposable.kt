@@ -141,17 +141,19 @@ fun AppBar(state: ArticlesScreenState, navBack: () -> Unit, markAllRead: () -> U
         backgroundColor = MaterialTheme.colorScheme.primaryContainer,
         elevation = 0.dp,
         actions = {
-            IconButton(
-                onClick = {
-                    markAllRead()
-                },
-                modifier = Modifier.padding(start = 2.dp, top = 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+            if (state.listType == ListType.NORMAL) {
+                IconButton(
+                    onClick = {
+                        markAllRead()
+                    },
+                    modifier = Modifier.padding(start = 2.dp, top = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
         }
     )

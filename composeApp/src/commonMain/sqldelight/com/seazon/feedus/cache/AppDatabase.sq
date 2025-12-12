@@ -108,3 +108,23 @@ FROM Category;
 selectCategoryById:
 SELECT Category.*
 FROM Category WHERE id = :id;
+
+CREATE TABLE Label (
+    id TEXT NOT NULL,
+    label TEXT
+);
+
+insertLabel:
+INSERT INTO Label(id, label)
+VALUES(?, ?);
+
+removeAllLabels:
+DELETE FROM Label;
+
+selectAllLabels:
+SELECT Label.*
+FROM Label;
+
+selectLabelById:
+SELECT Label.*
+FROM Label WHERE id = :id;

@@ -17,6 +17,7 @@ object A {
     var categoryId: String? = null
     var feedId: String? = null
     var starred: Boolean = false
+    var labelId: String? = null
 }
 
 @Composable
@@ -42,10 +43,11 @@ fun App() {
         }
         composable(route = Screen.Feeds.name) {
             FeedsScreen(
-                navToArticles = { categoryId, feedId, starred ->
+                navToArticles = { categoryId, feedId, starred, labelId ->
                     A.categoryId = categoryId
                     A.feedId = feedId
                     A.starred = starred
+                    A.labelId = labelId
                     navController.navigate(Screen.Articles.name)
                 },
                 navToLogin = {
@@ -61,6 +63,7 @@ fun App() {
                 categoryId = A.categoryId,
                 feedId = A.feedId,
                 starred = A.starred,
+                labelId = A.labelId,
                 navBack = {
                     navController.popBackStack()
                 },

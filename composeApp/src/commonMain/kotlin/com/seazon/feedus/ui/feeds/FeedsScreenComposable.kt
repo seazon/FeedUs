@@ -5,11 +5,11 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Tab
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeveloperMode
 import androidx.compose.material.icons.filled.Folder
@@ -26,15 +28,18 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,22 +49,26 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
+import com.seazon.feedme.lib.rss.bo.Label
 import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedus.ui.customize.Avatar
 import com.seazon.feedus.ui.customize.noRippleClickable
 import feedus.composeapp.generated.resources.Res
 import feedus.composeapp.generated.resources.all_items
 import feedus.composeapp.generated.resources.starred_items
+import feedus.composeapp.generated.resources.tab_later
+import feedus.composeapp.generated.resources.tab_new
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
 
 private val ITEM_HEIGHT = 48.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedsScreenComposable(
     stateFlow: StateFlow<FeedsScreenState>,
-    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean) -> Unit,
+    navToArticles: (categoryId: String?, feedId: String?, starred: Boolean, labelId: String?) -> Unit,
     navToDemo: () -> Unit,
     sync: () -> Unit,
     logout: () -> Unit,
@@ -69,36 +78,81 @@ fun FeedsScreenComposable(
         mutableStateOf(false)
     }
     val state by stateFlow.collectAsState()
+    val tabTitles = listOf(
+        stringResource(resource = Res.string.tab_new),
+        stringResource(resource = Res.string.tab_later)
+    )
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+
     Column(
         modifier = Modifier.fillMaxSize().systemBarsPadding()
     ) {
         AppBar(state.serviceName, navToDemo, sync, logout, navToSubscribe = {
             openDialog = true
         })
-        MainContent(
-            modifier = Modifier.fillMaxWidth().weight(1f),
-            state = state,
-            onFeedClick = {
-                if (!state.isSupportFetchByFeedOrCategory) {
-                    onError("not support fetch by feed")
-                    return@MainContent
-                }
-                navToArticles(null, it.id, false)
-            },
-            onCategoryClick = {
-                if (!state.isSupportFetchByFeedOrCategory) {
-                    onError("not support fetch by category")
-                    return@MainContent
-                }
-                navToArticles(it.id, null, false)
-            },
-            onStarredClick = {
-                navToArticles(null, null, true)
-            },
-            onAllClick = {
-                navToArticles(null, null, false)
-            },
-        )
+
+        PrimaryTabRow(
+            selectedTabIndex = selectedTabIndex,
+        ) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = {
+                        Text(
+                            text = title,
+                            style = if (selectedTabIndex == index) {
+                                MaterialTheme.typography.titleSmall
+                            } else {
+                                MaterialTheme.typography.bodyMedium
+                            }
+                        )
+                    },
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            when (selectedTabIndex) {
+                0 -> MainContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onFeedClick = {
+                        if (!state.isSupportFetchByFeedOrCategory) {
+                            onError("not support fetch by feed")
+                            return@MainContent
+                        }
+                        navToArticles(null, it.id, false, null)
+                    },
+                    onCategoryClick = {
+                        if (!state.isSupportFetchByFeedOrCategory) {
+                            onError("not support fetch by category")
+                            return@MainContent
+                        }
+                        navToArticles(it.id, null, false, null)
+                    },
+                    onAllClick = {
+                        navToArticles(null, null, false, null)
+                    },
+                )
+
+                1 -> ReadLaterContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onStarredClick = {
+                        navToArticles(null, null, true, null)
+                    },
+                    onLabelClick = {
+                        navToArticles(null, null, false, it.id)
+                    }
+                )
+            }
+        }
     }
     if (openDialog) {
         SubscribeDialog(
@@ -191,7 +245,6 @@ private fun MainContent(
     onFeedClick: (Feed) -> Unit,
     onCategoryClick: (Category) -> Unit,
     onAllClick: () -> Unit,
-    onStarredClick: () -> Unit,
 ) {
     val feeds = state.feeds
     LazyColumn(
@@ -218,24 +271,6 @@ private fun MainContent(
                 expand = false,
                 onItemClick = {
                     onAllClick()
-                },
-                onExpandClick = { e -> })
-        }
-        item {
-            val starredItemsCategory = Category(
-                id = "",
-                title = stringResource(resource = Res.string.starred_items),
-                sortId = null,
-                cntClientAll = 0,
-                cntClientUnread = state.starredCount,
-            )
-            ItemGroup(
-                category = starredItemsCategory,
-                type = GroupType.STARRED,
-                showUnreadCount = true,
-                expand = false,
-                onItemClick = {
-                    onStarredClick()
                 },
                 onExpandClick = { e -> })
         }
@@ -278,6 +313,45 @@ private fun MainContent(
 //                    }
 //                }
 //            }
+        })
+    }
+}
+
+@Composable
+private fun ReadLaterContent(
+    modifier: Modifier = Modifier,
+    state: FeedsScreenState,
+    onStarredClick: () -> Unit,
+    onLabelClick: (label: Label) -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+            )
+            .padding(horizontal = 16.dp)
+    ) {
+        item {
+            val starredItemsCategory = Category(
+                id = "",
+                title = stringResource(resource = Res.string.starred_items),
+                sortId = null,
+                cntClientAll = 0,
+                cntClientUnread = state.starredCount,
+            )
+            ItemGroup(
+                category = starredItemsCategory,
+                type = GroupType.STARRED,
+                showUnreadCount = true,
+                expand = false,
+                onItemClick = {
+                    onStarredClick()
+                },
+                onExpandClick = { e -> })
+        }
+        items(count = state.labels.size, itemContent = {
+            LabelItem(state.labels[it], onLabelClick)
         })
     }
 }
@@ -393,6 +467,43 @@ private fun ItemChild(
     }
 }
 
+@Composable
+private fun LabelItem(
+    label: Label,
+    onLabelClick: (label: Label) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .height(ITEM_HEIGHT)
+            .background(color = MaterialTheme.colorScheme.surface)
+            .clickable { onLabelClick(label) },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            imageVector = Icons.AutoMirrored.Default.Label,
+            contentDescription = "",
+            modifier = Modifier
+                .size(48.dp)
+                .padding(12.dp),
+            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface)
+        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 8.dp)
+        ) {
+            Text(
+                modifier = Modifier,
+                text = label.label.orEmpty(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun FeedsScreenComposablePreview() {
@@ -411,7 +522,7 @@ fun FeedsScreenComposablePreview() {
     )
     FeedsScreenComposable(
         stateFlow = state,
-        navToArticles = { categoryId, feedId, starred -> },
+        navToArticles = { categoryId, feedId, starred, labelId -> },
         navToDemo = {},
         logout = {},
         sync = {})

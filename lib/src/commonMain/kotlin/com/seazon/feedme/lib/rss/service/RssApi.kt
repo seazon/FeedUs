@@ -169,7 +169,13 @@ interface RssApi {
     /**
      * fetch all items of one tag
      */
+    @Deprecated("use getTagStream() instead")
     suspend fun getTagStreamIds(tag: String, count: Int, continuation: String?): RssStream? = null
+
+    /**
+     * fetch all items of one tag
+     */
+    suspend fun getTagStream(tag: String, count: Int, continuation: String?): RssStream? = null
 
     companion object {
         const val AUTH_TYPE_NONE = 1

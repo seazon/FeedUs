@@ -4,6 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.Item
+import com.seazon.feedme.lib.rss.bo.Label
 
 class RssDatabase(sqlDriver: SqlDriver) {
     private val database = Database(sqlDriver)
@@ -42,6 +43,18 @@ class RssDatabase(sqlDriver: SqlDriver) {
 
     suspend fun clearCategories() {
         database.clearCategories()
+    }
+
+    suspend fun getLabels(): List<Label> {
+        return database.getAllLabels()
+    }
+
+    suspend fun getLabelById(labelId: String): Label? {
+        return database.getLabelById(labelId)
+    }
+
+    suspend fun saveLabels(list: List<Label>) {
+        return database.clearAndCreateLabels(list)
     }
 
     suspend fun getItems(): List<Item> {

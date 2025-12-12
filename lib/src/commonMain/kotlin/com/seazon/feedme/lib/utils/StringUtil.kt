@@ -86,9 +86,7 @@ object StringUtil {
 //}
 
 fun String.format(vararg args: Any?): String {
-    LogUtils.debug("format: $this, args: ${args.joinToString(",")}")
     val result = PlatformString.format(this, *args)
-    LogUtils.debug("format result: $result")
     return result
 }
 

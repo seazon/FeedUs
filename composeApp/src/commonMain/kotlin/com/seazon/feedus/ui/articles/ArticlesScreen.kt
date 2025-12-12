@@ -12,6 +12,7 @@ fun ArticlesScreen(
     categoryId: String?,
     feedId: String?,
     starred: Boolean,
+    labelId: String?,
     navBack: () -> Unit,
     navToArticle: (item: Item) -> Unit,
 ) {
@@ -29,7 +30,7 @@ fun ArticlesScreen(
         }
     }
     Toaster(state = toaster)
-    viewModel.init(categoryId, feedId, starred)
+    viewModel.init(categoryId, feedId, starred, labelId)
     ArticlesScreenComposable(
         stateFlow = viewModel.state,
         onItemClick = {

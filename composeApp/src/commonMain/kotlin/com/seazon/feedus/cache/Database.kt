@@ -4,6 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.seazon.feedme.lib.rss.bo.Category
 import com.seazon.feedme.lib.rss.bo.Feed
 import com.seazon.feedme.lib.rss.bo.Item
+import com.seazon.feedme.lib.rss.bo.Label
 
 internal class Database(sqlDriver: SqlDriver) {
     private val database = AppDatabase(sqlDriver)
@@ -114,6 +115,37 @@ internal class Database(sqlDriver: SqlDriver) {
     fun clearCategories() {
         dbQuery.transaction {
             dbQuery.removeAllCategories()
+        }
+    }
+
+    // label
+    internal fun getAllLabels(): List<Label> {
+        return dbQuery.selectAllLabels(::mapLabelSelecting).executeAsList()
+    }
+
+    internal fun getLabelById(labelId: String): Label? {
+        return dbQuery.selectLabelById(labelId, ::mapLabelSelecting).executeAsOneOrNull()
+    }
+
+    private fun mapLabelSelecting(
+        id: String,
+        label: String?,
+    ): Label {
+        return Label(
+            id = id,
+            label = label,
+        )
+    }
+
+    internal fun clearAndCreateLabels(categories: List<Label>) {
+        dbQuery.transaction {
+            dbQuery.removeAllLabels()
+            categories.forEach { category ->
+                dbQuery.insertLabel(
+                    id = category.id,
+                    label = category.label,
+                )
+            }
         }
     }
 

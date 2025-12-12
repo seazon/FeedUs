@@ -205,6 +205,10 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         return mainApi?.getContentsIds("user/-/label/$tag", count, false, continuation)?.convert()
     }
 
+    override suspend fun getTagStream(tag: String, count: Int, continuation: String?): RssStream? {
+        return mainApi?.getContents2("user/-/label/$tag", count, false, null, continuation)?.convert()
+    }
+
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream? {
         return mainApi?.getContentsIds(tagStarred, count, false, continuation)?.convert()
     }
