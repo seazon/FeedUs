@@ -57,6 +57,10 @@ class RssDatabase(sqlDriver: SqlDriver) {
         return database.clearAndCreateLabels(list)
     }
 
+    suspend fun clearLabels() {
+        database.clearLabels()
+    }
+
     suspend fun getItems(): List<Item> {
         return database.getAllItems()
     }

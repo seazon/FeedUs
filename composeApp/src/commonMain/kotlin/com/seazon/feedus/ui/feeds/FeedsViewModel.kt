@@ -91,6 +91,7 @@ class FeedsViewModel(
             rssDatabase.clearCategories()
             rssDatabase.clearItems()
             rssDatabase.clearFeeds()
+            rssDatabase.clearLabels()
 
             callback()
         }

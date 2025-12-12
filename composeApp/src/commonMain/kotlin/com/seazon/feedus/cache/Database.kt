@@ -149,6 +149,12 @@ internal class Database(sqlDriver: SqlDriver) {
         }
     }
 
+    fun clearLabels() {
+        dbQuery.transaction {
+            dbQuery.removeAllLabels()
+        }
+    }
+
     // item
     internal fun getAllItems(): List<Item> {
         return dbQuery.selectAllItems(::mapItemSelecting).executeAsList()
