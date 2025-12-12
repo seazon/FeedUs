@@ -170,6 +170,13 @@ class FeedlyApi : RssApi {
         return streamsApi?.getIds(tag, count, false, continuation)?.convert()
     }
 
+    override suspend fun getTagStream(tag: String, count: Int, continuation: String?): RssStream? {
+        return streamsApi?.getContents(
+            "user/${token!!.id}/tag/$tag",
+            count, true, null, continuation
+        )?.convert()
+    }
+
     override suspend fun getStarredStreamIds(count: Int, continuation: String?): RssStream? {
         return streamsApi?.getIds("user/" + token!!.id + "/tag/" + tagStarred, count, false, continuation)?.convert()
     }
