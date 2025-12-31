@@ -158,7 +158,7 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override fun supportCreateTag(): Boolean {
-        return true
+        return false
     }
 
     override suspend fun getTags(): List<RssTag> {

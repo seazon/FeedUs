@@ -32,7 +32,7 @@ class FoloApi : RssApi {
     }
 
     override fun getCategoryId(category: String): String? {
-        return "user/" + token!!.id + "/category/" + category
+        return "user/${token!!.id}/category/${category}"
     }
 
     /*
@@ -47,12 +47,10 @@ class FoloApi : RssApi {
     }
 
     override suspend fun getRefreshToken(code: String): String {
-//        return authenticationApi.getRefreshToken(code)
         return code
     }
 
     override suspend fun getAccessToken(token: RssToken): String {
-//        authenticationApi.applyOneTimeTokenAndSetUser(token, token.refreshToken)
         return token.refreshToken.orEmpty()
     }
 
@@ -65,11 +63,6 @@ class FoloApi : RssApi {
     }
 
     override suspend fun setUserInfo(token: RssToken) {
-//        profileApi?.getProfile()?.let {
-//            token.id = it.id
-//            token.email = it.email
-//            token.picture = it.picture
-//        }
     }
 
     /*
@@ -88,7 +81,6 @@ class FoloApi : RssApi {
     }
 
     override suspend fun markUnread(entryIds: Array<String>?): String? {
-//        return markersApi?.keepArticleUnread(entryIds)
         return null
     }
 
@@ -118,17 +110,10 @@ class FoloApi : RssApi {
     }
 
     override suspend fun getStreamByIds(entryIds: Array<String>): RssStream {
-//        return FeedlyStream().apply {
-//            items = entriesApi?.getContent(entryIds)
-//        }.convert()
         return RssStream()
     }
 
     override suspend fun getUnraedStreamIds(count: Int, continuation: String?): RssStream? {
-//        return streamsApi?.getIds(
-//            "user/" + token!!.id + "/category/" + FeedlyConstants.GLOBAL_CATEGORY_ALL,
-//            count, true, continuation
-//        )?.convert()
         return RssStream()
     }
 
@@ -137,7 +122,6 @@ class FoloApi : RssApi {
         count: Int,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getIds(feedId, count, true, continuation)?.convert()
         return null
     }
 
@@ -146,7 +130,6 @@ class FoloApi : RssApi {
         count: Int,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getIds(category, count, true, continuation)?.convert()
         return null
     }
 
@@ -181,7 +164,6 @@ class FoloApi : RssApi {
         count: Int,
         continuation: String?
     ): RssStream? {
-//        return streamsApi?.getIds(tag, count, false, continuation)?.convert()
         return RssStream()
     }
 
@@ -223,7 +205,6 @@ class FoloApi : RssApi {
         aCategories: Array<String>,
         rCategories: Array<String>
     ): String? {
-//        return subscriptionsApi?.updateSubscription(feedId, title, aCategories)
         return null
     }
 
@@ -235,16 +216,10 @@ class FoloApi : RssApi {
     }
 
     override suspend fun getTags(): List<RssTag>? {
-//        return tagsApi?.getTags()?.convert2()
         return null
     }
 
     override suspend fun deleteTags(tagIds: Array<String>) {
-//        tagsApi?.deleteTags(tagIds)
     }
-
-    private val tagStarred: String
-        private get() = FoloConstants.GLOBAL_TAG_SAVED
-
 
 }

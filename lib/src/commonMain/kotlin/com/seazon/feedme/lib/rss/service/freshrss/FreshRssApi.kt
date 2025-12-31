@@ -33,10 +33,6 @@ class FreshRssApi(token: RssToken) : GrApi(token, token.host, EXPIRED_TIMESTAMP)
         return mainApi?.getContents2("user/-/state/com.google/reading-list", count, true, since, continuation)?.convert()
     }
 
-    override fun supportCreateTag(): Boolean {
-        return true
-    }
-
     override suspend fun getTags(): List<RssTag>? {
         return mainApi?.getTags()?.tags?.filter {
             TAG_TYPE_TAG == it.type
