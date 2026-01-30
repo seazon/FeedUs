@@ -15,11 +15,11 @@ class SummaryViewModel() : BaseViewModel() {
     val state: StateFlow<SummaryScreenState> = _state
 
     fun summary(
-        type: String, key: String, query: String, lang: String,
+        type: String, key: String, model: String, query: String, lang: String,
     ) {
         viewModelScope.launch {
             try {
-                val text = SummaryUtil.summary(query, lang, key, type)
+                val text = SummaryUtil.summary(query, lang, key, model, type)
                 debug("text: $text")
                 _state.update {
                     it.copy(

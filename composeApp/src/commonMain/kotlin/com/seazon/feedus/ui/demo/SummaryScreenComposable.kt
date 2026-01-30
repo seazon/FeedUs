@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import com.seazon.feedme.lib.ai.gemini.GeminiApi
 import com.seazon.feedme.lib.summary.SummaryUtil
 import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
@@ -37,6 +38,7 @@ import com.seazon.feedus.ui.customize.FmTextField
 import feedus.composeapp.generated.resources.Res
 import feedus.composeapp.generated.resources.summary_title
 import feedus.composeapp.generated.resources.translator_key
+import feedus.composeapp.generated.resources.translator_model
 import feedus.composeapp.generated.resources.translator_type
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,19 +47,23 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SummaryScreenComposable(
     stateFlow: StateFlow<SummaryScreenState>,
-    summary: (type: String, key: String, query: String) -> Unit,
+    summary: (type: String, key: String, model: String, query: String) -> Unit,
 ) {
     val state by stateFlow.collectAsState()
     val typeList = mutableListOf(
         SummaryUtil.TYPE_GEMINI,
     )
+    val modelList = GeminiApi.MODELS
     val title = stringResource(Res.string.summary_title)
     val typeLabel = stringResource(Res.string.translator_type)
     val keyLabel = stringResource(Res.string.translator_key)
+    val modelLabel = stringResource(Res.string.translator_model)
     val typeValue = remember { mutableStateOf(SummaryUtil.TYPE_GEMINI) }
     val keyValue = remember { mutableStateOf("") }
+    val modelValue = remember { mutableStateOf(modelList.first()) }
     val queryValue = remember { mutableStateOf("") }
-    val expanded = rememberSaveable { mutableStateOf(false) }
+    val typeExpanded = rememberSaveable { mutableStateOf(false) }
+    val modelExpanded = rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .systemBarsPadding()
@@ -84,7 +90,7 @@ fun SummaryScreenComposable(
                 Box {
                     Row(
                         modifier = Modifier.clickable {
-                            expanded.value = true
+                            typeExpanded.value = true
                         },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -102,16 +108,73 @@ fun SummaryScreenComposable(
                     }
                     DropdownMenu(
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
-                        expanded = expanded.value,
+                        expanded = typeExpanded.value,
                         onDismissRequest = {
-                            expanded.value = false
+                            typeExpanded.value = false
                         },
                         content = {
                             typeList.forEach {
                                 DropdownMenuItem(
                                     onClick = {
-                                        expanded.value = false
+                                        typeExpanded.value = false
                                         typeValue.value = it
+                                    },
+                                    text = {
+                                        Text(
+                                            text = it,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            style = MaterialTheme.typography.labelLarge,
+                                        )
+                                    }
+                                )
+                            }
+                        },
+                    )
+                }
+            }
+        }
+        // model
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            FmLabel(
+                text = modelLabel,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Box(modifier = Modifier.weight(3f), contentAlignment = Alignment.CenterEnd) {
+                Box {
+                    Row(
+                        modifier = Modifier.clickable {
+                            modelExpanded.value = true
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        FmLabel(
+                            text = modelValue.value,
+                        )
+                        Image(
+                            imageVector = Icons.Filled.ExpandMore,
+                            modifier = Modifier
+                                .size(56.dp)
+                                .padding(16.dp),
+                            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface),
+                            contentDescription = "dropdown arrow"
+                        )
+                    }
+                    DropdownMenu(
+                        modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
+                        expanded = modelExpanded.value,
+                        onDismissRequest = {
+                            modelExpanded.value = false
+                        },
+                        content = {
+                            modelList.forEach {
+                                DropdownMenuItem(
+                                    onClick = {
+                                        modelExpanded.value = false
+                                        modelValue.value = it
                                     },
                                     text = {
                                         Text(
@@ -170,7 +233,7 @@ fun SummaryScreenComposable(
             modifier = Modifier.fillMaxWidth(),
             text = "summary",
             onClick = {
-                summary(typeValue.value, keyValue.value, queryValue.value)
+                summary(typeValue.value, keyValue.value, modelValue.value, queryValue.value)
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -186,5 +249,5 @@ fun SummaryScreenComposable(
 @Composable
 fun SummaryScreenComposablePreview() {
     val stateFlow = MutableStateFlow(SummaryScreenState("this is output"))
-    SummaryScreenComposable(stateFlow = stateFlow, summary = { type, key, query -> })
+    SummaryScreenComposable(stateFlow = stateFlow, summary = { type, key, model, query -> })
 }

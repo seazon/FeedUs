@@ -10,8 +10,8 @@ fun SummaryScreen() {
     val platform = getPlatform()
     SummaryScreenComposable(
         stateFlow = viewModel.state,
-        summary = { type, key, query ->
-            viewModel.summary(type, key, query, platform.language)
+        summary = { type, key, model, query ->
+            viewModel.summary(type, key, model, query, platform.language)
         }
     )
 }

@@ -8,12 +8,12 @@ object SummaryUtil {
 
     const val TYPE_GEMINI = "gemini"
 
-    suspend fun summary(query: String, language: String, key: String, type: String): String? {
+    suspend fun summary(query: String, language: String, key: String, model: String, type: String): String? {
         return when (type) {
             TYPE_GEMINI -> {
                 try {
                     val api = GeminiApi()
-                    val result = api.summary(query, language, key)
+                    val result = api.summary(query, language, key, model)
                     result?.dst
                 } catch (e: GeminiException) {
                     e.printStackTrace()

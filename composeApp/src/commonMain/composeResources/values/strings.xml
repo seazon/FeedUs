@@ -75,6 +75,7 @@
     <string name="translator_title">Translator Demo</string>
     <string name="translator_type">Type</string>
     <string name="translator_key">Key</string>
+    <string name="translator_model">Model</string>
     <string name="translator_app_id">AppID</string>
     <string name="summary_title">Summary Demo</string>
 

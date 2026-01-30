@@ -29,7 +29,7 @@ object TranslatorUtil {
             TYPE_GEMINI -> {
                 try {
                     val api = GeminiApi()
-                    val result = api.translate(query, language, key)
+                    val result = api.translate(query, language, key, "") // TODO
                     result?.dst
                 } catch (e: GeminiException) {
                     e.printStackTrace()
