@@ -253,7 +253,7 @@ fun ArticlesScreenPreview() {
             title = "dao",
         )
     )
-    val state = MutableStateFlow(
+    val stateFlow = MutableStateFlow(
         ArticlesScreenState(
             isLoading = false,
             items = items,
@@ -261,7 +261,7 @@ fun ArticlesScreenPreview() {
         )
     )
     ArticlesScreenComposable(
-        stateFlow = state,
+        stateFlow = stateFlow,
         onItemClick = {},
         onToggleStar = {},
         navBack = {},

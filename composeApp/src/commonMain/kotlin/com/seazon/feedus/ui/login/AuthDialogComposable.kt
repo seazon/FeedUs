@@ -263,9 +263,9 @@ fun AuthDialogComposable(
 @Preview
 @Composable
 fun AuthDialogComposablePreview() {
-    val state = MutableStateFlow(LoginScreenState(isLoading = true, errorTips = "hello"))
+    val stateFlow = MutableStateFlow(LoginScreenState(isLoading = true, errorTips = "hello"))
     AuthDialogComposable(
-        state = state,
+        state = stateFlow,
         type = Static.ACCOUNT_TYPE_TTRSS,
         tips = "Go to FreshRSS \\'profile\\' menu and open link behind \\'API password\\' to get host address",
         usernamePlaceholder = "user suername",

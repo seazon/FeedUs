@@ -513,7 +513,7 @@ fun FeedsScreenComposablePreview() {
             title = "I'm a feed with long long long long long long long long long long title $it",
         )
     }
-    val state = MutableStateFlow(
+    val stateFlow = MutableStateFlow(
         FeedsScreenState(
             showUnreadCount = false,
             isSupportFetchByFeedOrCategory = false,
@@ -521,7 +521,7 @@ fun FeedsScreenComposablePreview() {
         )
     )
     FeedsScreenComposable(
-        stateFlow = state,
+        stateFlow = stateFlow,
         navToArticles = { categoryId, feedId, starred, labelId -> },
         navToDemo = {},
         logout = {},

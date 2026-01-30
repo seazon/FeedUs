@@ -183,9 +183,9 @@ private fun Item(item: ExploreResult, onItemClick: (ExploreResult) -> Unit) {
 @Preview
 @Composable
 fun SubscribeDialogComposablePreview() {
-    val state = MutableStateFlow(SubscribeDialogState(isLoading = true, errorTips = "hello"))
+    val stateFlow = MutableStateFlow(SubscribeDialogState(isLoading = true, errorTips = "hello"))
     SubscribeDialogComposable(
-        stateFlow = state,
+        stateFlow = stateFlow,
         subscribe = { host ->
 
         },
