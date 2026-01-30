@@ -9,6 +9,7 @@ fun SummaryScreen() {
     val viewModel = koinViewModel<SummaryViewModel>()
     val platform = getPlatform()
     SummaryScreenComposable(
+        stateFlow = viewModel.state,
         summary = { type, key, query ->
             viewModel.summary(type, key, query, platform.language)
         }

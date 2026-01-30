@@ -21,6 +21,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,13 +34,20 @@ import com.seazon.feedme.lib.summary.SummaryUtil
 import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
 import com.seazon.feedus.ui.customize.FmTextField
-import feedus.composeapp.generated.resources.*
+import feedus.composeapp.generated.resources.Res
+import feedus.composeapp.generated.resources.summary_title
+import feedus.composeapp.generated.resources.translator_key
+import feedus.composeapp.generated.resources.translator_type
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SummaryScreenComposable(
+    stateFlow: StateFlow<SummaryScreenState>,
     summary: (type: String, key: String, query: String) -> Unit,
 ) {
+    val state by stateFlow.collectAsState()
     val typeList = mutableListOf(
         SummaryUtil.TYPE_GEMINI,
     )
@@ -164,11 +173,18 @@ fun SummaryScreenComposable(
                 summary(typeValue.value, keyValue.value, queryValue.value)
             }
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = state.output.orEmpty(),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleMedium,
+        )
     }
 }
 
 @Preview
 @Composable
 fun SummaryScreenComposablePreview() {
-    SummaryScreenComposable(summary = { type, key, query -> })
+    val stateFlow = MutableStateFlow(SummaryScreenState("this is output"))
+    SummaryScreenComposable(stateFlow = stateFlow, summary = { type, key, query -> })
 }
