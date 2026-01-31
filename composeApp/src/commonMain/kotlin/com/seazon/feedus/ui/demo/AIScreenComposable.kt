@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.DropdownMenu
@@ -83,6 +85,7 @@ fun AIScreenComposable(
     val queryValue = remember { mutableStateOf(LocalConstants.QUERY_VALUE) }
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .systemBarsPadding()
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(24.dp)
@@ -93,8 +96,8 @@ fun AIScreenComposable(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleMedium,
         )
-        // type
         Spacer(modifier = Modifier.height(16.dp))
+        // type
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -154,7 +157,6 @@ fun AIScreenComposable(
             }
         }
         // model
-        Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -211,7 +213,6 @@ fun AIScreenComposable(
             }
         }
         // key
-        Spacer(modifier = Modifier.height(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -285,9 +286,7 @@ fun AIScreenComposable(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
         // query
-        Spacer(modifier = Modifier.height(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

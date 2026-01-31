@@ -53,7 +53,7 @@ fun FmTextField(
 ) {
     // 焦点, 用于控制是否显示 右侧叉号
     val hasFocus = remember { mutableStateOf(false) }
-    val textStyle = MaterialTheme.typography.titleMedium.copy(
+    val textStyle = MaterialTheme.typography.labelMedium.copy(
         color = MaterialTheme.colorScheme.onSurface,
         textAlign = if (reverse) TextAlign.End else TextAlign.Start,
     )

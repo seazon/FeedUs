@@ -51,7 +51,7 @@ private fun MainContent(
             text = stringResource(Res.string.ai_title),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(16.dp).noRippleClickable {
+            modifier = Modifier.fillMaxWidth().padding(16.dp).noRippleClickable {
                 navToAI()
             }
         )
