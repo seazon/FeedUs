@@ -1,5 +1,10 @@
 package com.seazon.feedme.lib.ai.gemini
 
+import com.seazon.feedme.lib.ai.Content
+import com.seazon.feedme.lib.ai.Part
+import com.seazon.feedme.lib.ai.RequestBody
+import com.seazon.feedme.lib.ai.Result
+import com.seazon.feedme.lib.ai.Translation
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod
 import com.seazon.feedme.lib.network.HttpUtils
@@ -7,9 +12,9 @@ import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.utils.format
 import com.seazon.feedme.lib.utils.orZero
 import com.seazon.feedme.lib.utils.toJson
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Deprecated("Use GeneralAIApi")
 class GeminiApi {
 
     companion object {
@@ -82,42 +87,5 @@ class GeminiApi {
         return result
     }
 }
-
-@Serializable
-data class RequestBody(
-    val contents: List<Content>? = null,
-)
-
-@Serializable
-data class Result(
-    val candidates: List<Candidates>? = null,
-    val error: Error? = null,
-) {
-    @Serializable
-    data class Error(
-        val code: Int? = null,
-        val message: String? = null,
-    )
-}
-
-@Serializable
-data class Candidates(
-    val content: Content? = null,
-)
-
-@Serializable
-data class Content(
-    val parts: List<Part>? = null,
-)
-
-@Serializable
-data class Part(
-    val text: String? = null,
-)
-
-@Serializable
-data class Translation(
-    val dst: String? = null,
-)
 
 class GeminiException(val code: Int, message: String) : Exception(message)

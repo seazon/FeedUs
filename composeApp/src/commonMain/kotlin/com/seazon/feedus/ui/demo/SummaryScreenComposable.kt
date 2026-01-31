@@ -31,8 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import com.seazon.feedme.lib.LocalConstants
-import com.seazon.feedme.lib.ai.gemini.GeminiApi
-import com.seazon.feedme.lib.summary.SummaryUtil
+import com.seazon.feedme.lib.ai.AIGenerationConfig
+import com.seazon.feedme.lib.ai.AIModel
 import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
 import com.seazon.feedus.ui.customize.FmTextField
@@ -48,21 +48,32 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SummaryScreenComposable(
     stateFlow: StateFlow<SummaryScreenState>,
-    summary: (type: String, key: String, model: String, query: String) -> Unit,
+    summary: (type: AIModel, key: String, model: String, query: String) -> Unit,
 ) {
     val state by stateFlow.collectAsState()
     val typeList = mutableListOf(
-        SummaryUtil.TYPE_GEMINI,
+        AIModel.Gemini,
+        AIModel.OpenAI,
+        AIModel.Ernie,
+        AIModel.QWen,
+        AIModel.Dream,
+        AIModel.Volces,
+        AIModel.Spark,
+        AIModel.Gemini,
+        AIModel.Claude,
+        AIModel.GLM
     )
-    val modelList = GeminiApi.MODELS
+
     val title = stringResource(Res.string.summary_title)
     val typeLabel = stringResource(Res.string.translator_type)
     val keyLabel = stringResource(Res.string.translator_key)
     val modelLabel = stringResource(Res.string.translator_model)
-    val typeValue = remember { mutableStateOf(SummaryUtil.TYPE_GEMINI) }
+    val typeValue = remember { mutableStateOf(AIModel.Volces) }
+    val config: AIGenerationConfig = AIGenerationConfig.getConfig(typeValue.value)
+    val modelList = remember { mutableStateOf(config.modelList) }
     val keyValue = remember { mutableStateOf(LocalConstants.KEY_VALUE) }
-    val modelValue = remember { mutableStateOf(modelList.first()) }
-    val queryValue = remember { mutableStateOf("") }
+    val modelValue = remember { mutableStateOf(config.modelList.first()) }
+    val queryValue = remember { mutableStateOf(LocalConstants.QUERY_VALUE) }
     val typeExpanded = rememberSaveable { mutableStateOf(false) }
     val modelExpanded = rememberSaveable { mutableStateOf(false) }
     Column(
@@ -96,7 +107,7 @@ fun SummaryScreenComposable(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         FmLabel(
-                            text = typeValue.value,
+                            text = typeValue.value.name,
                         )
                         Image(
                             imageVector = Icons.Filled.ExpandMore,
@@ -119,10 +130,13 @@ fun SummaryScreenComposable(
                                     onClick = {
                                         typeExpanded.value = false
                                         typeValue.value = it
+                                        val config = AIGenerationConfig.getConfig(typeValue.value)
+                                        modelList.value = config.modelList
+                                        modelValue.value = config.modelList.first()
                                     },
                                     text = {
                                         Text(
-                                            text = it,
+                                            text = it.name,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             style = MaterialTheme.typography.labelLarge,
                                         )
@@ -171,7 +185,7 @@ fun SummaryScreenComposable(
                             modelExpanded.value = false
                         },
                         content = {
-                            modelList.forEach {
+                            modelList.value.forEach {
                                 DropdownMenuItem(
                                     onClick = {
                                         modelExpanded.value = false

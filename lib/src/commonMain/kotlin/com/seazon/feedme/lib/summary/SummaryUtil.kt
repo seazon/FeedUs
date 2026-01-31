@@ -4,6 +4,7 @@ import com.seazon.feedme.lib.ai.gemini.GeminiApi
 import com.seazon.feedme.lib.ai.gemini.GeminiException
 import io.ktor.client.network.sockets.SocketTimeoutException
 
+@Deprecated("")
 object SummaryUtil {
 
     const val TYPE_GEMINI = "gemini"
