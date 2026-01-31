@@ -6,8 +6,7 @@ import com.seazon.feedus.data.AppSettings
 import com.seazon.feedus.data.RssSDK
 import com.seazon.feedus.data.TokenSettings
 import com.seazon.feedus.ui.articles.ArticlesViewModel
-import com.seazon.feedus.ui.demo.SummaryViewModel
-import com.seazon.feedus.ui.demo.TranslatorViewModel
+import com.seazon.feedus.ui.demo.AIViewModel
 import com.seazon.feedus.ui.feeds.FeedsViewModel
 import com.seazon.feedus.ui.login.LoginViewModel
 import org.koin.core.module.Module
@@ -24,8 +23,7 @@ val appModule = module {
     }
     single { RssSDK(tokenSettings = get()) }
     single { LoginViewModel(rssSDK = get(), tokenSettings = get()) }
-    single { TranslatorViewModel() }
-    single { SummaryViewModel() }
+    single { AIViewModel() }
     single { FeedsViewModel(rssSDK = get(), tokenSettings = get(), rssDatabase = get(), appSettings = get()) }
     viewModel { ArticlesViewModel(rssSDK = get(), tokenSettings = get(), rssDatabase = get()) }
 }

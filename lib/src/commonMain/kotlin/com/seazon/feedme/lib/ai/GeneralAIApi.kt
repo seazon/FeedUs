@@ -15,12 +15,12 @@ class GeneralAIApi {
         aiModel: AIModel,
         key: String,
         targetModel: String,
-        prompt: Prompt,
+        prompt: String,
         query: String,
         language: String
     ): String? {
         val selectedConfig = AIGenerationConfig.getConfig(aiModel).copy(apiKey = key)
-        val userPrompt = prompt.content.format(language, query)
+        val userPrompt = prompt.format(language, query)
         try {
             val response = generateText(selectedConfig, targetModel, userPrompt)
             val generatedText = extractGeneratedText2(response, aiModel)

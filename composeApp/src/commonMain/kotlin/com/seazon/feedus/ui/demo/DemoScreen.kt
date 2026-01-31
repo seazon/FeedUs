@@ -5,12 +5,10 @@ import androidx.compose.runtime.Composable
 @Composable
 fun DemoScreen(
     navBack: () -> Unit,
-    navToTranslator: () -> Unit,
-    navToSummary: () -> Unit,
+    navToAI: () -> Unit,
 ) {
     DemoScreenComposable(
         navBack = navBack,
-        navToTranslator = navToTranslator,
-        navToSummary = navToSummary,
+        navToAI = navToAI,
     )
 }

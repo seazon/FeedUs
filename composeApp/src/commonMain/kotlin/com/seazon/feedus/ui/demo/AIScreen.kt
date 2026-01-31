@@ -5,13 +5,13 @@ import com.seazon.feedus.getPlatform
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SummaryScreen() {
-    val viewModel = koinViewModel<SummaryViewModel>()
+fun AIScreen() {
+    val viewModel = koinViewModel<AIViewModel>()
     val platform = getPlatform()
-    SummaryScreenComposable(
+    AIScreenComposable(
         stateFlow = viewModel.state,
-        summary = { type, key, model, query ->
-            viewModel.summary(type, key, model, query, platform.language)
+        query = { type, key, model, query, prompt ->
+            viewModel.query(type, key, model, query, platform.language, prompt)
         }
     )
 }

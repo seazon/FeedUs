@@ -8,6 +8,5 @@ enum class Screen(val title: StringResource) {
     Feeds(title = Res.string.feeds_title),
     Articles(title = Res.string.articles_title),
     Demo(title = Res.string.demo_title),
-    Translator(title = Res.string.translator_title),
-    Summary(title = Res.string.summary_title),
+    AI(title = Res.string.ai_title),
 }

@@ -72,12 +72,13 @@
     <string name="articles_title">Articles</string>
 
     <string name="demo_title">Demo</string>
-    <string name="translator_title">Translator Demo</string>
-    <string name="translator_type">Type</string>
-    <string name="translator_key">Key</string>
-    <string name="translator_model">Model</string>
-    <string name="translator_app_id">AppID</string>
-    <string name="summary_title">Summary Demo</string>
+    <string name="ai_title">AI Demo</string>
+    <string name="ai_type">Type</string>
+    <string name="ai_key">Key</string>
+    <string name="ai_model">Model</string>
+    <string name="ai_prompt">Prompt</string>
+    <string name="ai_app_id">AppID</string>
+    <string name="ai_query">Query</string>
 
     <string name="category_category">Expand or collapse category</string>
     <string name="category_feed">Feed icon</string>
