@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import com.seazon.feedme.lib.LocalConstants
 import com.seazon.feedme.lib.ai.gemini.GeminiApi
 import com.seazon.feedme.lib.summary.SummaryUtil
 import com.seazon.feedus.ui.customize.FmLabel
@@ -59,7 +60,7 @@ fun SummaryScreenComposable(
     val keyLabel = stringResource(Res.string.translator_key)
     val modelLabel = stringResource(Res.string.translator_model)
     val typeValue = remember { mutableStateOf(SummaryUtil.TYPE_GEMINI) }
-    val keyValue = remember { mutableStateOf("") }
+    val keyValue = remember { mutableStateOf(LocalConstants.KEY_VALUE) }
     val modelValue = remember { mutableStateOf(modelList.first()) }
     val queryValue = remember { mutableStateOf("") }
     val typeExpanded = rememberSaveable { mutableStateOf(false) }

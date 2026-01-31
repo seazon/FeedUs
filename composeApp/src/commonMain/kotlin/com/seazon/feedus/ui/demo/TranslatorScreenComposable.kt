@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import com.seazon.feedme.lib.LocalConstants
 import com.seazon.feedme.lib.translation.TranslatorUtil
 import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
@@ -50,7 +51,7 @@ fun TranslatorScreenComposable(
     val keyLabel = stringResource(Res.string.translator_key)
     val appIdLabel = stringResource(Res.string.translator_app_id)
     val typeValue = remember { mutableStateOf(TranslatorUtil.TYPE_GEMINI) }
-    val keyValue = remember { mutableStateOf("") }
+    val keyValue = remember { mutableStateOf(LocalConstants.KEY_VALUE) }
     val appIdValue = remember { mutableStateOf("") }
     val queryValue = remember { mutableStateOf("") }
     val expanded = rememberSaveable { mutableStateOf(false) }
