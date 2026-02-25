@@ -26,6 +26,8 @@ class GeneralAIApi {
             val generatedText = extractGeneratedText2(response, aiModel)
             println("result：$generatedText")
             return generatedText.orEmpty()
+        } catch (e: AiException) {
+            throw e
         } catch (e: Exception) {
             println("failed：${e.message}")
             e.printStackTrace()
@@ -100,7 +102,7 @@ class GeneralAIApi {
 
     private fun extractGeneratedText(response: Text2TextResponse): String? {
         return when {
-            response.error != null -> null
+            response.error != null -> throw AiException(message = "code: ${response.error.code}, message: ${response.error.message}")
             response.choices.isNullOrEmpty() -> null
             else -> response.choices.first().message?.content
         }
@@ -108,7 +110,7 @@ class GeneralAIApi {
 
     private fun extractGeneratedText(response: Result?): Translation? {
         val text = when {
-            response?.error != null -> null
+            response?.error != null -> throw AiException(message = "code: ${response.error.code}, message: ${response.error.message}")
             response?.candidates.isNullOrEmpty() -> null
             else -> response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
         }

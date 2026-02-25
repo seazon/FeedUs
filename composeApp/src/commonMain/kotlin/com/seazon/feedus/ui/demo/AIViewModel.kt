@@ -2,6 +2,7 @@ package com.seazon.feedus.ui.demo
 
 import androidx.lifecycle.viewModelScope
 import com.seazon.feedme.lib.ai.AIModel
+import com.seazon.feedme.lib.ai.AiException
 import com.seazon.feedme.lib.ai.GeneralAIApi
 import com.seazon.feedme.lib.utils.LogUtils.debug
 import com.seazon.feedus.ui.BaseViewModel
@@ -23,6 +24,13 @@ class AIViewModel() : BaseViewModel() {
                 _state.update {
                     it.copy(
                         output = text,
+                    )
+                }
+            } catch (e: AiException) {
+                e.printStackTrace()
+                _state.update {
+                    it.copy(
+                        output = e.message,
                     )
                 }
             } catch (e: Exception) {
