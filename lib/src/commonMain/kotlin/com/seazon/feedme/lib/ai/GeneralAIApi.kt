@@ -89,8 +89,7 @@ class GeneralAIApi {
         when (aiModel) {
             AIModel.Gemini -> {
                 val result: Result = response.convertBody()
-                val generatedText = extractGeneratedText(result)
-                return generatedText?.dst.orEmpty()
+                return extractGeneratedText(result)
             }
 
             else -> {
@@ -108,16 +107,11 @@ class GeneralAIApi {
         }
     }
 
-    private fun extractGeneratedText(response: Result?): Translation? {
-        val text = when {
+    private fun extractGeneratedText(response: Result?): String? {
+        return when {
             response?.error != null -> throw AiException(message = "code: ${response.error.code}, message: ${response.error.message}")
             response?.candidates.isNullOrEmpty() -> null
             else -> response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
-        }
-        return if (text.isNullOrEmpty()) {
-            null
-        } else {
-            toJson<Translation>(text.replace("```json\n", "").replace("\n```", ""))
         }
     }
 }

@@ -33,8 +33,3 @@ data class Content(
 data class Part(
     val text: String? = null,
 )
-
-@Serializable
-data class Translation(
-    val dst: String? = null,
-)

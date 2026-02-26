@@ -12,11 +12,23 @@ data class Prompt(
         val configs = arrayOf(
             Prompt(
                 PromptType.Summary,
-                "Summary the text in %s, JSON format output, key is dst, dst should be a string, and no more than 400 words, use markdown to improve readability if need. Text: %s"
+                """
+Summarize the article in %s within 100 words.
+Keep it concise and complete.
+Use markdown to improve readability if need.
+Output only the result directly, no extra explanations.
+Article: %s""".trimIndent()
             ),
             Prompt(
                 PromptType.Translate,
-                "Translate to %s, JSON format output, key is dst. Text: %s"
+                """
+Translate the following text into %s.
+Keep the original meaning, tone, and logic completely unchanged.
+Use natural, fluent, and accurate expressions.
+Do not add extra explanations or comments.
+Preserve formatting, paragraphs, and key terms.
+Output only the translated result.
+Text to translate:%s""".trimMargin()
             ),
         )
     }
