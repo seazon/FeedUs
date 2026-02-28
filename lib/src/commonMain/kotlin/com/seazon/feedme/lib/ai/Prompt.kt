@@ -13,7 +13,7 @@ data class Prompt(
             Prompt(
                 PromptType.Summary,
                 """
-Summarize the article in %s within 100 words.
+Summarize the article in %s within 200 words.
 Keep it concise and complete.
 Use markdown to improve readability if need.
 Output only the result directly, no extra explanations.
