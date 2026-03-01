@@ -7,4 +7,7 @@ object LocalConstants {
     const val LOGIN_HOST = ""
     const val LOGIN_USERNAME = ""
     const val LOGIN_PASSWORD = ""
+
+    const val READ_LATER_API_BASE_URL = "https://try.karakeep.app/api/v1"
+    const val READ_LATER_API_KEY = ""
 }
