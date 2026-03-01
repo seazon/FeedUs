@@ -1,6 +1,5 @@
 package com.seazon.feedus.ui.demo
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +48,7 @@ import feedus.composeapp.generated.resources.ai_type
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AIScreenComposable(
@@ -56,17 +56,7 @@ fun AIScreenComposable(
     query: (type: AIModel, key: String, model: String, query: String, prompt: String) -> Unit,
 ) {
     val state by stateFlow.collectAsState()
-    val typeList = mutableListOf(
-        AIModel.Gemini,
-        AIModel.Volces,
-        AIModel.OpenAI,
-        AIModel.Ernie,
-        AIModel.QWen,
-        AIModel.Dream,
-        AIModel.Spark,
-        AIModel.Claude,
-        AIModel.GLM,
-    )
+    val typeList = AIModel.entries.toTypedArray()
 
     val keyValue = remember { mutableStateOf(LocalConstants.KEY_VALUE) }
 
@@ -140,7 +130,7 @@ fun AIScreenComposable(
                                         typeValue.value = it
                                         val config = AIGenerationConfig.getConfig(typeValue.value)
                                         modelList.value = config.modelList
-                                        modelValue.value = config.modelList.first()
+                                        modelValue.value = config.modelList.firstOrNull().orEmpty()
                                     },
                                     text = {
                                         Text(

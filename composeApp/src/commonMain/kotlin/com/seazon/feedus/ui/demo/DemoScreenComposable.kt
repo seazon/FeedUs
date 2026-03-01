@@ -1,6 +1,5 @@
 package com.seazon.feedus.ui.demo
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.seazon.feedus.ui.customize.noRippleClickable
 import feedus.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DemoScreenComposable(

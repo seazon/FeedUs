@@ -1,7 +1,7 @@
 [versions]
 androidx-activity = "1.10.1"
 androidx-espresso = "3.6.1"
-composeHotReload = "1.0.0-beta03"
+composeHotReload = "1.0.0"
 agp = "8.11.1"
 android-compileSdk = "36"
 android-minSdk = "26"
@@ -12,10 +12,11 @@ androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
 androidx-core-ktx = "1.16.0"
 androidx-lifecycle = "2.9.1"
-androidx-navigation = "2.9.0-beta03"
+androidx-navigation = "2.9.2"
 coil = "3.2.0"
 material-icons = "1.7.3"
-compose-multiplatform = "1.8.2"
+compose-multiplatform = "1.10.1"
+compose-material3 = "1.8.2"
 dateTimeVersion = "0.7.1"
 jetbrainsKotlinJvm = "2.2.0"
 koin = "4.1.0"
@@ -44,7 +45,7 @@ coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 compose_foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
 compose_material = { module = "org.jetbrains.compose.material:material", version.ref = "compose-multiplatform" }
-compose_material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-multiplatform" }
+compose_material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
 compose_material_icons_extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material-icons" }
 compose_resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
 compose_runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
