@@ -3,6 +3,7 @@ package com.seazon.feedus.ui.demo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,9 +15,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -181,50 +184,64 @@ fun AIScreenComposable(
                 modifier = Modifier.weight(1f),
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Box(modifier = Modifier.weight(3f), contentAlignment = Alignment.CenterEnd) {
-                Box {
-                    Row(
-                        modifier = Modifier.clickable {
-                            modelExpanded = true
-                        },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        FmLabel(
-                            text = modelValue,
-                        )
-                        Image(
-                            imageVector = Icons.Filled.ExpandMore,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .padding(16.dp),
-                            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface),
-                            contentDescription = "dropdown arrow"
-                        )
-                    }
-                    DropdownMenu(
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
-                        expanded = modelExpanded,
-                        onDismissRequest = {
-                            modelExpanded = false
-                        },
-                        content = {
-                            modelList.forEach {
-                                DropdownMenuItem(
-                                    onClick = {
-                                        modelExpanded = false
-                                        modelValue = it
-                                    },
-                                    text = {
-                                        Text(
-                                            text = it,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            style = MaterialTheme.typography.labelLarge,
-                                        )
-                                    }
-                                )
-                            }
+            if (typeValue == AIModel.Custom) {
+                Column(modifier = Modifier.weight(3f)) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    FmTextField(
+                        value = modelValue,
+                        reverse = true,
+                        onValueChange = {
+                            modelValue = it
                         },
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            } else {
+                Box(modifier = Modifier.weight(3f), contentAlignment = Alignment.CenterEnd) {
+                    Box {
+                        Row(
+                            modifier = Modifier.clickable {
+                                modelExpanded = true
+                            },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            FmLabel(
+                                text = modelValue,
+                            )
+                            Image(
+                                imageVector = Icons.Filled.ExpandMore,
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(16.dp),
+                                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface),
+                                contentDescription = "dropdown arrow"
+                            )
+                        }
+                        DropdownMenu(
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
+                            expanded = modelExpanded,
+                            onDismissRequest = {
+                                modelExpanded = false
+                            },
+                            content = {
+                                modelList.forEach {
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            modelExpanded = false
+                                            modelValue = it
+                                        },
+                                        text = {
+                                            Text(
+                                                text = it,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                style = MaterialTheme.typography.labelLarge,
+                                            )
+                                        }
+                                    )
+                                }
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -321,20 +338,37 @@ fun AIScreenComposable(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        FmPrimaryButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(Res.string.ai_query),
-            onClick = {
-                query(
-                    typeValue,
-                    baseUrlValue,
-                    keyValue,
-                    modelValue,
-                    queryValue,
-                    promptValue.content,
+        if (state.loading) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
-        )
+        } else {
+            FmPrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(Res.string.ai_query),
+                onClick = {
+                    query(
+                        typeValue,
+                        baseUrlValue,
+                        keyValue,
+                        modelValue,
+                        queryValue,
+                        promptValue.content,
+                    )
+                }
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = state.output.orEmpty(),
@@ -347,6 +381,6 @@ fun AIScreenComposable(
 @Preview
 @Composable
 fun AIScreenComposablePreview() {
-    val stateFlow = MutableStateFlow(AIScreenState("this is output"))
+    val stateFlow = MutableStateFlow(AIScreenState(false, "this is output"))
     AIScreenComposable(stateFlow = stateFlow, query = { type, baseUrl, key, model, query, prompt -> })
 }

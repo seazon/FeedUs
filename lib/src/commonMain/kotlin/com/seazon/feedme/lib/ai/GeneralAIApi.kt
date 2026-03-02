@@ -41,7 +41,7 @@ class GeneralAIApi {
         targetModel: String,
         userPrompt: String
     ): SimpleResponse {
-        if (!config.modelList.contains(targetModel)) {
+        if (config.aiModel != AIModel.Custom && !config.modelList.contains(targetModel)) {
             throw IllegalArgumentException("model $targetModel not exist in ${config.aiModel}'s support list")
         }
 

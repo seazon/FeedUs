@@ -235,15 +235,11 @@ fun AuthDialogComposable(
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
                         strokeWidth = 2.dp,
-//                        progress = {
-//                            0.8f
-//                        }
                         )
                     Spacer(modifier = Modifier.width(24.dp))
                 } else {
                     TextButton(modifier = Modifier.widthIn(max = 140.dp),
                         onClick = {
-//                        errorTips.value = ""
                             keyboardController?.hide()
                             login(host, username, password, httpUsername, httpPassword)
                         }) {

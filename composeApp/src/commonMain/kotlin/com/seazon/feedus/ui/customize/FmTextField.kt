@@ -64,7 +64,7 @@ fun FmTextField(
             .height(48.dp)
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(24.dp)
             )
             .padding(horizontal = 0.dp) // default is 8dp, so set to 0dp

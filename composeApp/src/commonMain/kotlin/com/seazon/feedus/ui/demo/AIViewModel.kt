@@ -17,12 +17,19 @@ class AIViewModel() : BaseViewModel() {
     val state: StateFlow<AIScreenState> = _state
 
     fun query(type: AIModel, baseUrl: String, key: String, model: String, query: String, lang: String, prompt: String) {
+        _state.update {
+            it.copy(
+                loading = true,
+                output = null,
+            )
+        }
         viewModelScope.launch {
             try {
                 val text = GeneralAIApi().text2Text(type, baseUrl, key, model, prompt, query, lang)
                 debug("text: $text")
                 _state.update {
                     it.copy(
+                        loading = false,
                         output = text,
                     )
                 }
@@ -30,11 +37,17 @@ class AIViewModel() : BaseViewModel() {
                 e.printStackTrace()
                 _state.update {
                     it.copy(
+                        loading = false,
                         output = e.message,
                     )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _state.update {
+                    it.copy(
+                        loading = false,
+                    )
+                }
             }
         }
     }
