@@ -16,10 +16,10 @@ class AIViewModel() : BaseViewModel() {
     private val _state = MutableStateFlow(AIScreenState())
     val state: StateFlow<AIScreenState> = _state
 
-    fun query(type: AIModel, key: String, model: String, query: String, lang: String, prompt: String) {
+    fun query(type: AIModel, baseUrl: String, key: String, model: String, query: String, lang: String, prompt: String) {
         viewModelScope.launch {
             try {
-                val text = GeneralAIApi().text2Text(type, key, model, prompt, query, lang)
+                val text = GeneralAIApi().text2Text(type, baseUrl, key, model, prompt, query, lang)
                 debug("text: $text")
                 _state.update {
                     it.copy(

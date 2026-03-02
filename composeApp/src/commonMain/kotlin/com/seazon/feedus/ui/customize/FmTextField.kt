@@ -45,7 +45,7 @@ fun FmTextField(
 //    iconSpacing: Dp = 16.dp,
 //    iconPadding: Dp = 0.dp,
 //    showClearImg: Boolean = true,
-//    enabled: Boolean = true,
+    enabled: Boolean = true,
 //    readOnly: Boolean = false,
 //    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 //    keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -57,7 +57,8 @@ fun FmTextField(
         color = MaterialTheme.colorScheme.onSurface,
         textAlign = if (reverse) TextAlign.End else TextAlign.Start,
     )
-    BasicTextField(value = value,
+    BasicTextField(
+        value = value,
         onValueChange = onValueChange,
         modifier = modifier
             .height(48.dp)
@@ -73,7 +74,7 @@ fun FmTextField(
             },
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
-//        enabled = enabled,
+        enabled = enabled,
 //        readOnly = readOnly,
         textStyle = textStyle,
 //        keyboardOptions = KeyboardOptions.Default. . keyboardOptions,
@@ -121,7 +122,8 @@ fun FmTextField(
 
                 // 存在焦点 且 有输入内容时. 显示叉号
                 if (hasFocus.value && value.isNotEmpty()) {
-                    Image(imageVector = Icons.Sharp.Clear,
+                    Image(
+                        imageVector = Icons.Sharp.Clear,
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface),
                         modifier = Modifier

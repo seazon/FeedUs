@@ -10,8 +10,8 @@ fun AIScreen() {
     val platform = getPlatform()
     AIScreenComposable(
         stateFlow = viewModel.state,
-        query = { type, key, model, query, prompt ->
-            viewModel.query(type, key, model, query, platform.language, prompt)
+        query = { type, baseUrl, key, model, query, prompt ->
+            viewModel.query(type, baseUrl, key, model, query, platform.language, prompt)
         }
     )
 }

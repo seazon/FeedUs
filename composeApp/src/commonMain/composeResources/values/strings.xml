@@ -76,6 +76,7 @@
     <string name="ai_type">Type</string>
     <string name="ai_key">Key</string>
     <string name="ai_model">Model</string>
+    <string name="ai_base_url">Base Url</string>
     <string name="ai_prompt">Prompt</string>
     <string name="ai_app_id">AppID</string>
     <string name="ai_query">Query</string>

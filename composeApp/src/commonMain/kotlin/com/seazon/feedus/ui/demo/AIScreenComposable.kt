@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -39,11 +40,12 @@ import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
 import com.seazon.feedus.ui.customize.FmTextField
 import feedus.composeapp.generated.resources.Res
-import feedus.composeapp.generated.resources.ai_query
-import feedus.composeapp.generated.resources.ai_title
+import feedus.composeapp.generated.resources.ai_base_url
 import feedus.composeapp.generated.resources.ai_key
 import feedus.composeapp.generated.resources.ai_model
 import feedus.composeapp.generated.resources.ai_prompt
+import feedus.composeapp.generated.resources.ai_query
+import feedus.composeapp.generated.resources.ai_title
 import feedus.composeapp.generated.resources.ai_type
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,26 +55,30 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun AIScreenComposable(
     stateFlow: StateFlow<AIScreenState>,
-    query: (type: AIModel, key: String, model: String, query: String, prompt: String) -> Unit,
+    query: (type: AIModel, baseUrl: String, key: String, model: String, query: String, prompt: String) -> Unit,
 ) {
     val state by stateFlow.collectAsState()
     val typeList = AIModel.entries.toTypedArray()
 
-    val keyValue = remember { mutableStateOf(LocalConstants.KEY_VALUE) }
+    var keyValue by remember { mutableStateOf(LocalConstants.KEY_VALUE) }
 
-    val typeValue = remember { mutableStateOf(AIModel.Gemini) }
-    val typeExpanded = rememberSaveable { mutableStateOf(false) }
+    var typeValue by remember { mutableStateOf(AIModel.Gemini) }
+    var typeExpanded by rememberSaveable { mutableStateOf(false) }
 
-    val config: AIGenerationConfig = AIGenerationConfig.getConfig(typeValue.value)
-    val modelList = remember { mutableStateOf(config.modelList) }
-    val modelValue = remember { mutableStateOf(config.modelList.first()) }
-    val modelExpanded = rememberSaveable { mutableStateOf(false) }
+    var config by remember { mutableStateOf(AIGenerationConfig.getConfig(typeValue)) }
 
-    val promptList = remember { mutableStateOf(Prompt.configs) }
-    val promptValue = remember { mutableStateOf(Prompt.configs.first()) }
-    val promptExpanded = rememberSaveable { mutableStateOf(false) }
+    var baseUrlValue by remember { mutableStateOf(config.apiUrl) }
 
-    val queryValue = remember { mutableStateOf(LocalConstants.QUERY_VALUE) }
+    var modelList by remember { mutableStateOf(config.modelList) }
+    var modelValue by remember { mutableStateOf(config.modelList.first()) }
+    var modelExpanded by rememberSaveable { mutableStateOf(false) }
+
+    var promptList by remember { mutableStateOf(Prompt.configs) }
+    var promptValue by remember { mutableStateOf(Prompt.configs.first()) }
+    var promptExpanded by rememberSaveable { mutableStateOf(false) }
+
+    var queryValue by remember { mutableStateOf(LocalConstants.QUERY_VALUE) }
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -100,12 +106,12 @@ fun AIScreenComposable(
                 Box {
                     Row(
                         modifier = Modifier.clickable {
-                            typeExpanded.value = true
+                            typeExpanded = true
                         },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         FmLabel(
-                            text = typeValue.value.name,
+                            text = typeValue.name,
                         )
                         Image(
                             imageVector = Icons.Filled.ExpandMore,
@@ -118,19 +124,20 @@ fun AIScreenComposable(
                     }
                     DropdownMenu(
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
-                        expanded = typeExpanded.value,
+                        expanded = typeExpanded,
                         onDismissRequest = {
-                            typeExpanded.value = false
+                            typeExpanded = false
                         },
                         content = {
                             typeList.forEach {
                                 DropdownMenuItem(
                                     onClick = {
-                                        typeExpanded.value = false
-                                        typeValue.value = it
-                                        val config = AIGenerationConfig.getConfig(typeValue.value)
-                                        modelList.value = config.modelList
-                                        modelValue.value = config.modelList.firstOrNull().orEmpty()
+                                        typeExpanded = false
+                                        typeValue = it
+                                        config = AIGenerationConfig.getConfig(typeValue)
+                                        baseUrlValue = config.apiUrl
+                                        modelList = config.modelList
+                                        modelValue = config.modelList.firstOrNull().orEmpty()
                                     },
                                     text = {
                                         Text(
@@ -146,6 +153,25 @@ fun AIScreenComposable(
                 }
             }
         }
+        // base url
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            FmLabel(
+                text = stringResource(Res.string.ai_base_url),
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            FmTextField(
+                value = baseUrlValue,
+                modifier = Modifier.weight(3f),
+                reverse = true,
+                enabled = config.urlEditable,
+                onValueChange = {
+                    baseUrlValue = it
+                },
+            )
+        }
         // model
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -159,12 +185,12 @@ fun AIScreenComposable(
                 Box {
                     Row(
                         modifier = Modifier.clickable {
-                            modelExpanded.value = true
+                            modelExpanded = true
                         },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         FmLabel(
-                            text = modelValue.value,
+                            text = modelValue,
                         )
                         Image(
                             imageVector = Icons.Filled.ExpandMore,
@@ -177,16 +203,16 @@ fun AIScreenComposable(
                     }
                     DropdownMenu(
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
-                        expanded = modelExpanded.value,
+                        expanded = modelExpanded,
                         onDismissRequest = {
-                            modelExpanded.value = false
+                            modelExpanded = false
                         },
                         content = {
-                            modelList.value.forEach {
+                            modelList.forEach {
                                 DropdownMenuItem(
                                     onClick = {
-                                        modelExpanded.value = false
-                                        modelValue.value = it
+                                        modelExpanded = false
+                                        modelValue = it
                                     },
                                     text = {
                                         Text(
@@ -212,11 +238,11 @@ fun AIScreenComposable(
             )
             Spacer(modifier = Modifier.width(16.dp))
             FmTextField(
-                value = keyValue.value,
+                value = keyValue,
                 modifier = Modifier.weight(3f),
                 reverse = true,
                 onValueChange = {
-                    keyValue.value = it
+                    keyValue = it
                 },
             )
         }
@@ -233,12 +259,12 @@ fun AIScreenComposable(
                 Box {
                     Row(
                         modifier = Modifier.clickable {
-                            promptExpanded.value = true
+                            promptExpanded = true
                         },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         FmLabel(
-                            text = promptValue.value.type.name,
+                            text = promptValue.type.name,
                         )
                         Image(
                             imageVector = Icons.Filled.ExpandMore,
@@ -251,16 +277,16 @@ fun AIScreenComposable(
                     }
                     DropdownMenu(
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
-                        expanded = promptExpanded.value,
+                        expanded = promptExpanded,
                         onDismissRequest = {
-                            promptExpanded.value = false
+                            promptExpanded = false
                         },
                         content = {
-                            promptList.value.forEach {
+                            promptList.forEach {
                                 DropdownMenuItem(
                                     onClick = {
-                                        promptExpanded.value = false
-                                        promptValue.value = it
+                                        promptExpanded = false
+                                        promptValue = it
                                     },
                                     text = {
                                         Text(
@@ -286,11 +312,11 @@ fun AIScreenComposable(
             )
             Spacer(modifier = Modifier.width(16.dp))
             FmTextField(
-                value = queryValue.value,
+                value = queryValue,
                 modifier = Modifier.weight(3f),
                 reverse = true,
                 onValueChange = {
-                    queryValue.value = it
+                    queryValue = it
                 },
             )
         }
@@ -300,11 +326,12 @@ fun AIScreenComposable(
             text = stringResource(Res.string.ai_query),
             onClick = {
                 query(
-                    typeValue.value,
-                    keyValue.value,
-                    modelValue.value,
-                    queryValue.value,
-                    promptValue.value.content,
+                    typeValue,
+                    baseUrlValue,
+                    keyValue,
+                    modelValue,
+                    queryValue,
+                    promptValue.content,
                 )
             }
         )
@@ -321,5 +348,5 @@ fun AIScreenComposable(
 @Composable
 fun AIScreenComposablePreview() {
     val stateFlow = MutableStateFlow(AIScreenState("this is output"))
-    AIScreenComposable(stateFlow = stateFlow, query = { type, key, model, query, prompt -> })
+    AIScreenComposable(stateFlow = stateFlow, query = { type, baseUrl, key, model, query, prompt -> })
 }

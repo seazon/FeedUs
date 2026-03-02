@@ -13,13 +13,14 @@ class GeneralAIApi {
 
     suspend fun text2Text(
         aiModel: AIModel,
+        baseUrl: String,
         key: String,
         targetModel: String,
         prompt: String,
         query: String,
         language: String
     ): String? {
-        val selectedConfig = AIGenerationConfig.getConfig(aiModel).copy(apiKey = key)
+        val selectedConfig = AIGenerationConfig.getConfig(aiModel).copy(apiUrl = baseUrl, apiKey = key)
         val userPrompt = prompt.format(language, query)
         try {
             val response = generateText(selectedConfig, targetModel, userPrompt)
