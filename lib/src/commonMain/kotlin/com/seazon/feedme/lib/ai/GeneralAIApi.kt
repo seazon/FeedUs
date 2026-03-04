@@ -6,7 +6,6 @@ import com.seazon.feedme.lib.network.HttpUtils
 import com.seazon.feedme.lib.network.NameValuePair
 import com.seazon.feedme.lib.network.SimpleResponse
 import com.seazon.feedme.lib.utils.format
-import com.seazon.feedme.lib.utils.toJson
 import kotlinx.serialization.json.Json
 
 class GeneralAIApi {
@@ -21,7 +20,8 @@ class GeneralAIApi {
         language: String
     ): String? {
         val selectedConfig = AIGenerationConfig.getConfig(aiModel).copy(apiUrl = baseUrl, apiKey = key)
-        val userPrompt = prompt.format(language, query)
+        val userPrompt = prompt.replace("{content}", query)
+            .replace("{language}", language)
         try {
             val response = generateText(selectedConfig, targetModel, userPrompt)
             val generatedText = extractGeneratedText2(response, aiModel)

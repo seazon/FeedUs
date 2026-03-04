@@ -13,22 +13,22 @@ data class Prompt(
             Prompt(
                 PromptType.Summary,
                 """
-Summarize the article in %s within 200 words.
+Summarize the article in {language} within 200 words.
 Keep it concise and complete.
 Use markdown to improve readability if need.
 Output only the result directly, no extra explanations.
-Article: %s""".trimIndent()
+Article: {content}""".trimIndent()
             ),
             Prompt(
                 PromptType.Translate,
                 """
-Translate the following text into %s.
+Translate the following text into {language}.
 Keep the original meaning, tone, and logic completely unchanged.
 Use natural, fluent, and accurate expressions.
 Do not add extra explanations or comments.
 Preserve formatting, paragraphs, and key terms.
 Output only the translated result.
-Text to translate:%s""".trimMargin()
+Text to translate: {content}""".trimMargin()
             ),
         )
     }
