@@ -36,7 +36,7 @@ FeedUs contains code that is open sourced from [FeedMe](https://github.com/seazo
 |                                                                                     | Support Unread Count API | Feed ID Star with ”Feed” | Support Subscribe API | Support Tag API | Support Star API | Support Fetch by Feed / Category | Support Fetch IDs and then Stream | Support pagination | Support podcast |
 |-------------------------------------------------------------------------------------| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Folo](https://api.folo.is/reference)                                               | ✅ | N | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| [Fever API](https://blog.badguy.top/index.php/archives/294/, https://github.com/bazqux/bazqux-api/blob/master/FeverAPI.md) (Miniflux / CommaFeed) | ❌ | N | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Fever API [link 1](https://web.archive.org/web/20230616124016/https://feedafever.com/api),[link 2](https://blog.badguy.top/index.php/archives/294/), [link 3](https://github.com/bazqux/bazqux-api/blob/master/FeverAPI.md) (Miniflux / CommaFeed) | ❌ | N | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | Tiny Tiny RSS                                                                       | ✅ | N | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Feedly                                                                              | ✅ | Y | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Feedbin                                                                             | ❌ | N | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
