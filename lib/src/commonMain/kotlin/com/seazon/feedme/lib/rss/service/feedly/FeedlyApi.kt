@@ -198,13 +198,14 @@ class FeedlyApi : RssApi {
 
     override fun supportUpdateSubscription() = true
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean {
+    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
         val response = subscriptionsApi?.subscribeFeed(title, feedId.orEmpty(), categories)
         //        {
 //            "errorCode":400, "errorId":"ap5int-sv2.2019123000.2410146", "errorMessage":
 //            "invalid feed id"
 //        }
-        return response != null && !response.contains("errorMessage")
+        val isError = response != null && !response.contains("errorMessage")
+        return if(isError) null else feedId
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String? {

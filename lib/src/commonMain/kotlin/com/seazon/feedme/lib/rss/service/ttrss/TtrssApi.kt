@@ -192,7 +192,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean {
+    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
         // 需要订阅到其他类别，但是由于ttrss api不支持添加类别，所以暂时默认添加到未分类的，或者已有分类
         val map = TtrssCategory.parse(mainApi?.getCategories().orEmpty(), false)
         for (i in categories.indices) {
@@ -206,7 +206,7 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
                 mainApi?.subscribeToFeed(feedUrl.orEmpty(), "0")
             }
         }
-        return true
+        return feedId
     }
 
     override suspend fun unsubscribeFeed(id: String): String? {

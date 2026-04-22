@@ -235,9 +235,9 @@ abstract class GrApi(token: RssToken, schemaHttps: String?, expiredTimestamp: Lo
         feedId: String?,
         feedUrl: String?,
         categories: Array<String>
-    ): Boolean {
+    ): String? {
         mainApi?.editSubscription("subscribe", feedId.orEmpty(), title, categories, null)
-        return true // TODO should check response for error case
+        return feedId // TODO should check response for error case
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String? {

@@ -293,8 +293,8 @@ class FeedsViewModel(
         viewModelScope.launch {
             try {
                 val api = rssSDK.getRssApi(false)
-                val success = api.subscribeFeed(title, feedId, feedUrl, arrayOf())
-                if (success) {
+                val feedId = api.subscribeFeed(title, feedId, feedUrl, arrayOf())
+                if (!feedId.isNullOrEmpty()) {
                     onSuccess()
                 } else {
                     _subscribeState.update {

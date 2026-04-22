@@ -193,4 +193,19 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         )
         return execute(HttpMethod.DELETE, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body
     }
+
+    suspend fun editFeed(
+        title: String,
+        feedId: String,
+        category: String?,
+    ): String {
+        val o = jsonOf(
+            "feedId" to feedId,
+            "title" to title,
+            "view" to 0,
+            "category" to category,
+        )
+        return execute(HttpMethod.PATCH, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body
+    }
+
 }

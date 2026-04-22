@@ -148,6 +148,7 @@ class HttpManager {
             val response = client.request(url) {
                 method = when (httpMethod) {
                     HttpMethod.PUT -> io.ktor.http.HttpMethod.Put
+                    HttpMethod.PATCH -> io.ktor.http.HttpMethod.Patch
                     HttpMethod.POST -> io.ktor.http.HttpMethod.Post
                     HttpMethod.DELETE -> io.ktor.http.HttpMethod.Delete
                     else -> io.ktor.http.HttpMethod.Get

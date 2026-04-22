@@ -116,7 +116,7 @@ interface RssApi {
      * 由于最早支持的是feedly，而所有的源搜索都来自feedly的所有接口，
      * 所以传入的feedId都是以feedly的feed id作为标准，即：feed/{feed_url}
      */
-    suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean
+    suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? = null
 
     suspend fun unsubscribeFeed(feedId: String): String?
 

@@ -202,7 +202,7 @@ class LocalRssApi() : RssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): Boolean {
+    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
         val subscription = spiderServiceConnection.getFeed(feedUrl.orEmpty())
         subscription?.categories = ArrayList()
         if (categories != null) {
@@ -218,7 +218,7 @@ class LocalRssApi() : RssApi {
         }
         subscription?.lastClawTime = 0
         LocalFeedHelper.saveLocalFeed(subscription)
-        return true
+        return feedId
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String {
