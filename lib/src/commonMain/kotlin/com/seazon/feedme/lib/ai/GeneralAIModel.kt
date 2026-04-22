@@ -1,11 +1,14 @@
 package com.seazon.feedme.lib.ai
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GeneralAIRequest(
     val model: String,
     val messages: List<Message>,
+    @SerialName("enable_thinking")
+    val enableThinking: Boolean,
 )
 
 @Serializable

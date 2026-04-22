@@ -25,7 +25,7 @@ class AIViewModel : BaseViewModel() {
         }
         viewModelScope.launch {
             try {
-                val text = GeneralAIApi().text2Text(type, baseUrl, key, model, prompt, "", "")
+                val text = GeneralAIApi().text2Text(type, baseUrl, key, model, prompt, query, lang)
                 debug("text: $text")
                 _state.update {
                     it.copy(

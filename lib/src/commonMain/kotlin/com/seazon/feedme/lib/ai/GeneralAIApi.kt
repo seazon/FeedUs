@@ -51,6 +51,7 @@ class GeneralAIApi {
             val requestBody = GeneralAIRequest(
                 model = targetModel,
                 messages = listOf(Message(role = "user", content = userPrompt)),
+                enableThinking = false,
             )
             Json.encodeToString(requestBody).trimIndent()
         }
