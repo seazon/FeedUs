@@ -192,9 +192,11 @@ class FoloApi : RssApi {
         title: String,
         feedId: String?,
         feedUrl: String?,
-        categories: Array<String>
+        categories: Array<String>,
+        view: Int,
     ): String? {
-        val response = mainApi?.subscribeFeed(title, feedUrl.orEmpty(), categories.firstOrNull { !it.isNullOrEmpty() })
+        val response =
+            mainApi?.subscribeFeed(title, feedUrl.orEmpty(), categories.firstOrNull { !it.isNullOrEmpty() }, view)
         return response?.feed?.id
     }
 
@@ -206,9 +208,10 @@ class FoloApi : RssApi {
         title: String,
         feedId: String,
         aCategories: Array<String>,
-        rCategories: Array<String>
+        rCategories: Array<String>,
+        view: Int,
     ): String? {
-        return mainApi?.editFeed(title, feedId, aCategories.firstOrNull())
+        return mainApi?.editFeed(title, feedId, aCategories.firstOrNull(), view)
     }
 
     /*

@@ -139,7 +139,13 @@ class FeedbinApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
+    override suspend fun subscribeFeed(
+        title: String,
+        feedId: String?,
+        feedUrl: String?,
+        categories: Array<String>,
+        view: Int,
+    ): String? {
         subscriptionsApi?.createSubscriptions(feedUrl)
         return feedId // TODO should check response for error case
     }

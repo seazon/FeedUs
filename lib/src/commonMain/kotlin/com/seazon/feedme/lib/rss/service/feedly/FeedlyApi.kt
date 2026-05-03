@@ -164,7 +164,12 @@ class FeedlyApi : RssApi {
         return streamsApi?.getContents(feedId, count, true, since, continuation)?.convert()
     }
 
-    override suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream? {
+    override suspend fun getCategoryStream(
+        category: String,
+        count: Int,
+        since: String?,
+        continuation: String?
+    ): RssStream? {
         return streamsApi?.getContents(category, count, true, since, continuation)?.convert()
     }
 
@@ -198,14 +203,20 @@ class FeedlyApi : RssApi {
 
     override fun supportUpdateSubscription() = true
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
+    override suspend fun subscribeFeed(
+        title: String,
+        feedId: String?,
+        feedUrl: String?,
+        categories: Array<String>,
+        view: Int,
+    ): String? {
         val response = subscriptionsApi?.subscribeFeed(title, feedId.orEmpty(), categories)
-        //        {
+//        {
 //            "errorCode":400, "errorId":"ap5int-sv2.2019123000.2410146", "errorMessage":
 //            "invalid feed id"
 //        }
         val isError = response != null && !response.contains("errorMessage")
-        return if(isError) null else feedId
+        return if (isError) null else feedId
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String? {
@@ -216,7 +227,8 @@ class FeedlyApi : RssApi {
         title: String,
         feedId: String,
         aCategories: Array<String>,
-        rCategories: Array<String>
+        rCategories: Array<String>,
+        view: Int,
     ): String? {
         return subscriptionsApi?.updateSubscription(feedId, title, aCategories)
     }

@@ -175,11 +175,12 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         title: String,
         feedUrl: String,
         category: String?,
+        view: Int,
     ): FoloSubscribeResponse {
         val o = jsonOf(
             "url" to feedUrl,
             "title" to title,
-            "view" to 0,
+            "view" to view,
             "category" to category,
         )
         return execute(HttpMethod.POST, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).convertBody()
@@ -198,11 +199,12 @@ class MainApi(token: RssToken) : AuthedApi(token) {
         title: String,
         feedId: String,
         category: String?,
+        view: Int,
     ): String {
         val o = jsonOf(
             "feedId" to feedId,
             "title" to title,
-            "view" to 0,
+            "view" to view,
             "category" to category,
         )
         return execute(HttpMethod.PATCH, FoloConstants.URL_SUBSCRIPTIONS, null, null, o.toString()).body

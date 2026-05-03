@@ -45,7 +45,12 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
     }
 
     override suspend fun getAccessToken(token: RssToken): String {
-        return authenticationApi.getAccessToken(token.username.orEmpty(), token.password.orEmpty(), token.httpUsername, token.httpPassword)
+        return authenticationApi.getAccessToken(
+            token.username.orEmpty(),
+            token.password.orEmpty(),
+            token.httpUsername,
+            token.httpPassword
+        )
     }
 
     override suspend fun setUserWithAccessToken(token: RssToken, response: String) {
@@ -161,7 +166,12 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
         )
     }
 
-    override suspend fun getCategoryStream(categoryId: String, count: Int, since: String?, continuation: String?): RssStream {
+    override suspend fun getCategoryStream(
+        categoryId: String,
+        count: Int,
+        since: String?,
+        continuation: String?
+    ): RssStream {
         return TtrssStream.parseIds(
             mainApi?.getHeadlines(
                 categoryId, true, true,
@@ -192,8 +202,14 @@ class TtrssApi(token: RssToken) : RssApi, SelfHostedRssApi {
         return true
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
-        // 需要订阅到其他类别，但是由于ttrss api不支持添加类别，所以暂时默认添加到未分类的，或者已有分类
+    override suspend fun subscribeFeed(
+        title: String,
+        feedId: String?,
+        feedUrl: String?,
+        categories: Array<String>,
+        view: Int,
+    ): String? {
+        // Since TTRSS API does not support adding categories, so only support add exist categories.
         val map = TtrssCategory.parse(mainApi?.getCategories().orEmpty(), false)
         for (i in categories.indices) {
             if (categories[i].isEmpty()) {

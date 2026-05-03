@@ -62,6 +62,7 @@ interface RssApi {
     fun getCategoryId(category: String): String? = null
 
     fun supportUnreadCounts() = true
+
     /**
      * if supportPagingFetchIds=false, not need to implement this
      */
@@ -94,7 +95,8 @@ interface RssApi {
      */
     suspend fun getCategoryStreamIds(category: String, count: Int, continuation: String?): RssStream? = null
 
-    suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream? = null
+    suspend fun getCategoryStream(category: String, count: Int, since: String?, continuation: String?): RssStream? =
+        null
 
     /*
      * SubscriptionsApi
@@ -113,14 +115,27 @@ interface RssApi {
     fun supportUpdateSubscription(): Boolean = false
 
     /**
-     * 由于最早支持的是feedly，而所有的源搜索都来自feedly的所有接口，
-     * 所以传入的feedId都是以feedly的feed id作为标准，即：feed/{feed_url}
+     * @param feedId Since the earliest support is Feedly, and all source searches come from Feedly's search API,
+     * So the [feedId] is based on Feedly's feed id as the standard, that is: feed/{feed_url}.
+     * @param view the layout of this feed to display. Currently only use for Folo.
      */
-    suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? = null
+    suspend fun subscribeFeed(
+        title: String,
+        feedId: String?,
+        feedUrl: String?,
+        categories: Array<String>,
+        view: Int = 0,
+    ): String? = null
 
     suspend fun unsubscribeFeed(feedId: String): String?
 
-    suspend fun editFeed(title: String, feedId: String, aCategories: Array<String>, rCategories: Array<String>): String? = null
+    suspend fun editFeed(
+        title: String,
+        feedId: String,
+        aCategories: Array<String>,
+        rCategories: Array<String>,
+        view: Int,
+    ): String? = null
 
     /*
      * StarApi

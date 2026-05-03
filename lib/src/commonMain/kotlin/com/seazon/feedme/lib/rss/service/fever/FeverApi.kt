@@ -116,7 +116,13 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         return false
     }
 
-    override suspend fun subscribeFeed(title: String, feedId: String?, feedUrl: String?, categories: Array<String>): String? {
+    override suspend fun subscribeFeed(
+        title: String,
+        feedId: String?,
+        feedUrl: String?,
+        categories: Array<String>,
+        view: Int,
+    ): String? {
         return null
     }
 
@@ -128,7 +134,8 @@ class FeverApi(var _token: RssToken) : RssApi, SelfHostedRssApi {
         title: String,
         feedId: String,
         aCategories: Array<String>,
-        rCategories: Array<String>
+        rCategories: Array<String>,
+        view: Int,
     ): String {
         return ""
     }
