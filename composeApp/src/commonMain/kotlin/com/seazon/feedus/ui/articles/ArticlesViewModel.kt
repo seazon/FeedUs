@@ -138,7 +138,10 @@ class ArticlesViewModel(
             } catch (e: Exception) {
                 _eventFlow.value = Event.GeneralErrorEvent(e.message.orEmpty())
                 _state.update {
-                    it.copy(isLoading = false)
+                    it.copy(
+                        isLoading = false,
+                        hasMore = false,
+                    )
                 }
             }
         }

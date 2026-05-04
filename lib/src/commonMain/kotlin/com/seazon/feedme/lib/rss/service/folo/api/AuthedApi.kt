@@ -35,7 +35,7 @@ open class AuthedApi(val token: RssToken) : BaseApi() {
         )
         if (response.code == RssApi.HTTP_CODE_UNAUTHORIZED) {
             throw HttpException(HttpException.Type.EEXPIRED)
-        } else if (response.code == RssApi.HTTP_CODE_BAD_REQUEST) {
+        } else if (response.code >= RssApi.HTTP_CODE_BAD_REQUEST) {
             throw HttpException(HttpException.Type.EREMOTE, "HTTP code: " + response.code)
         }
         return response
