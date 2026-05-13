@@ -122,11 +122,11 @@ data class AIGenerationConfig(
             // https://ai.google.dev/gemini-api/docs/pricing?authuser=1
             AIGenerationConfig(
                 aiModel = AIModel.Gemini,
-                apiUrl = "https://generativelanguage.googleapis.com/v1/models/%s:generateContent",
+                apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent",
                 modelList = listOf(
                     "gemini-2.5-flash-lite",
                     "gemini-3.1-pro-preview",
-                    "gemini-3.1-flash-lite-preview",
+                    "gemini-3.1-flash-lite",
                     "gemini-3-flash-preview",
                     "gemini-2.5-pro",
                     "gemini-2.5-flash",
