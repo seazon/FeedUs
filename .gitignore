@@ -1,0 +1,10 @@
+/composeApp/build
+/composeApp/feedus.db
+.kotlin
+.idea
+.gradle
+build
+local.properties
+feedus.keystore
+iosApp/iosApp.xcodeproj/xcuserdata
+iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata
