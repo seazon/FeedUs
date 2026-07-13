@@ -1,4 +1,4 @@
-package com.seazon.feedme.lib
+package com.seazon.feedus
 
 object LocalConstants {
     const val KEY_VALUE = ""

@@ -32,10 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.seazon.feedme.lib.LocalConstants
 import com.seazon.feedme.lib.ai.AIGenerationConfig
 import com.seazon.feedme.lib.ai.AIModel
 import com.seazon.feedme.lib.ai.Prompt
+import com.seazon.feedus.LocalConstants
 import com.seazon.feedus.ui.customize.FmLabel
 import com.seazon.feedus.ui.customize.FmPrimaryButton
 import com.seazon.feedus.ui.customize.FmTextField

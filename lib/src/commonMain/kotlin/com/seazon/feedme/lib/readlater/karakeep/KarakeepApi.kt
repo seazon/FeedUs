@@ -1,6 +1,5 @@
 package com.seazon.feedme.lib.readlater.karakeep
 
-import com.seazon.feedme.lib.LocalConstants
 import com.seazon.feedme.lib.network.HttpException
 import com.seazon.feedme.lib.network.HttpManager
 import com.seazon.feedme.lib.network.HttpMethod

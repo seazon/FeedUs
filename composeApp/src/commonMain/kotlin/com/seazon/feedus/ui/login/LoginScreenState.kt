@@ -1,6 +1,6 @@
 package com.seazon.feedus.ui.login
 
-import com.seazon.feedme.lib.LocalConstants
+import com.seazon.feedus.LocalConstants
 
 data class LoginScreenState(
     val isLoading: Boolean = false,
