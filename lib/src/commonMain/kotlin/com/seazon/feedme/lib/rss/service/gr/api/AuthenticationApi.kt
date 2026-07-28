@@ -18,10 +18,23 @@ import com.seazon.feedme.platform.TimeProvider
 open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token, config) {
 
     open suspend fun getAccessToken(username: String?, password: String?): String? {
-        val parameters = listOf(
-            NameValuePair("Email", username.orEmpty()),
-            NameValuePair("Passwd", password.orEmpty()),
-        )
+        val authInfoInBody = isTheseRssType(Static.ACCOUNT_TYPE_FRESH_RSS)
+        val parameters = if (authInfoInBody) {
+            null
+        } else {
+            listOf(
+                NameValuePair("Email", username.orEmpty()),
+                NameValuePair("Passwd", password.orEmpty()),
+            )
+        }
+        val xFormParams = if (authInfoInBody) {
+            mutableListOf<NameValuePair>().apply {
+                add(NameValuePair("Email", username.orEmpty()))
+                add(NameValuePair("Passwd", password.orEmpty()))
+            }
+        } else {
+            null
+        }
 
         val headers = HashMap<String, String>()
         if (isTheseRssType(Static.ACCOUNT_TYPE_INOREADER_OAUTH2, Static.ACCOUNT_TYPE_INOREADER)) {
@@ -29,8 +42,11 @@ open class AuthenticationApi(token: RssToken, config: GrConfig) : BaseApi(token,
         }
 
         val response = HttpManager.requestWrap(
-            HttpMethod.POST, getSchema() + GrConstants.AUTH,
-            parameters, headers, null
+            httpMethod = HttpMethod.POST,
+            url = getSchema() + GrConstants.AUTH,
+            params = parameters,
+            headers = headers,
+            xFormParams = xFormParams,
         )
         if (response.code == 200) {
             return response.body
