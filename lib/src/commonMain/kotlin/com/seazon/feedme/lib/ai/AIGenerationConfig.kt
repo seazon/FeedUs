@@ -34,15 +34,8 @@ data class AIGenerationConfig(
                 aiModel = AIModel.OpenAI,
                 apiUrl = "https://api.openai.com/v1/chat/completions",
                 modelList = listOf(
-                    "gpt-4.1-nano",
-                    "gpt-5-mini",
-                    "gpt-5.4",
-                    "gpt-5.2",
-                    "gpt-5",
-                    "gpt-5-chat",
-                    "gpt-5-nano",
-                    "gpt-4.1",
-                    "gpt-4.1-mini",
+                    "gpt-5.4-nano-2026-03-17", // $0.2•$1.25
+                    "gpt-5.6-luna", // $1•$6
                 ),
             ),
             // 百度文心一言
@@ -51,16 +44,8 @@ data class AIGenerationConfig(
 //                apiUrl = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions",
                 apiUrl = "https://qianfan.baidubce.com/v2/chat/completions",
                 modelList = listOf(
-                    "ernie-5.0-thinking-preview",
-                    "ernie-4.0-plus",
-                    "ernie-4.0-turbo-2026",
-                    "ernie-4.5-turbo-128k-preview",
-                    "ernie-4.5-turbo-32k",
-                    "ernie-4.5-turbo-128k",
-                    "ernie-4.5-0.3b",
-                    "ernie-4.5-21b-a3b",
-                    "ernie-4.5-vl-28b-a3b",
-                    "ernie-3.5-128k",
+                    "ernie-4.5-turbo-20260402", // ¥0.8/3.2
+                    "ernie-5.1", // ¥4/18
                 ),
             ),
             // 阿里通义千问
@@ -70,12 +55,8 @@ data class AIGenerationConfig(
 //                apiUrl = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
 //                apiUrl = "https://dashscope-us.aliyuncs.com/compatible-mode/v1/chat/completions",
                 modelList = listOf(
-                    "qwen-flash",
-                    "qwen3.5-plus",
-                    "qwen3.5-flash",
-                    "qwen3.5-27b",
-                    "qwen3-max",
-                    "qwen-plus",
+                    "qwen3.7-flash", // ¥0.2/0.8
+                    "qwen3.7-max", // ¥12/36
                 ),
             ),
             // MiniMax
@@ -84,19 +65,15 @@ data class AIGenerationConfig(
                 aiModel = AIModel.MiniMax,
                 apiUrl = "https://api.minimax.io/v1/text/chatcompletion_v2",
                 modelList = listOf(
-                    "MiniMax-M2.5",
-                    "MiniMax-M2.5-highspeed",
-                    "MiniMax-M2.1",
-                    "MiniMax-M2.1-highspeed",
-                    "MiniMax-M2",
-                    "M2-her",
+                    "MiniMax-M2.7", // ¥0.3/1.2
+                    "MiniMax-M3", // ¥0.6/2.4
                 ),
             ),
             // 字节即梦AI
             AIGenerationConfig(
                 aiModel = AIModel.Dream,
                 apiUrl = "https://dreamai.bytedance.com/api/v1/chat/%s/completions",
-                modelList = listOf("dream-text-v2", "dream-text-pro-2026", "doubao-4.0", "doubao-longcontext"),
+                modelList = listOf("dream-text-v2", "doubao-4.0"),
             ),
             // 火山方舟
             AIGenerationConfig(
@@ -105,18 +82,13 @@ data class AIGenerationConfig(
                 modelList = listOf(
                     "doubao-seed-2-0-mini-260215",
                     "doubao-seed-2-0-pro-260215",
-                    "doubao-seed-2-0-lite-260215",
-                    "doubao-seed-1-8-251228",
-                    "doubao-seed-1-6-251015",
-                    "doubao-seed-1-6-lite-251015",
-                    "doubao-seed-1-6-flash-250828",
                 ),
             ),
             // 讯飞星火
             AIGenerationConfig(
                 aiModel = AIModel.Spark,
                 apiUrl = "https://spark-api.xf-yun.com/v4/chat/completions",
-                modelList = listOf("spark-4.0", "spark-4.0-turbo", "spark-5.0-preview", "spark-4.0-long"),
+                modelList = listOf("spark-4.0-turbo", "spark-5.0-preview"),
             ),
             // Google Gemini
             // https://ai.google.dev/gemini-api/docs/pricing?authuser=1
@@ -124,12 +96,8 @@ data class AIGenerationConfig(
                 aiModel = AIModel.Gemini,
                 apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent",
                 modelList = listOf(
-                    "gemini-2.5-flash-lite",
-                    "gemini-3.1-pro-preview",
                     "gemini-3.1-flash-lite",
-                    "gemini-3-flash-preview",
-                    "gemini-2.5-pro",
-                    "gemini-2.5-flash",
+                    "gemini-3.1-pro-preview",
                 ),
             ),
             // Anthropic Claude
@@ -139,8 +107,6 @@ data class AIGenerationConfig(
                 modelList = listOf(
                     "claude-3-5-haiku-latest",
                     "claude-4-preview",
-                    "claude-3-5-sonnet-20250129",
-                    "claude-3-opus-20250203",
                 ),
             ),
             // GLM
@@ -151,14 +117,6 @@ data class AIGenerationConfig(
                 modelList = listOf(
                     "glm-4.7-flash",
                     "glm-5",
-                    "glm-4.7",
-                    "glm-4.7-flashx",
-                    "glm-4.6",
-                    "glm-4.5-air",
-                    "glm-4.5-airx",
-                    "glm-4.5-flash",
-                    "glm-4-flashx-250414",
-                    "glm-4-flash-250414",
                 ),
             ),
             // DeepSeek
@@ -168,9 +126,6 @@ data class AIGenerationConfig(
                 modelList = listOf(
                     "deepseek-chat",
                     "deepseek-v3.2",
-                    "deepseek-v3.1",
-                    "deepseek-v3",
-                    "deepseek-r1",
                 ),
             ),
             // Custom
