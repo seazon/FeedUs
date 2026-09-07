@@ -215,8 +215,8 @@ class FeedlyApi : RssApi {
 //            "errorCode":400, "errorId":"ap5int-sv2.2019123000.2410146", "errorMessage":
 //            "invalid feed id"
 //        }
-        val isError = response != null && !response.contains("errorMessage")
-        return if (isError) null else feedId
+        val isSuccess = response != null && !response.contains("errorMessage")
+        return if (isSuccess) feedId else null
     }
 
     override suspend fun unsubscribeFeed(feedId: String): String? {
