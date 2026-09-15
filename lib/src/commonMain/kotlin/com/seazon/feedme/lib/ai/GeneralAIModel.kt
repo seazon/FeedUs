@@ -12,9 +12,20 @@ data class GeneralAIRequest(
 )
 
 @Serializable
+data class GeneralAIStreamRequest(
+    val model: String,
+    val messages: List<Message>,
+    @SerialName("enable_thinking")
+    val enableThinking: Boolean,
+    val stream: Boolean,
+    @SerialName("max_tokens")
+    val maxTokens: Int = 2048,
+)
+
+@Serializable
 data class Message(
-    val role: String, // user /assistant /system
-    val content: String
+    val role: String? = null, // user / assistant / system, may be absent in a stream delta
+    val content: String? = null
 )
 
 @Serializable
@@ -27,6 +38,7 @@ data class GeneralAIResponse(
 @Serializable
 data class Choice(
     val message: Message? = null,
+    val delta: Message? = null, // incremental content used in streaming responses
     val finishReason: String? = null // stop / length
 )
 

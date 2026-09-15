@@ -16,6 +16,8 @@ object HttpUtils {
     const val CONNECT_TIMEOUT: Long = 15000
     const val REQUEST_TIMEOUT: Long = 25000
     const val SOCKET_TIMEOUT: Long = 30000
+    const val STREAM_TIMEOUT: Long = 300000
+    const val STREAM_SOCKET_TIMEOUT: Long = 60000
     const val BUFFER_SIZE: Int = 4096
     private val CHARSET_CHARACTER =
         arrayOf("content=\"text/html;charset=", "content='text/html;charset=", "charset=\"")

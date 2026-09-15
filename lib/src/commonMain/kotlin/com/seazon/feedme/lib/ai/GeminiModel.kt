@@ -8,6 +8,17 @@ data class GeminiRequest(
 )
 
 @Serializable
+data class GeminiStreamRequest(
+    val contents: List<Content>? = null,
+    val generationConfig: GeminiGenerationConfig? = null,
+)
+
+@Serializable
+data class GeminiGenerationConfig(
+    val maxOutputTokens: Int? = null,
+)
+
+@Serializable
 data class GeminiResponse(
     val candidates: List<Candidates>? = null,
     val error: Error? = null,
