@@ -9,5 +9,6 @@ data class RssFeed(
     var url: String? = null, // website url
     var feedUrl: String? = null, // rss url
     var categories: List<RssCategory>? = null,
-    var favicon: String? = null
+    var favicon: String? = null,
+    var view: Int = 0,
 ) : Entity()

@@ -39,6 +39,7 @@ class MainApi(token: RssToken) : AuthedApi(token) {
                     )
                 ),
                 favicon = it.feeds?.image,
+                view = it.view ?: 0,
             )
         }
     }
